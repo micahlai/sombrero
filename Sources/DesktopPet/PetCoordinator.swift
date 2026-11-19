@@ -121,6 +121,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
 
     private func makeMenu() -> NSMenu {
         let menu = NSMenu(); menu.delegate = self; menu.autoenablesItems = false
+        menu.font = AppTypography.font(size: AppTypography.menuSize)
         let heading = NSMenuItem(title: "Watercolor Duck", action: nil, keyEquivalent: ""); heading.isEnabled = false
         menu.addItem(heading); menu.addItem(.separator())
         menu.addItem(item(behavior.isVisible ? "Hide Pet" : "Show Pet", #selector(toggleVisibility)))
@@ -132,6 +133,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         menu.addItem(item("Pause Motion", #selector(togglePause), checked: behavior.isPaused))
         let sizes = NSMenuItem(title: "Size", action: nil, keyEquivalent: "")
         let submenu = NSMenu()
+        submenu.font = AppTypography.font(size: AppTypography.menuSize)
         for (title, size) in [("Small", 88), ("Medium", 112), ("Large", 152)] {
             let option = item(title, #selector(changeSize(_:)), checked: preferences.size == Double(size))
             option.tag = size; submenu.addItem(option)

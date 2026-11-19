@@ -1,8 +1,10 @@
 import AppKit
+import PetAssets
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var coordinator: PetCoordinator?
     func applicationDidFinishLaunching(_ notification: Notification) {
+        AppTypography.installDefaults()
         NSApp.setActivationPolicy(.accessory)
         let controller = PetCoordinator(); coordinator = controller; controller.start()
     }
