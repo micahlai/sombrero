@@ -1,0 +1,458 @@
+{
+  "schemaVersion": 1,
+  "status": "planning-only-not-wired-to-prototype",
+  "source": {
+    "path": "docs/reference/sombrero-v1-state-diagram.pdf",
+    "sha256": "24b6cef91b52f27557fa3b4d4d415cd031f5cbea8a9526c848b27911464dc2ab",
+    "review": "Both pages rendered and visually inspected; arrow colors transcribed from images."
+  },
+  "cadence": {
+    "timelineFPS": 24,
+    "drawingFPS": 6,
+    "holdFrames": 4
+  },
+  "initialState": "1a",
+  "states": [
+    {
+      "id": "1a",
+      "name": "Standing idle",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "1b",
+      "name": "Standing look",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "1c",
+      "name": "Standing wave",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "1d",
+      "name": "Standing pet",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "2a",
+      "name": "Sit down",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "2b",
+      "name": "Stand up",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "3a",
+      "name": "Sitting idle",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "3b",
+      "name": "Sitting look",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "3c",
+      "name": "Sitting pet",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "4a",
+      "name": "Goodbye standing",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "4b",
+      "name": "Peek in",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "timeout",
+      "name": "Hidden timeout",
+      "kind": "hidden",
+      "asset": null
+    },
+    {
+      "id": "5a",
+      "name": "Grab photo",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "5b",
+      "name": "Show photo",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "5c",
+      "name": "Showing photo idle",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "5d",
+      "name": "Put photo away",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "6a",
+      "name": "Grab camera",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "6b",
+      "name": "Camera idle",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "6c",
+      "name": "Take photo and deliver",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "7a",
+      "name": "Pull out Bible",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "7b",
+      "name": "Bible idle",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "7c",
+      "name": "Stow Bible",
+      "kind": "clip",
+      "asset": null
+    }
+  ],
+  "transitions": [
+    {
+      "from": "1a",
+      "to": "1a",
+      "kind": "default",
+      "weight": 0.975
+    },
+    {
+      "from": "1a",
+      "to": "1b",
+      "kind": "default",
+      "weight": 0.02
+    },
+    {
+      "from": "1a",
+      "to": "1c",
+      "kind": "default",
+      "weight": 0.02
+    },
+    {
+      "from": "1a",
+      "to": "2a",
+      "kind": "default",
+      "weight": 0.005
+    },
+    {
+      "from": "1b",
+      "to": "1a",
+      "kind": "default",
+      "weight": 0.8
+    },
+    {
+      "from": "1b",
+      "to": "1c",
+      "kind": "default",
+      "weight": 0.2
+    },
+    {
+      "from": "1c",
+      "to": "1a",
+      "kind": "default",
+      "weight": 1
+    },
+    {
+      "from": "2a",
+      "to": "3a",
+      "kind": "default",
+      "weight": 1
+    },
+    {
+      "from": "2b",
+      "to": "1a",
+      "kind": "default",
+      "weight": 1
+    },
+    {
+      "from": "3a",
+      "to": "3a",
+      "kind": "default",
+      "weight": 0.985
+    },
+    {
+      "from": "3a",
+      "to": "3b",
+      "kind": "default",
+      "weight": 0.01
+    },
+    {
+      "from": "3a",
+      "to": "2b",
+      "kind": "default",
+      "weight": 0.005
+    },
+    {
+      "from": "3b",
+      "to": "3b",
+      "kind": "default",
+      "weight": 0.1
+    },
+    {
+      "from": "3b",
+      "to": "3a",
+      "kind": "default",
+      "weight": 0.9
+    },
+    {
+      "from": "4a",
+      "to": "timeout",
+      "kind": "default",
+      "weight": 1
+    },
+    {
+      "from": "4b",
+      "to": "1b",
+      "kind": "default",
+      "weight": 1
+    },
+    {
+      "from": "5a",
+      "to": "5b",
+      "kind": "default",
+      "weight": 1
+    },
+    {
+      "from": "5b",
+      "to": "5c",
+      "kind": "default",
+      "weight": 1
+    },
+    {
+      "from": "5d",
+      "to": "1a",
+      "kind": "default",
+      "weight": 1
+    },
+    {
+      "from": "6a",
+      "to": "6b",
+      "kind": "default",
+      "weight": 1
+    },
+    {
+      "from": "6c",
+      "to": "1a",
+      "kind": "default",
+      "weight": 1
+    },
+    {
+      "from": "7a",
+      "to": "7b",
+      "kind": "default",
+      "weight": 1
+    },
+    {
+      "from": "7c",
+      "to": "1a",
+      "kind": "default",
+      "weight": 1
+    },
+    {
+      "from": "1a",
+      "to": "1d",
+      "kind": "interrupt",
+      "guard": "pet"
+    },
+    {
+      "from": "1b",
+      "to": "1d",
+      "kind": "interrupt",
+      "guard": "pet"
+    },
+    {
+      "from": "1c",
+      "to": "1d",
+      "kind": "interrupt",
+      "guard": "pet"
+    },
+    {
+      "from": "1a",
+      "to": "4a",
+      "kind": "interrupt",
+      "guard": "goodbye"
+    },
+    {
+      "from": "1b",
+      "to": "4a",
+      "kind": "interrupt",
+      "guard": "goodbye"
+    },
+    {
+      "from": "3a",
+      "to": "3c",
+      "kind": "interrupt",
+      "guard": "pet"
+    },
+    {
+      "from": "3b",
+      "to": "3c",
+      "kind": "interrupt",
+      "guard": "pet"
+    },
+    {
+      "from": "3a",
+      "to": "2b",
+      "kind": "interrupt",
+      "guard": "event"
+    },
+    {
+      "from": "3b",
+      "to": "2b",
+      "kind": "interrupt",
+      "guard": "event"
+    },
+    {
+      "from": "1a",
+      "to": "5a",
+      "kind": "interrupt",
+      "guard": "photoShowRequested"
+    },
+    {
+      "from": "1a",
+      "to": "6a",
+      "kind": "interrupt",
+      "guard": "photoTakeRequested"
+    },
+    {
+      "from": "1a",
+      "to": "7a",
+      "kind": "interrupt",
+      "guard": "bibleReadRequested"
+    },
+    {
+      "from": "1b",
+      "to": "1a",
+      "kind": "afterClip",
+      "guard": "event"
+    },
+    {
+      "from": "1d",
+      "to": "1d",
+      "kind": "afterClip",
+      "guard": "pet && !event"
+    },
+    {
+      "from": "1d",
+      "to": "1a",
+      "kind": "afterClip",
+      "guard": "event"
+    },
+    {
+      "from": "1d",
+      "to": "1c",
+      "kind": "afterClip",
+      "guard": "!pet"
+    },
+    {
+      "from": "3c",
+      "to": "3c",
+      "kind": "afterClip",
+      "guard": "pet && !event"
+    },
+    {
+      "from": "3c",
+      "to": "3a",
+      "kind": "afterClip",
+      "guard": "!pet || event"
+    },
+    {
+      "from": "5c",
+      "to": "5c",
+      "kind": "afterClip",
+      "guard": "showPhoto"
+    },
+    {
+      "from": "5c",
+      "to": "5d",
+      "kind": "afterClip",
+      "guard": "!showPhoto"
+    },
+    {
+      "from": "6b",
+      "to": "6b",
+      "kind": "afterClip",
+      "guard": "takingPhoto"
+    },
+    {
+      "from": "6b",
+      "to": "6c",
+      "kind": "afterClip",
+      "guard": "!takingPhoto"
+    },
+    {
+      "from": "7b",
+      "to": "7b",
+      "kind": "afterClip",
+      "guard": "reading"
+    },
+    {
+      "from": "7b",
+      "to": "7c",
+      "kind": "afterClip",
+      "guard": "!reading"
+    },
+    {
+      "from": "timeout",
+      "to": "4b",
+      "kind": "recall",
+      "guard": "manualRecall || timedAwayExpired"
+    }
+  ],
+  "eventTargets": {
+    "photoShow": "5a",
+    "photoTake": "6a",
+    "bibleRead": "7a"
+  },
+  "priorityProposal": [
+    "goodbye/explicit dismissal where permitted",
+    "pending page-2 event",
+    "pet",
+    "default"
+  ],
+  "weightPolicy": "relative-normalized-at-clip-end",
+  "knownNotes": [
+    "1a black weights sum to 1.02; preserved literally and normalized as relative weights, not silently edited.",
+    "Single black arrows without a written weight are treated as deterministic weight 1.",
+    "Check red guards on entry before issuing play; skipped gateway clips render no frame.",
+    "No implicit event-interrupt edges are added to other states.",
+    "Camera captured clears takingPhoto immediately; purple exit waits for the current 6b clip."
+  ]
+}

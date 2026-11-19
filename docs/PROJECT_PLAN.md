@@ -1,5 +1,7 @@
 # Watercolor duck desktop pet — current implementation plan
 
+> Release planning update (November 19, 2026): [SOMBRERO_V1_PLAN.md](SOMBRERO_V1_PLAN.md) is authoritative for the first sombrero release, including the visually reviewed numbered-lettered diagram, two-laptop Python messaging, camera, and Bible reader. The material below records the implemented five-state prototype and its earlier scope; its exclusions and random weights do not constrain the new release plan. The new features are planned, not implemented.
+
 Updated November 18, 2026. Current scope follows BACKEND_HANDOFF.md and the user's five-state correction. The earlier 12 fps preview/Electron proposal is preserved in docs/archive/PROJECT_PLAN_12fps_preview_superseded.md.
 
 ## Scope and architecture

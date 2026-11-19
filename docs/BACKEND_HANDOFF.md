@@ -1,5 +1,7 @@
 # macOS desktop pet — backend and sprite controller handoff
 
+> Release planning update (November 19, 2026): [SOMBRERO_V1_PLAN.md](SOMBRERO_V1_PLAN.md) is authoritative for the first sombrero release, including the visually reviewed numbered-lettered diagram, two-laptop Python messaging, camera, and Bible reader. The material below records the implemented five-state prototype and its earlier scope; its exclusions and random weights do not constrain the new release plan. The new features are planned, not implemented.
+
 Updated November 18, 2026.
 
 **Implementation resumed at the user’s request.** The first source table, including sitting idle (5), is authoritative. The five-state controller, imported transparent frames, native renderer, resource fallback, and app bundle are implemented. See PROJECT_PLAN.md for the current build and validation record.
