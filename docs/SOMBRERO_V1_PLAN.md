@@ -12,6 +12,16 @@ Related data: `docs/sombrero-v1-state-graph.json` transcribes the colored arrows
 
 Current cadence remains 6 drawings/second: a 24 fps timeline with each drawing held for four frames. Each animation has its own complete sprite sheet identified by a string ID such as `3c`. Timeout has no sprite or active duck window. Final sheet manifests will record actual frame order/count, alpha, registration, and holds; do not assume uniform grids or interpolate missing drawings.
 
+## Global typography
+
+Use **Matcha Style** as the global app font for the speech-bubble menu, control-panel menus, notification text, polaroid viewer/composer, rich-text editor defaults, and Bible reader. Share `AppTypography` from PetAssets; use its font factory for every new native control or attributed-string default. Current sizes are 16 pt for menus and 18 pt for body text, with sizing adjusted for readability as the new UI is implemented. Rich-text formatting remains supported; the base face is Matcha Style.
+
+The supplied `Downloads/matcha_style/Matcha Style.otf` is imported unchanged as `Sources/PetAssets/Resources/Fonts/MatchaStyle.otf`. Bundle the OTF once rather than registering both OTF and TTF versions of the same face. Keep the supplied `More Info.txt` and `Read Me.pdf` alongside it as `More-Info.txt` and `Read-Me.pdf`. The supplied notice permits personal and commercial use.
+
+CoreText registers the font for this app process on startup; no system font installation is required. `AppTypography.installDefaults()` sets the application user font, and existing native menus/submenus explicitly use the shared font. Future bubble/reader/composer implementations must use it explicitly too; native system defaults alone do not style every AppKit control. Unsupported glyphs can use normal font fallback, and a missing/corrupt font resource falls back to the system font so recovery controls remain readable.
+
+This typography import is implemented in the current prototype. The other first-release features described here remain planned until implemented.
+
 ## State inventory and black arrows
 
 Black arrows run only at clip completion when no permitted red/purple condition wins. Roll once per completed clip, including repeats. Single-arrow paths are deterministic. Preserve the handwritten values as relative weights, then normalize each state's eligible black edges.
