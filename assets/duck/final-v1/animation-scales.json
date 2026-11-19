@@ -11,7 +11,7 @@
   },
   "transformConvention": "canvasX = sourceX * scale + offsetX; canvasY = sourceY * scale + offsetY",
   "units": "source and canvas coordinates are pixels; scale is uniform in both axes",
-  "policy": "Exactly one fixed scale and translation per animation. No per-frame resizing, repositioning, warping, interpolation, or source-image changes.",
+  "policy": "Exactly one fixed scale and translation per animation during playback. No per-frame resizing, repositioning, warping, or interpolation during playback. 4a source-frame registration was corrected with lossless integer translations recorded in its sourcePositionCorrections.",
   "review": {
     "reviewedAtUTC": "2026-11-19T08:28:28.345137+00:00",
     "method": "First two and last two frames of every available clip visually reviewed on contact sheets; all frame alpha bounds checked for canvas containment. Uniform transforms fitted across authored graph adjacency using endpoint head width, silhouette height, head-center position, and baseline. Transformed seam comparisons visually reviewed.",
@@ -19,13 +19,15 @@
       "1a",
       "1b",
       "1c",
+      "1d",
       "2a",
       "2b",
       "3a",
       "3b",
+      "3c",
       "4a"
     ],
-    "uniqueSampleCount": 31,
+    "uniqueSampleCount": 39,
     "graphPath": "docs/sombrero-v1-state-graph.json",
     "graphSHA256": "0a5aac90765ef6face80704283db5b52f283bbe51fa51f7c902c72e6151099a9",
     "measurementDetails": "Geometry uses alpha \u226532. Head width/center use the upper 60% of the alpha silhouette, filtered for yellow watercolor pigment (R>130, G>100, R-B>35, G-B>15). All endpoint pair equations use equal weight; head width and silhouette height are normalized by 290 and 489 source pixels, with 1a scale fixed at 1.4. X/Y offsets fit endpoint head centers and baselines. Canvas expanded to include ALL nonzero alpha across every frame, including alpha 1\u20137 speckles in 4a.",
@@ -34,6 +36,30 @@
       "The 2b seated-to-standing drawings change head-to-body proportion; its transform is a best-fit compromise across both incoming and outgoing neighbors.",
       "4a ends in fading smoke and an empty frame; its scale is determined from standing entry, while full-motion bounds determine canvas padding.",
       "Missing states have identity values only as placeholders and must not be treated as calibrated. Re-review after replacing animation frames; sample hashes/counts identify stale calibration."
+    ],
+    "updates": [
+      {
+        "reviewedAtUTC": "2026-11-19T20:56:44.041433+00:00",
+        "animations": [
+          "1d",
+          "3c"
+        ],
+        "method": "First two and last two frames visually reviewed against adjacent calibrated standing/sitting clips. New transforms use the existing head-width/silhouette-height least-squares metric; existing transforms and canvas were held fixed. Every source frame checked for nonzero-alpha canvas containment.",
+        "checkedFrameCounts": {
+          "1d": 18,
+          "3c": 9
+        }
+      },
+      {
+        "reviewedAtUTC": "2026-11-19T21:07:58.318722+00:00",
+        "animations": [
+          "4a"
+        ],
+        "method": "All 27 source frames visually reviewed; duck leg shafts, repeated cloud outlines, and sparkles used to correct positional drift with integer translations. Shared-canvas first-two-frame mean entry head center and baseline preserved. Exact RGBA values and total alpha preserved for every nontransparent source pixel; no clipping, resampling, or size changes.",
+        "checkedFrameCounts": {
+          "4a": 27
+        }
+      }
     ]
   },
   "animations": {
@@ -485,14 +511,154 @@
       "notes": "Aligned across 1a/1b\u21921c and 1c\u21921a. Waving/bouncing in the penultimate frame is authored motion and is not individually recentered."
     },
     "1d": {
-      "status": "missing",
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
-      "sourceFrameCount": 0,
-      "sourceFrameSize": null,
-      "sampleFrames": [],
-      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+      "status": "calibrated",
+      "scale": 1.450183,
+      "offsetX": 346.226572,
+      "offsetY": 372.004676,
+      "sourceFrameCount": 18,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sourceFrameSizes": [
+        {
+          "width": 700,
+          "height": 500
+        }
+      ],
+      "sampleFrames": [
+        {
+          "file": "1d0000.png",
+          "role": "first",
+          "index": 0,
+          "width": 700,
+          "height": 500,
+          "sha256": "bf5c27e653c52b2315392f7bf89b3486a1a162ec06e9609f7a08ec6c12eb5e67",
+          "alphaBounds": [
+            185,
+            53,
+            507,
+            468
+          ],
+          "alpha32Bounds": [
+            185,
+            53,
+            507,
+            468
+          ],
+          "alignmentFeatures": {
+            "headWidth": 310,
+            "headCenterX": 347.0,
+            "silhouetteHeight": 415,
+            "baselineY": 468
+          }
+        },
+        {
+          "file": "1d0001.png",
+          "role": "second",
+          "index": 1,
+          "width": 700,
+          "height": 500,
+          "sha256": "082dc2ea4256725de2987d36ceca18ad5dae2e2e861da7d15484fff6e1851b9b",
+          "alphaBounds": [
+            195,
+            61,
+            512,
+            468
+          ],
+          "alpha32Bounds": [
+            195,
+            61,
+            512,
+            468
+          ],
+          "alignmentFeatures": {
+            "headWidth": 316,
+            "headCenterX": 354.0,
+            "silhouetteHeight": 407,
+            "baselineY": 468
+          }
+        },
+        {
+          "file": "1d0016.png",
+          "role": "penultimate",
+          "index": 16,
+          "width": 700,
+          "height": 500,
+          "sha256": "3f37e31cebd19c3265ea4a47847444a1d0f396c167762ff3b6fcc895453a462c",
+          "alphaBounds": [
+            189,
+            48,
+            503,
+            465
+          ],
+          "alpha32Bounds": [
+            189,
+            48,
+            503,
+            465
+          ],
+          "alignmentFeatures": {
+            "headWidth": 283,
+            "headCenterX": 330.5,
+            "silhouetteHeight": 417,
+            "baselineY": 465
+          }
+        },
+        {
+          "file": "1d0017.png",
+          "role": "last",
+          "index": 17,
+          "width": 700,
+          "height": 500,
+          "sha256": "7abb28882e92061cf2602cb1962ed5c3dea72cff2e80f972606401b52544bf69",
+          "alphaBounds": [
+            195,
+            61,
+            512,
+            468
+          ],
+          "alpha32Bounds": [
+            195,
+            61,
+            512,
+            468
+          ],
+          "alignmentFeatures": {
+            "headWidth": 316,
+            "headCenterX": 354.0,
+            "silhouetteHeight": 407,
+            "baselineY": 468
+          }
+        }
+      ],
+      "sourceInventorySHA256": "b5ada742e28f390ec7a24f3145b7ab737926fef3ed78c75acc2aaa1486dbdb78",
+      "sourceInventoryHashMethod": "SHA256 of compact JSON array of {file,sha256}, naturally ordered, with sorted object keys.",
+      "sourceAlphaBounds": [
+        61,
+        17,
+        656,
+        479
+      ],
+      "sourceVisibleBounds": [
+        185,
+        45,
+        523,
+        479
+      ],
+      "transformedAlphaBounds": [
+        434.688,
+        396.658,
+        1297.547,
+        1066.642
+      ],
+      "transformedVisibleBounds": [
+        614.51,
+        437.263,
+        1104.672,
+        1066.642
+      ],
+      "notes": "Aligned to fixed 1a/1b/1c transforms at incoming pet edges and outgoing 1a/1c edges. Petting has an authored tilted head, bent torso and shorter silhouette; one clip-wide transform preserves this pose and its flutter marks instead of stretching it to a neutral standing height."
     },
     "2a": {
       "status": "calibrated",
@@ -1091,20 +1257,160 @@
       "notes": "Aligned across 3a\u21943b and 3b\u21922b. The look/lean motion and its slight end-frame height variation are retained."
     },
     "3c": {
-      "status": "missing",
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
-      "sourceFrameCount": 0,
-      "sourceFrameSize": null,
-      "sampleFrames": [],
-      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+      "status": "calibrated",
+      "scale": 1.5927,
+      "offsetX": 244.223748,
+      "offsetY": 296.266691,
+      "sourceFrameCount": 9,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sourceFrameSizes": [
+        {
+          "width": 700,
+          "height": 500
+        }
+      ],
+      "sampleFrames": [
+        {
+          "file": "3c0000.png",
+          "role": "first",
+          "index": 0,
+          "width": 700,
+          "height": 500,
+          "sha256": "820ec531e491ac4a964f931f8b58f78d39e29c74137fd2c197973615c9a10245",
+          "alphaBounds": [
+            209,
+            95,
+            532,
+            476
+          ],
+          "alpha32Bounds": [
+            209,
+            95,
+            532,
+            476
+          ],
+          "alignmentFeatures": {
+            "headWidth": 273,
+            "headCenterX": 371.5,
+            "silhouetteHeight": 381,
+            "baselineY": 476
+          }
+        },
+        {
+          "file": "3c0001.png",
+          "role": "second",
+          "index": 1,
+          "width": 700,
+          "height": 500,
+          "sha256": "af07dab0ce231737aafeabadd056e62dc49929846aeec5a89ec5b9b08dfe44aa",
+          "alphaBounds": [
+            205,
+            96,
+            526,
+            476
+          ],
+          "alpha32Bounds": [
+            205,
+            96,
+            526,
+            476
+          ],
+          "alignmentFeatures": {
+            "headWidth": 278,
+            "headCenterX": 379.0,
+            "silhouetteHeight": 380,
+            "baselineY": 476
+          }
+        },
+        {
+          "file": "3c0007.png",
+          "role": "penultimate",
+          "index": 7,
+          "width": 700,
+          "height": 500,
+          "sha256": "e6bac1a4e37ad8380b019cb7d98419407bdbed455280be6b3b57291807fc5590",
+          "alphaBounds": [
+            209,
+            88,
+            532,
+            476
+          ],
+          "alpha32Bounds": [
+            209,
+            88,
+            532,
+            476
+          ],
+          "alignmentFeatures": {
+            "headWidth": 276,
+            "headCenterX": 393.0,
+            "silhouetteHeight": 388,
+            "baselineY": 476
+          }
+        },
+        {
+          "file": "3c0008.png",
+          "role": "last",
+          "index": 8,
+          "width": 700,
+          "height": 500,
+          "sha256": "9749f78554da910ad3c0ca27fe7ada030c177cdcd55df5bb0f4d92f0d71080ae",
+          "alphaBounds": [
+            205,
+            99,
+            528,
+            477
+          ],
+          "alpha32Bounds": [
+            205,
+            99,
+            528,
+            477
+          ],
+          "alignmentFeatures": {
+            "headWidth": 271,
+            "headCenterX": 380.5,
+            "silhouetteHeight": 378,
+            "baselineY": 477
+          }
+        }
+      ],
+      "sourceInventorySHA256": "c78a3db5888552a6e16db4a2ffb3b79842a6571080dc22d839430338ba0bfd97",
+      "sourceInventoryHashMethod": "SHA256 of compact JSON array of {file,sha256}, naturally ordered, with sorted object keys.",
+      "sourceAlphaBounds": [
+        184,
+        52,
+        532,
+        477
+      ],
+      "sourceVisibleBounds": [
+        184,
+        52,
+        532,
+        477
+      ],
+      "transformedAlphaBounds": [
+        537.281,
+        379.087,
+        1091.54,
+        1055.985
+      ],
+      "transformedVisibleBounds": [
+        537.281,
+        379.087,
+        1091.54,
+        1055.985
+      ],
+      "notes": "Aligned to fixed sitting 3a/3b transforms at incoming pet edges and outgoing 3a edge. The excited head tilt, flapping wings and gesture strokes are retained with one clip-wide scale and offset."
     },
     "4a": {
       "status": "calibrated",
       "scale": 2.484649,
-      "offsetX": -17.58271,
-      "offsetY": 24.139534,
+      "offsetX": -23.794332,
+      "offsetY": 45.259051,
       "sourceFrameCount": 27,
       "sourceFrameSize": {
         "width": 700,
@@ -1123,24 +1429,24 @@
           "index": 0,
           "width": 700,
           "height": 500,
-          "sha256": "b875b191e73619aea53c0d08222acf0aa4e904b2a6d6e16b5677590bb7eaf351",
+          "sha256": "97fbfe6b8c3517b96c74f98cc1e0460d2f12bc999080a457985739ac05b0d39c",
           "alphaBounds": [
             272,
-            131,
+            123,
             429,
-            412
+            404
           ],
           "alpha32Bounds": [
             272,
-            131,
+            123,
             429,
-            412
+            404
           ],
           "alignmentFeatures": {
             "headWidth": 156,
             "headCenterX": 350.0,
             "silhouetteHeight": 281,
-            "baselineY": 412
+            "baselineY": 404
           }
         },
         {
@@ -1149,24 +1455,24 @@
           "index": 1,
           "width": 700,
           "height": 500,
-          "sha256": "9822eceeeb6e1ee5e6ca72d630bca725a7aee2574a3700c70fbb2d3b890e015c",
+          "sha256": "b8d946178e915ca3ed3b4591972baa516b6974d386d9cb8a64632c62eb6f366c",
           "alphaBounds": [
-            268,
-            132,
-            452,
-            414
+            273,
+            123,
+            457,
+            405
           ],
           "alpha32Bounds": [
-            268,
-            132,
-            452,
-            414
+            273,
+            123,
+            457,
+            405
           ],
           "alignmentFeatures": {
             "headWidth": 162,
-            "headCenterX": 349.0,
+            "headCenterX": 354.0,
             "silhouetteHeight": 282,
-            "baselineY": 414
+            "baselineY": 405
           }
         },
         {
@@ -1175,18 +1481,18 @@
           "index": 25,
           "width": 700,
           "height": 500,
-          "sha256": "dc533b241f868c28c51697ce7c161e957b823f612d73858f4f861060c0cb48cc",
+          "sha256": "c99fb0d54587768013689fae029aa7211be7dd110c56c69601a78499800dcaa9",
           "alphaBounds": [
-            329,
-            166,
-            494,
-            335
+            311,
+            156,
+            476,
+            325
           ],
           "alpha32Bounds": [
-            329,
-            166,
-            494,
-            304
+            311,
+            156,
+            476,
+            294
           ],
           "alignmentFeatures": null
         },
@@ -1202,32 +1508,143 @@
           "alignmentFeatures": null
         }
       ],
-      "sourceInventorySHA256": "38c4a6db5b36115a6dc3828f090358980fbedc8fd4cff8c96f2db8156c83cba2",
+      "sourceInventorySHA256": "a002ef788616cffe2646705613eeb6be83e3cd55911a17b8f35e8ff0e2de7805",
       "sourceAlphaBounds": [
         29,
-        13,
-        675,
+        5,
+        673,
         500
       ],
       "sourceVisibleBounds": [
         198,
-        70,
-        581,
-        431
+        60,
+        564,
+        420
       ],
       "transformedAlphaBounds": [
-        54.472,
-        56.44,
-        1659.555,
-        1266.464
+        48.26,
+        57.682,
+        1648.374,
+        1287.584
       ],
       "transformedVisibleBounds": [
-        474.378,
-        198.065,
-        1425.998,
-        1095.023
+        468.166,
+        194.338,
+        1377.548,
+        1088.812
       ],
-      "notes": "Standing entry aligned to 1a/1b. Final frames are intentionally fading smoke/sparks and then empty, not a standing scale reference. Canvas padding retains the raised wing, smoke, and even very faint nonzero-alpha source speckles."
+      "notes": "Standing entry aligned to 1a/1b. Final frames are intentionally fading smoke/sparks and then empty, not a standing scale reference. Canvas padding retains the raised wing, smoke, and even very faint nonzero-alpha source speckles. Source positions stabilized on 2026-11-19; clip placement and calibration fingerprints refreshed after whole-pixel translations.",
+      "sourceInventoryHashMethod": "SHA256 of UTF-8 lines filename:sha256 followed by newline, ordered by filename.",
+      "sourcePositionCorrections": {
+        "method": "Integer translations anchored to grounded leg shafts while the duck is visible, then shared cloud contours and sparkles. No scaling, resampling, redrawing, or alpha changes. All nontransparent pixels retained.",
+        "canvasPadding": "Common upward translation of 8 pixels prevents clipping faint bottom-edge speckles when correcting the two raised smoke-entry frames; clip placement compensates for the new first-two-frame mean position.",
+        "frames": {
+          "4a0000.png": [
+            0,
+            -8
+          ],
+          "4a0001.png": [
+            5,
+            -9
+          ],
+          "4a0002.png": [
+            4,
+            -9
+          ],
+          "4a0003.png": [
+            2,
+            -9
+          ],
+          "4a0004.png": [
+            6,
+            -8
+          ],
+          "4a0005.png": [
+            6,
+            -8
+          ],
+          "4a0006.png": [
+            -4,
+            -8
+          ],
+          "4a0007.png": [
+            -2,
+            0
+          ],
+          "4a0008.png": [
+            -2,
+            0
+          ],
+          "4a0009.png": [
+            0,
+            -8
+          ],
+          "4a0010.png": [
+            -3,
+            -10
+          ],
+          "4a0011.png": [
+            -7,
+            -11
+          ],
+          "4a0012.png": [
+            -12,
+            -11
+          ],
+          "4a0013.png": [
+            -16,
+            -11
+          ],
+          "4a0014.png": [
+            -18,
+            -11
+          ],
+          "4a0015.png": [
+            -1,
+            -10
+          ],
+          "4a0016.png": [
+            -6,
+            -10
+          ],
+          "4a0017.png": [
+            -11,
+            -10
+          ],
+          "4a0018.png": [
+            -15,
+            -10
+          ],
+          "4a0019.png": [
+            -17,
+            -10
+          ],
+          "4a0020.png": [
+            -15,
+            -10
+          ],
+          "4a0021.png": [
+            1,
+            -10
+          ],
+          "4a0022.png": [
+            -2,
+            -10
+          ],
+          "4a0023.png": [
+            -9,
+            -10
+          ],
+          "4a0024.png": [
+            -14,
+            -10
+          ],
+          "4a0025.png": [
+            -18,
+            -10
+          ]
+        }
+      }
     },
     "4b": {
       "status": "missing",
@@ -1476,6 +1893,78 @@
       "headCenterDeltaPixels": -5.606,
       "headWidthDeltaPercent": 1.846,
       "silhouetteHeightDeltaPercent": -0.869
+    },
+    {
+      "from": "1a",
+      "to": "1d",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": 0.69,
+      "headCenterDeltaPixels": 4.166,
+      "headWidthDeltaPercent": 11.993,
+      "silhouetteHeightDeltaPercent": -12.849
+    },
+    {
+      "from": "1b",
+      "to": "1d",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": 0.091,
+      "headCenterDeltaPixels": 3.261,
+      "headWidthDeltaPercent": 14.509,
+      "silhouetteHeightDeltaPercent": -14.409
+    },
+    {
+      "from": "1c",
+      "to": "1d",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": 4.287,
+      "headCenterDeltaPixels": 10.978,
+      "headWidthDeltaPercent": 10.904,
+      "silhouetteHeightDeltaPercent": -14.117
+    },
+    {
+      "from": "1d",
+      "to": "1a",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": 1.485,
+      "headCenterDeltaPixels": 7.098,
+      "headWidthDeltaPercent": -6.361,
+      "silhouetteHeightDeltaPercent": 14.348
+    },
+    {
+      "from": "1d",
+      "to": "1c",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": 3.583,
+      "headCenterDeltaPixels": 11.307,
+      "headWidthDeltaPercent": -9.865,
+      "silhouetteHeightDeltaPercent": 16.75
+    },
+    {
+      "from": "3a",
+      "to": "3c",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": -1.397,
+      "headCenterDeltaPixels": -5.483,
+      "headWidthDeltaPercent": 3.193,
+      "silhouetteHeightDeltaPercent": -4.495
+    },
+    {
+      "from": "3b",
+      "to": "3c",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": 1.063,
+      "headCenterDeltaPixels": -9.22,
+      "headWidthDeltaPercent": 4.639,
+      "silhouetteHeightDeltaPercent": -5.185
+    },
+    {
+      "from": "3c",
+      "to": "3a",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": -0.334,
+      "headCenterDeltaPixels": -14.702,
+      "headWidthDeltaPercent": -1.957,
+      "silhouetteHeightDeltaPercent": 3.87
     }
   ]
 }
