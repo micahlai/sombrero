@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "output": "assets/duck/frame-by-frame/v1/previews/idle-and-pet.mp4",
+  "frames": 96,
+  "frameRate": "12/1",
+  "durationSeconds": 8,
+  "cyclesPerClip": 2,
+  "clips": [
+    {
+      "clipId": "idle.wait",
+      "frames": 24,
+      "uniquePixelHashes": 24
+    },
+    {
+      "clipId": "react.pet",
+      "frames": 24,
+      "uniquePixelHashes": 24
+    }
+  ],
+  "video": {
+    "width": 960,
+    "height": 640,
+    "r_frame_rate": "12/1",
+    "avg_frame_rate": "12/1",
+    "duration": "8.000000",
+    "nb_frames": "96"
+  },
+  "animationMethod": "individually-drawn-frames",
+  "transforms": "Full-frame positioning onto presentation background only"
+}

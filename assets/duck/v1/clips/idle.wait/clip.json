@@ -1,0 +1,610 @@
+{
+  "schemaVersion": 1,
+  "characterId": "watercolor-duck",
+  "referenceVersion": "duck-v1-nostrils",
+  "clipId": "idle.wait",
+  "canvas": {
+    "width": 512,
+    "height": 512
+  },
+  "groundPivot": {
+    "x": 256,
+    "y": 448
+  },
+  "frameRate": {
+    "numerator": 12,
+    "denominator": 1
+  },
+  "loop": true,
+  "entryPose": "neutral",
+  "exitPose": "neutral",
+  "safeInterruptionFrames": [
+    0,
+    47
+  ],
+  "fallbackClip": "idle.wait",
+  "sourceMasterVersion": "duck-master-v1.0",
+  "sourceMasterSha256": "39b2c145593dc8aae2b41a2b1fecbe83270dc5851a091f500f9a6ea697910fc3",
+  "authoring": "Shared watercolor raster parts with rigid face group and curved 12fps pose sampling; no independent per-frame image generation.",
+  "frames": [
+    {
+      "file": "idle.wait__000.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 348,
+          "y": 122
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__001.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 351.9116418514572,
+          "y": 123.51240814451637
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__002.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 355.6795678849304,
+          "y": 124.95993481368816
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__003.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 359.1941111120637,
+          "y": 126.28540256597805
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__004.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 362.3593375422845,
+          "y": 127.43327272960201
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__005.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365.09659591368546,
+          "y": 128.35401686777277
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__006.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 367.34682141232105,
+          "y": 129.00822094590947
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__007.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 369.0716453661281,
+          "y": 129.36989126746826
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__008.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 370.2534443834934,
+          "y": 129.42854318604893
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__009.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 370.8944872231313,
+          "y": 129.18982935888957
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__010.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 371.01531851052994,
+          "y": 128.67466923774154
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__011.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 370.6524806693755,
+          "y": 127.91703959760208
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__012.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 369.8556470019805,
+          "y": 126.96074608007866
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__013.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 368.6842398399276,
+          "y": 125.85559604973821
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__014.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 367.2036438770625,
+          "y": 124.6534233644076
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__015.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365.4811867803255,
+          "y": 123.40437857021216
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__016.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 363.5821268520498,
+          "y": 122.15380807853575
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__017.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 361.56593775957674,
+          "y": 120.93992623352301
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__018.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 359.48319471540594,
+          "y": 119.79236115126557
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__019.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 357.37333640326995,
+          "y": 118.73155173809214
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__020.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 355.2635050481278,
+          "y": 117.76890332883667
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__021.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 353.16856511150417,
+          "y": 116.90757517313605
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__022.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 351.09228598934817,
+          "y": 116.14376619571719
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__023.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 349.0295631997676,
+          "y": 115.46837163154636
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__024.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 346.9694602196124,
+          "y": 114.86888792493177
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__025.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 344.89878843096074,
+          "y": 114.33143795272638
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__026.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 342.80590863001356,
+          "y": 113.84277313522423
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__027.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 340.6844319311629,
+          "y": 113.39209158249739
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__028.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 338.53651483466626,
+          "y": 112.97250514684337
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__029.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 336.3754759377482,
+          "y": 112.58200570545202
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__030.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 334.22750513128926,
+          "y": 112.22382903798939
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__031.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 332.1322883168925,
+          "y": 111.90619083678104
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__032.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 330.14243309041206,
+          "y": 111.64146117838762
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__033.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 328.3216560983093,
+          "y": 111.44493106022018
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__034.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 326.7417817039824,
+          "y": 111.33338476587869
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__035.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 325.47870054700775,
+          "y": 111.32370643739746
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__036.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 324.6075365706069,
+          "y": 111.43171032575118
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__037.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 324.1973594691784,
+          "y": 111.67129817481154
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__038.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 324.30584334281076,
+          "y": 112.05393485263252
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__039.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 324.9743020490747,
+          "y": 112.58832533583856
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__040.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 326.223523079953,
+          "y": 113.28010493194613
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__041.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 328.0507755217265,
+          "y": 114.13134496952765
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__042.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 330.4282874439684,
+          "y": 115.13973714621521
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__043.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 333.3033784365136,
+          "y": 116.29744050693685
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__044.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 336.60029907071555,
+          "y": 117.58972630910907
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__045.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 340.22367842465025,
+          "y": 118.99369673616638
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__046.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 344.0633264922879,
+          "y": 120.47744143663249
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.wait__047.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 348,
+          "y": 122
+        }
+      },
+      "markers": [
+        "complete"
+      ],
+      "durationMs": 83.33333333333333
+    }
+  ],
+  "sourceReferenceSha256": "284d1c9d54fd373d19a8b5a7c7ea680f08df5252dc08ed275eda56ef507f4ca1"
+}

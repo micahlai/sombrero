@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "characterId": "watercolor-duck",
+  "referenceVersion": "duck-v1-nostrils",
+  "clipId": "activity.read.exit",
+  "canvas": {
+    "width": 512,
+    "height": 512
+  },
+  "groundPivot": {
+    "x": 256,
+    "y": 448
+  },
+  "frameRate": {
+    "numerator": 12,
+    "denominator": 1
+  },
+  "loop": false,
+  "entryPose": "book-held",
+  "exitPose": "neutral",
+  "safeInterruptionFrames": [
+    6
+  ],
+  "fallbackClip": "idle.wait",
+  "sourceMasterVersion": "duck-master-v1.0",
+  "sourceMasterSha256": "39b2c145593dc8aae2b41a2b1fecbe83270dc5851a091f500f9a6ea697910fc3",
+  "sourceReferenceSha256": "284d1c9d54fd373d19a8b5a7c7ea680f08df5252dc08ed275eda56ef507f4ca1",
+  "production": {
+    "masterManifest": "assets/duck/v1/source/master.json",
+    "method": "Shared painted source parts with exact twelve-fps transforms; fixed closed bill",
+    "propsBaked": true
+  },
+  "frames": [
+    {
+      "file": "activity.read.exit__000.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 386,
+          "rotationDeg": 0,
+          "scaleX": 0.25862068965517243,
+          "scaleY": 0.258974358974359
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "activity.read.exit__001.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 386,
+          "rotationDeg": 0,
+          "scaleX": 0.25862068965517243,
+          "scaleY": 0.258974358974359
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "activity.read.exit__002.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 397.4,
+          "rotationDeg": -0.5999999999999999,
+          "scaleX": 0.25862068965517243,
+          "scaleY": 0.258974358974359
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "activity.read.exit__003.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 420.2,
+          "rotationDeg": -1.8000000000000003,
+          "scaleX": 0.25862068965517243,
+          "scaleY": 0.258974358974359
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "activity.read.exit__004.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 448.7,
+          "rotationDeg": -3.3000000000000003,
+          "scaleX": 0.25862068965517243,
+          "scaleY": 0.258974358974359
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "activity.read.exit__005.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 477.2,
+          "rotationDeg": -4.800000000000001,
+          "scaleX": 0.25862068965517243,
+          "scaleY": 0.258974358974359
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "activity.read.exit__006.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        }
+      },
+      "markers": [
+        "neutral"
+      ],
+      "durationMs": 83.33333333333333
+    }
+  ]
+}

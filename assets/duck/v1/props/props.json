@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "referenceVersion": "duck-v1-nostrils",
+  "sourceBoard": "generated_images/exec-45626a1c-12ad-4d06-9fb8-8a4a35f2bdba.png",
+  "sourceBoardSize": {"width": 1774, "height": 887},
+  "authoring": "Generated once with the locked duck reference for watercolor continuity; technical crops preserve source pigment and alpha.",
+  "props": {
+    "book": {
+      "file": "book-open.png",
+      "sourceCrop": {"x":165,"y":275,"width":580,"height":390},
+      "size": {"width":580,"height":390},
+      "pivot": {"x":290,"y":290},
+      "contactLeft": {"x":105,"y":245},
+      "contactRight": {"x":475,"y":245},
+      "notes": "Open moss watercolor book with ivory pages and sparse nonverbal marks; no external text or integration."
+    },
+    "polaroid": {
+      "file": "polaroid.png",
+      "sourceCrop": {"x":1080,"y":165,"width":520,"height":520},
+      "size": {"width":520,"height":520},
+      "pivot": {"x":260,"y":410},
+      "contactLeft": {"x":70,"y":390},
+      "contactRight": {"x":455,"y":390},
+      "pictureSlot": {"x":65,"y":78,"width":390,"height":285},
+      "notes": "Fixed watercolor landscape picture; preserve opaque ivory border. Picture-slot metadata is local animation geometry only."
+    }
+  }
+}

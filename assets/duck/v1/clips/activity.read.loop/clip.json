@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "characterId": "watercolor-duck",
+  "referenceVersion": "duck-v1-nostrils",
+  "clipId": "activity.read.loop",
+  "canvas": {
+    "width": 512,
+    "height": 512
+  },
+  "groundPivot": {
+    "x": 256,
+    "y": 448
+  },
+  "frameRate": {
+    "numerator": 12,
+    "denominator": 1
+  },
+  "loop": true,
+  "entryPose": "book-held",
+  "exitPose": "book-held",
+  "safeInterruptionFrames": [
+    0,
+    4
+  ],
+  "fallbackClip": "idle.wait",
+  "sourceMasterVersion": "duck-master-v1.0",
+  "sourceMasterSha256": "39b2c145593dc8aae2b41a2b1fecbe83270dc5851a091f500f9a6ea697910fc3",
+  "sourceReferenceSha256": "284d1c9d54fd373d19a8b5a7c7ea680f08df5252dc08ed275eda56ef507f4ca1",
+  "production": {
+    "masterManifest": "assets/duck/v1/source/master.json",
+    "method": "Shared painted source parts with exact twelve-fps transforms; fixed closed bill",
+    "propsBaked": true
+  },
+  "frames": [
+    {
+      "file": "activity.read.loop__000.png",
+      "durationFrames": 12,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 386,
+          "rotationDeg": 0,
+          "scaleX": 0.25862068965517243,
+          "scaleY": 0.258974358974359
+        }
+      },
+      "markers": [
+        "book.ready"
+      ],
+      "durationMs": 1000
+    },
+    {
+      "file": "activity.read.loop__001.png",
+      "durationFrames": 6,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 386,
+          "rotationDeg": 0,
+          "scaleX": 0.25862068965517243,
+          "scaleY": 0.258974358974359
+        }
+      },
+      "markers": [],
+      "durationMs": 500
+    },
+    {
+      "file": "activity.read.loop__002.png",
+      "durationFrames": 6,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 386,
+          "rotationDeg": 0,
+          "scaleX": 0.25862068965517243,
+          "scaleY": 0.258974358974359
+        }
+      },
+      "markers": [],
+      "durationMs": 500
+    },
+    {
+      "file": "activity.read.loop__003.png",
+      "durationFrames": 2,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 386,
+          "rotationDeg": -2,
+          "scaleX": 0.25862068965517243,
+          "scaleY": 0.258974358974359
+        }
+      },
+      "markers": [
+        "page.turn"
+      ],
+      "durationMs": 166.66666666666666
+    },
+    {
+      "file": "activity.read.loop__004.png",
+      "durationFrames": 12,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 386,
+          "rotationDeg": 0,
+          "scaleX": 0.25862068965517243,
+          "scaleY": 0.258974358974359
+        }
+      },
+      "markers": [
+        "book.ready"
+      ],
+      "durationMs": 1000
+    }
+  ]
+}

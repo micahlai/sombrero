@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "characterId": "watercolor-duck",
+  "referenceVersion": "duck-v1-nostrils",
+  "stage": "native-macos-v2-sprite-controller",
+  "reference": {
+    "path": "generated_images/exec-0f994ff1-3130-4298-b10e-bbb99ffb5446.png",
+    "sha256": "284d1c9d54fd373d19a8b5a7c7ea680f08df5252dc08ed275eda56ef507f4ca1",
+    "width": 1217,
+    "height": 1293,
+    "gridColumns": 4,
+    "gridRows": 3,
+    "neutralPoseLabel": "01",
+    "purpose": "Visual model reference; not a registered runtime spritesheet"
+  },
+  "supersededReferences": [
+    "generated_images/exec-a8ed7ec8-06de-4a94-9b4a-a5b2c25be750.png",
+    "generated_images/exec-eea368e0-ce75-45c6-9de5-fbbacc3d79f7.png"
+  ],
+  "invariants": {
+    "head": "Large tall softly domed irregular silhouette",
+    "bill": "Broad low closed outline with central raised point; preserve reference shape",
+    "nostrilStrokeCount": 2,
+    "eyes": "Two sparse dark dash marks; closed-eye curve variants allowed",
+    "torso": "Small narrow vertical oval",
+    "wings": "Small angular flaps",
+    "legs": "Short thin legs and feet",
+    "paint": "Golden yellow watercolor head, deeper ochre torso, pale warm bill, dark brown linework",
+    "mouthAnimation": false,
+    "paperTexture": false
+  },
+  "plannedExport": {
+    "status": "Historical v1 preview contract; current runtime contract is currentProduction",
+    "frameWidth": 512,
+    "frameHeight": 512,
+    "standingGroundPivot": {
+      "x": 256,
+      "y": 448
+    },
+    "standingHeightApproxPx": 360,
+    "format": "RGBA PNG",
+    "colorSpace": "sRGB",
+    "background": "transparent",
+    "frameNames": "<clip-id>__<zero-based-three-digit-index>.png",
+    "frameRate": {
+      "numerator": 12,
+      "denominator": 1
+    },
+    "timing": "Positive integer durationFrames at exact12fps; initial24frames each durationFrames1",
+    "motionStyle": "Very noodly: loose arcs, soft torso bends, floppy wings, elastic anticipation and playful follow-through; preserve model identity"
+  },
+  "scope": {
+    "llm": false,
+    "remoteBackend": false,
+    "externalIntegrations": false,
+    "talking": "Gestures plus locally scripted chat bubble; no mouth movement",
+    "polaroid": "Illustrated prop animation with fixed placeholder picture"
+  },
+  "animationMethod": "individually-drawn-frames",
+  "generatorCapability": "Still-image tool drawing sequential sprite boards; not a video-generation model; underlying architecture undisclosed",
+  "supersededProductionDependencies": {
+    "cleanMaster": "assets/duck/v1/source/neutral.png",
+    "sharedLayerPack": "assets/duck/v1/source/master.json",
+    "sourceMasterVersion": "duck-master-v1.0",
+    "sourceMasterSha256": "39b2c145593dc8aae2b41a2b1fecbe83270dc5851a091f500f9a6ea697910fc3",
+    "validatedPilot": "assets/duck/v1/previews/idle-pilot.mp4",
+    "pilotContactSheet": "assets/duck/v1/previews/idle-pilot-contact-sheet.png",
+    "pilotReview": "Root reviewed neutral on white/charcoal, neutral/blink/look/pet contact frames, and ffprobe-confirmed exact12fps playback; first-pass production source accepted, not user-final art approval",
+    "artistFanoutReady": true
+  },
+  "archivedPreviewProduction": {
+    "outputRoot": "assets/duck/frame-by-frame/v1",
+    "clips": [
+      "idle.wait",
+      "react.pet"
+    ],
+    "frameRate": {
+      "numerator": 12,
+      "denominator": 1
+    },
+    "framesPerClip": 24,
+    "watercolor": "Baked into full-frame drawings; separate overlay optional",
+    "reviewGate": "User sees combined idle/pet MP4 and explicitly continues before shoo or peeking",
+    "furtherActionsAuthorized": false,
+    "preview": "assets/duck/frame-by-frame/v1/previews/idle-and-pet.mp4",
+    "validation": "passed-24-distinct-frames-per-clip-video96frames-12fps-8seconds"
+  },
+  "currentProduction": {
+    "outputRoot": "Sources/PetAssets/Resources/Duck",
+    "sourceRoot": "assets/duck/v2",
+    "timelineFPS": 24,
+    "drawingFPS": 6,
+    "holdFrames": 4,
+    "frameWidth": 320,
+    "frameHeight": 320,
+    "anchor": {
+      "x": 160,
+      "y": 288
+    },
+    "frameCounts": {
+      "1": 23,
+      "2": 25,
+      "3": 20,
+      "4": 20,
+      "5": 20
+    },
+    "furtherArtworkAuthorized": false
+  }
+}

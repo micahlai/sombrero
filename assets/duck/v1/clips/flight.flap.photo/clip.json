@@ -1,0 +1,835 @@
+{
+  "schemaVersion": 1,
+  "characterId": "watercolor-duck",
+  "referenceVersion": "duck-v1-nostrils",
+  "clipId": "flight.flap.photo",
+  "canvas": {
+    "width": 512,
+    "height": 512
+  },
+  "groundPivot": {
+    "x": 256,
+    "y": 448
+  },
+  "frameRate": {
+    "numerator": 12,
+    "denominator": 1
+  },
+  "loop": true,
+  "entryPose": "flight.photo.start",
+  "exitPose": "flight.photo.start",
+  "safeInterruptionFrames": [
+    0
+  ],
+  "fallbackClip": "idle.wait",
+  "rootMotion": {
+    "mode": "host-root",
+    "phase": "return",
+    "edgeClip": true,
+    "path": {
+      "kind": "cubicBezier",
+      "coordinateSpace": "normalizedEdgeToHome",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0.22,
+          -0.2
+        ],
+        [
+          0.64,
+          0.14
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    }
+  },
+  "sourceMaster": "assets/duck/v1/source/master.json",
+  "sourceMasterVersion": "duck-master-v1.0",
+  "sourceMasterSha256": "39b2c145593dc8aae2b41a2b1fecbe83270dc5851a091f500f9a6ea697910fc3",
+  "sourceReferenceSha256": "284d1c9d54fd373d19a8b5a7c7ea680f08df5252dc08ed275eda56ef507f4ca1",
+  "authoring": {
+    "technique": "shared-painted-part-animation",
+    "faceArticulation": false,
+    "pigmentRerendered": false,
+    "frameTransforms": [
+      {
+        "root": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "head": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "torso": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0,
+          "bendAnchor": 0
+        },
+        "wing_left": {
+          "x": 6,
+          "y": 14,
+          "rotationDeg": -18,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 1
+        },
+        "wing_right": {
+          "x": -6,
+          "y": 14,
+          "rotationDeg": 18,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 0
+        },
+        "leg_left": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": -9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "leg_right": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        }
+      },
+      {
+        "root": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "head": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": -1,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "torso": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": -2,
+          "skewXDeg": 0,
+          "bendAnchor": 0
+        },
+        "wing_left": {
+          "x": 6,
+          "y": 14,
+          "rotationDeg": -16,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 1
+        },
+        "wing_right": {
+          "x": -6,
+          "y": 14,
+          "rotationDeg": 16,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 0
+        },
+        "leg_left": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": -9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "leg_right": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        }
+      },
+      {
+        "root": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "head": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": -2,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "torso": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": -3,
+          "skewXDeg": 0,
+          "bendAnchor": 0
+        },
+        "wing_left": {
+          "x": 6,
+          "y": 14,
+          "rotationDeg": -14,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 1
+        },
+        "wing_right": {
+          "x": -6,
+          "y": 14,
+          "rotationDeg": 14,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 0
+        },
+        "leg_left": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": -9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "leg_right": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        }
+      },
+      {
+        "root": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "head": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": -1,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "torso": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": -1,
+          "skewXDeg": 0,
+          "bendAnchor": 0
+        },
+        "wing_left": {
+          "x": 6,
+          "y": 14,
+          "rotationDeg": -18,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 1
+        },
+        "wing_right": {
+          "x": -6,
+          "y": 14,
+          "rotationDeg": 18,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 0
+        },
+        "leg_left": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": -9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "leg_right": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        }
+      },
+      {
+        "root": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "head": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "torso": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 2,
+          "skewXDeg": 0,
+          "bendAnchor": 0
+        },
+        "wing_left": {
+          "x": 6,
+          "y": 14,
+          "rotationDeg": -20,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 1
+        },
+        "wing_right": {
+          "x": -6,
+          "y": 14,
+          "rotationDeg": 20,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 0
+        },
+        "leg_left": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": -9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "leg_right": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        }
+      },
+      {
+        "root": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "head": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 1,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "torso": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 3,
+          "skewXDeg": 0,
+          "bendAnchor": 0
+        },
+        "wing_left": {
+          "x": 6,
+          "y": 14,
+          "rotationDeg": -22,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 1
+        },
+        "wing_right": {
+          "x": -6,
+          "y": 14,
+          "rotationDeg": 22,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 0
+        },
+        "leg_left": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": -9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "leg_right": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        }
+      },
+      {
+        "root": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "head": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 1,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "torso": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 1,
+          "skewXDeg": 0,
+          "bendAnchor": 0
+        },
+        "wing_left": {
+          "x": 6,
+          "y": 14,
+          "rotationDeg": -20,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 1
+        },
+        "wing_right": {
+          "x": -6,
+          "y": 14,
+          "rotationDeg": 20,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 0
+        },
+        "leg_left": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": -9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "leg_right": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        }
+      },
+      {
+        "root": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "head": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "torso": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0,
+          "bendAnchor": 0
+        },
+        "wing_left": {
+          "x": 6,
+          "y": 14,
+          "rotationDeg": -18,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 1
+        },
+        "wing_right": {
+          "x": -6,
+          "y": 14,
+          "rotationDeg": 18,
+          "scaleX": 1,
+          "scaleY": 1.1,
+          "bendPx": 5.4,
+          "skewXDeg": 0,
+          "bendAxis": "y",
+          "bendAnchor": 0
+        },
+        "leg_left": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": -9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        },
+        "leg_right": {
+          "x": 0,
+          "y": 0,
+          "rotationDeg": 9,
+          "scaleX": 1,
+          "scaleY": 1,
+          "bendPx": 0,
+          "skewXDeg": 0
+        }
+      }
+    ]
+  },
+  "frames": [
+    {
+      "file": "flight.flap.photo__000.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 348,
+          "y": 122
+        },
+        "prop": {
+          "x": 256,
+          "y": 413,
+          "rotationDeg": 0,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 372.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": 0
+        }
+      },
+      "markers": [
+        "loopStart"
+      ],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "flight.flap.photo__001.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 344.722,
+          "y": 120.423
+        },
+        "prop": {
+          "x": 256,
+          "y": 413,
+          "rotationDeg": 0,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 372.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": 0
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "flight.flap.photo__002.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 341.418,
+          "y": 118.903
+        },
+        "prop": {
+          "x": 256,
+          "y": 413,
+          "rotationDeg": 0,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 372.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": 0
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "flight.flap.photo__003.png",
+      "durationFrames": 2,
+      "attachments": {
+        "bubble": {
+          "x": 344.722,
+          "y": 120.423
+        },
+        "prop": {
+          "x": 256,
+          "y": 413,
+          "rotationDeg": 0,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 372.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": 0
+        }
+      },
+      "markers": [],
+      "durationMs": 166.66666666666666
+    },
+    {
+      "file": "flight.flap.photo__004.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 348,
+          "y": 122
+        },
+        "prop": {
+          "x": 256,
+          "y": 413,
+          "rotationDeg": 0,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 372.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": 0
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "flight.flap.photo__005.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 351.25,
+          "y": 123.634
+        },
+        "prop": {
+          "x": 256,
+          "y": 413,
+          "rotationDeg": 0,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 372.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": 0
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "flight.flap.photo__006.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 351.25,
+          "y": 123.634
+        },
+        "prop": {
+          "x": 256,
+          "y": 413,
+          "rotationDeg": 0,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 372.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": 0
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "flight.flap.photo__007.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 348,
+          "y": 122
+        },
+        "prop": {
+          "x": 256,
+          "y": 413,
+          "rotationDeg": 0,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 372.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": 0
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    }
+  ]
+}

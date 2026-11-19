@@ -1,0 +1,701 @@
+{
+  "schemaVersion": 1,
+  "characterId": "watercolor-duck",
+  "referenceVersion": "duck-v1-nostrils",
+  "animationMethod": "individually-drawn-frames",
+  "clipId": "react.pet",
+  "frameRate": {
+    "numerator": 12,
+    "denominator": 1
+  },
+  "canvas": {
+    "width": 512,
+    "height": 512
+  },
+  "groundPivot": {
+    "x": 256,
+    "y": 448
+  },
+  "loop": false,
+  "entryPose": "neutral-redrawn",
+  "exitPose": "neutral-redrawn",
+  "safeInterruptionFrames": [
+    0,
+    23
+  ],
+  "sourceBoard": {
+    "path": "generated_images/exec-e78e25f8-375b-4269-bb96-63533414fc4d.png",
+    "sha256": "a3b2d121822cd6e91571880f09e41bdebe6430387720656688698b32e8bab0fc",
+    "width": 1024,
+    "height": 1536,
+    "columns": 4,
+    "rows": 6,
+    "order": "row-major",
+    "generatedFrom": "generated_images/exec-0f994ff1-3130-4298-b10e-bbb99ffb5446.png"
+  },
+  "acting": "Unseen petting from upper right; anticipatory lean, comfortable closed eyes, loose wing wiggle, soft body bends, follow-through, neutral return. No hand or bill articulation.",
+  "technicalProcessing": {
+    "gridSlicingOnly": true,
+    "uniformExportCellSize": 410,
+    "uniformScale": 1.6015625,
+    "perFrameTranslationOnly": true,
+    "alphaCleanup": "Clear only background quantization alpha <=1 and hidden RGB; preserve all source paint alpha >=2",
+    "noRig": true,
+    "noTween": true,
+    "noPerPartTransform": true
+  },
+  "frames": [
+    {
+      "file": "react.pet__000.png",
+      "durationFrames": 1,
+      "markers": [
+        "neutral"
+      ],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 0,
+          "top": 0,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 132,
+        "sourceFootBaseline": 253,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 45,
+          "y": 43
+        },
+        "clearedQuantizationPixels": 36255
+      }
+    },
+    {
+      "file": "react.pet__001.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 256,
+          "top": 0,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 127,
+        "sourceFootBaseline": 253,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 53,
+          "y": 43
+        },
+        "clearedQuantizationPixels": 34680
+      }
+    },
+    {
+      "file": "react.pet__002.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 512,
+          "top": 0,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 110,
+        "sourceFootBaseline": 252,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 80,
+          "y": 44
+        },
+        "clearedQuantizationPixels": 35595
+      }
+    },
+    {
+      "file": "react.pet__003.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 768,
+          "top": 0,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 109,
+        "sourceFootBaseline": 252,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 81,
+          "y": 44
+        },
+        "clearedQuantizationPixels": 36645
+      }
+    },
+    {
+      "file": "react.pet__004.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 0,
+          "top": 256,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 127.5,
+        "sourceFootBaseline": 248,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 52,
+          "y": 51
+        },
+        "clearedQuantizationPixels": 32980
+      }
+    },
+    {
+      "file": "react.pet__005.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 256,
+          "top": 256,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 126.5,
+        "sourceFootBaseline": 248,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 53,
+          "y": 51
+        },
+        "clearedQuantizationPixels": 31569
+      }
+    },
+    {
+      "file": "react.pet__006.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 512,
+          "top": 256,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 139.5,
+        "sourceFootBaseline": 248,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 33,
+          "y": 51
+        },
+        "clearedQuantizationPixels": 32940
+      }
+    },
+    {
+      "file": "react.pet__007.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 768,
+          "top": 256,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 123.5,
+        "sourceFootBaseline": 248,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 58,
+          "y": 51
+        },
+        "clearedQuantizationPixels": 36667
+      }
+    },
+    {
+      "file": "react.pet__008.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 0,
+          "top": 512,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 128,
+        "sourceFootBaseline": 245,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 51,
+          "y": 56
+        },
+        "clearedQuantizationPixels": 31121
+      }
+    },
+    {
+      "file": "react.pet__009.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 256,
+          "top": 512,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 126.5,
+        "sourceFootBaseline": 245,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 53,
+          "y": 56
+        },
+        "clearedQuantizationPixels": 30971
+      }
+    },
+    {
+      "file": "react.pet__010.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 512,
+          "top": 512,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 124,
+        "sourceFootBaseline": 245,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 57,
+          "y": 56
+        },
+        "clearedQuantizationPixels": 30886
+      }
+    },
+    {
+      "file": "react.pet__011.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 768,
+          "top": 512,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 120.5,
+        "sourceFootBaseline": 245,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 63,
+          "y": 56
+        },
+        "clearedQuantizationPixels": 35043
+      }
+    },
+    {
+      "file": "react.pet__012.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 0,
+          "top": 768,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 125,
+        "sourceFootBaseline": 242,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 56,
+          "y": 60
+        },
+        "clearedQuantizationPixels": 29673
+      }
+    },
+    {
+      "file": "react.pet__013.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 256,
+          "top": 768,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 127.5,
+        "sourceFootBaseline": 242,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 52,
+          "y": 60
+        },
+        "clearedQuantizationPixels": 27911
+      }
+    },
+    {
+      "file": "react.pet__014.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 512,
+          "top": 768,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 120.5,
+        "sourceFootBaseline": 242,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 63,
+          "y": 60
+        },
+        "clearedQuantizationPixels": 31134
+      }
+    },
+    {
+      "file": "react.pet__015.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 768,
+          "top": 768,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 119.5,
+        "sourceFootBaseline": 242,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 65,
+          "y": 60
+        },
+        "clearedQuantizationPixels": 34351
+      }
+    },
+    {
+      "file": "react.pet__016.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 0,
+          "top": 1024,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 125.5,
+        "sourceFootBaseline": 240,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 55,
+          "y": 64
+        },
+        "clearedQuantizationPixels": 31394
+      }
+    },
+    {
+      "file": "react.pet__017.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 256,
+          "top": 1024,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 126.5,
+        "sourceFootBaseline": 240,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 53,
+          "y": 64
+        },
+        "clearedQuantizationPixels": 30075
+      }
+    },
+    {
+      "file": "react.pet__018.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 512,
+          "top": 1024,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 125.5,
+        "sourceFootBaseline": 240,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 55,
+          "y": 64
+        },
+        "clearedQuantizationPixels": 33953
+      }
+    },
+    {
+      "file": "react.pet__019.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 768,
+          "top": 1024,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 124,
+        "sourceFootBaseline": 240,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 57,
+          "y": 64
+        },
+        "clearedQuantizationPixels": 34652
+      }
+    },
+    {
+      "file": "react.pet__020.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 0,
+          "top": 1280,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 129.5,
+        "sourceFootBaseline": 237,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 49,
+          "y": 68
+        },
+        "clearedQuantizationPixels": 34518
+      }
+    },
+    {
+      "file": "react.pet__021.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 256,
+          "top": 1280,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 125.5,
+        "sourceFootBaseline": 238,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 55,
+          "y": 67
+        },
+        "clearedQuantizationPixels": 30811
+      }
+    },
+    {
+      "file": "react.pet__022.png",
+      "durationFrames": 1,
+      "markers": [],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 512,
+          "top": 1280,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 126,
+        "sourceFootBaseline": 238,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 54,
+          "y": 67
+        },
+        "clearedQuantizationPixels": 34991
+      }
+    },
+    {
+      "file": "react.pet__023.png",
+      "durationFrames": 1,
+      "markers": [
+        "neutral"
+      ],
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 125
+        }
+      },
+      "registration": {
+        "sourceCell": {
+          "left": 768,
+          "top": 1280,
+          "width": 256,
+          "height": 256
+        },
+        "sourceFootCenterX": 126.5,
+        "sourceFootBaseline": 238,
+        "uniformScale": 1.6015625,
+        "translation": {
+          "x": 53,
+          "y": 67
+        },
+        "clearedQuantizationPixels": 35538
+      }
+    }
+  ]
+}

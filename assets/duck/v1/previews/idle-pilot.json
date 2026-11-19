@@ -1,0 +1,33 @@
+{
+  "frameRate": {
+    "numerator": 12,
+    "denominator": 1
+  },
+  "clips": [
+    {
+      "clipId": "idle.wait",
+      "frameCount": 48
+    },
+    {
+      "clipId": "idle.look",
+      "frameCount": 48
+    },
+    {
+      "clipId": "react.pet.enter",
+      "frameCount": 9
+    },
+    {
+      "clipId": "react.pet.loop",
+      "frameCount": 24
+    },
+    {
+      "clipId": "react.pet.exit",
+      "frameCount": 9
+    }
+  ],
+  "description": "12fps pilot: waiting sway/blink, look-around, pet entrance/loop/exit. Dark/transparent runtime frames are separate from the pale preview background.",
+  "limitations": [
+    "Sitting is not authored in this pilot; it needs an approved seated source silhouette.",
+    "Eye half-state maps to the approved closed-eye marks until a separate half-blink source is supplied."
+  ]
+}

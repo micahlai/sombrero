@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "characterId": "watercolor-duck",
+  "referenceVersion": "duck-v1-nostrils",
+  "clipId": "photo.hold",
+  "canvas": {
+    "width": 512,
+    "height": 512
+  },
+  "groundPivot": {
+    "x": 256,
+    "y": 448
+  },
+  "frameRate": {
+    "numerator": 12,
+    "denominator": 1
+  },
+  "loop": true,
+  "entryPose": "photo-held",
+  "exitPose": "photo-held",
+  "safeInterruptionFrames": [
+    0,
+    2
+  ],
+  "fallbackClip": "idle.wait",
+  "sourceMasterVersion": "duck-master-v1.0",
+  "sourceMasterSha256": "39b2c145593dc8aae2b41a2b1fecbe83270dc5851a091f500f9a6ea697910fc3",
+  "sourceReferenceSha256": "284d1c9d54fd373d19a8b5a7c7ea680f08df5252dc08ed275eda56ef507f4ca1",
+  "production": {
+    "masterManifest": "assets/duck/v1/source/master.json",
+    "method": "Shared painted source parts with exact twelve-fps transforms; fixed closed bill",
+    "propsBaked": true
+  },
+  "frames": [
+    {
+      "file": "photo.hold__000.png",
+      "durationFrames": 18,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 387,
+          "rotationDeg": 0,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 346.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": 0
+        }
+      },
+      "markers": [
+        "photo.ready"
+      ],
+      "durationMs": 1500
+    },
+    {
+      "file": "photo.hold__001.png",
+      "durationFrames": 6,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 387,
+          "rotationDeg": 1,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 346.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": 1
+        }
+      },
+      "markers": [],
+      "durationMs": 500
+    },
+    {
+      "file": "photo.hold__002.png",
+      "durationFrames": 18,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 387,
+          "rotationDeg": 0,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 346.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": 0
+        }
+      },
+      "markers": [
+        "photo.ready"
+      ],
+      "durationMs": 1500
+    }
+  ]
+}

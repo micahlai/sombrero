@@ -1,0 +1,322 @@
+{
+  "schemaVersion": 1,
+  "characterId": "watercolor-duck",
+  "referenceVersion": "duck-v1-nostrils",
+  "clipId": "react.pet.loop",
+  "canvas": {
+    "width": 512,
+    "height": 512
+  },
+  "groundPivot": {
+    "x": 256,
+    "y": 448
+  },
+  "frameRate": {
+    "numerator": 12,
+    "denominator": 1
+  },
+  "loop": true,
+  "entryPose": "pet",
+  "exitPose": "pet",
+  "safeInterruptionFrames": [
+    0,
+    23
+  ],
+  "fallbackClip": "idle.wait",
+  "sourceMasterVersion": "duck-master-v1.0",
+  "sourceMasterSha256": "39b2c145593dc8aae2b41a2b1fecbe83270dc5851a091f500f9a6ea697910fc3",
+  "authoring": "Shared watercolor raster parts with rigid face group and curved 12fps pose sampling; no independent per-frame image generation.",
+  "frames": [
+    {
+      "file": "react.pet.loop__000.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 381.6213251915402,
+          "y": 143.6082206073422
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__001.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 385.19227719621045,
+          "y": 145.184629138089
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__002.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 388.4773954724927,
+          "y": 146.526352639345
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__003.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 391.2396671872684,
+          "y": 147.52360383698718
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__004.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 393.28352505071314,
+          "y": 148.0889396551226
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__005.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 394.4665696651292,
+          "y": 148.16762508154605
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__006.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 394.7073055791158,
+          "y": 147.7453156337806
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__007.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 393.9892346476961,
+          "y": 146.851502493748
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__008.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 392.3616534067492,
+          "y": 145.55783489025137
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__009.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 389.9372388584815,
+          "y": 143.9713110863109
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__010.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 386.8861848902797,
+          "y": 142.22323507367676
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__011.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 383.426502022097,
+          "y": 140.45559044049816
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__012.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 379.81027110173727,
+          "y": 138.8069208350384
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__013.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 376.3061547795545,
+          "y": 137.39980950883518
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__014.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 373.1791777878854,
+          "y": 136.33159167166633
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__015.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 370.66946254505996,
+          "y": 135.66911311980806
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__016.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 368.97203817960735,
+          "y": 135.4473887542475
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__017.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 368.2199103112235,
+          "y": 135.6711979712687
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__018.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 368.47228611308225,
+          "y": 136.31822644524385
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__019.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 369.7092803578015,
+          "y": 137.34244228641396
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__020.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 371.83369681801054,
+          "y": 138.6769206463565
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__021.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 374.6796852409259,
+          "y": 140.236090940367
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__022.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 378.0273003252815,
+          "y": 141.9180824945663
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.loop__023.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 381.6213251915402,
+          "y": 143.6082206073422
+        }
+      },
+      "markers": [
+        "complete"
+      ],
+      "durationMs": 83.33333333333333
+    }
+  ],
+  "sourceReferenceSha256": "284d1c9d54fd373d19a8b5a7c7ea680f08df5252dc08ed275eda56ef507f4ca1"
+}

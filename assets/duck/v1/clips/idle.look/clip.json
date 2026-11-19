@@ -1,0 +1,609 @@
+{
+  "schemaVersion": 1,
+  "characterId": "watercolor-duck",
+  "referenceVersion": "duck-v1-nostrils",
+  "clipId": "idle.look",
+  "canvas": {
+    "width": 512,
+    "height": 512
+  },
+  "groundPivot": {
+    "x": 256,
+    "y": 448
+  },
+  "frameRate": {
+    "numerator": 12,
+    "denominator": 1
+  },
+  "loop": false,
+  "entryPose": "neutral",
+  "exitPose": "neutral",
+  "safeInterruptionFrames": [
+    47
+  ],
+  "fallbackClip": "idle.wait",
+  "sourceMasterVersion": "duck-master-v1.0",
+  "sourceMasterSha256": "39b2c145593dc8aae2b41a2b1fecbe83270dc5851a091f500f9a6ea697910fc3",
+  "authoring": "Shared watercolor raster parts with rigid face group and curved 12fps pose sampling; no independent per-frame image generation.",
+  "frames": [
+    {
+      "file": "idle.look__000.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 348,
+          "y": 122
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__001.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 352.9547591332122,
+          "y": 123.71453531502185
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__002.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 358.068951371559,
+          "y": 125.4889872556477
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__003.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 363.1792274162165,
+          "y": 127.25580034657025
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__004.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 368.1270930180503,
+          "y": 128.93934135223222
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__005.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 372.765708933954,
+          "y": 130.46094093998528
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__006.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 376.96507330294924,
+          "y": 131.74479411055339
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__007.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 380.6154683656823,
+          "y": 132.72394899361038
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__008.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 383.6292975568498,
+          "y": 133.34560305773965
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__009.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 385.94160436906856,
+          "y": 133.5750533676443
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__010.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 387.5096264491075,
+          "y": 133.39787276698087
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__011.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 388.3117054511276,
+          "y": 132.82015392894306
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__012.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 388.3457796685632,
+          "y": 131.86692729460304
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__013.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 387.62757824945936,
+          "y": 130.57907752192648
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__014.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 386.18855381138064,
+          "y": 129.00923152194963
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__015.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 384.0735584046272,
+          "y": 127.21715917776933
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__016.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 381.3382882559486,
+          "y": 125.26521751480861
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__017.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 378.0465792233482,
+          "y": 123.21429257103573
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__018.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 374.2677009215199,
+          "y": 121.12057013445175
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__019.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 370.0738464411767,
+          "y": 119.03332061075811
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__020.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365.5380279087397,
+          "y": 116.99373821044372
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__021.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 360.7325593016833,
+          "y": 115.0347497710891
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__022.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 355.7282420926248,
+          "y": 113.18161602662605
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__023.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 350.5942796051372,
+          "y": 111.45309231082604
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__024.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 345.3988487212225,
+          "y": 109.86289462509762
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__025.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 340.2101679322748,
+          "y": 108.42122554769122
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__026.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 335.09783011974355,
+          "y": 107.13614703601105
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__027.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 330.13412399654845,
+          "y": 106.01463922734177
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__028.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 325.3950533231745,
+          "y": 105.0632519187858
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__029.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 320.9607788603149,
+          "y": 104.28833330039569
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__030.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 316.91525384745916,
+          "y": 103.69590023534231
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__031.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 313.3448971111421,
+          "y": 103.29128331691905
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__032.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 310.3362436527691,
+          "y": 103.07872274577349
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__033.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 307.97262243364946,
+          "y": 103.06109345720466
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__034.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 306.33002375069077,
+          "y": 103.23989182895194
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__035.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 305.47242144491617,
+          "y": 103.61552478325149
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__036.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 305.4468969855015,
+          "y": 104.18782184992045
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__037.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 306.27896596846165,
+          "y": 104.95657063717441
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__038.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 307.9685303258297,
+          "y": 105.92179143918523
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__039.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 310.4868722961335,
+          "y": 107.08345009802728
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__040.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 313.7750694110616,
+          "y": 108.44037986734436
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__041.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 317.7441404801625,
+          "y": 109.98834222250062
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__042.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 322.27712443557937,
+          "y": 111.71737799018155
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__043.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 327.233141530233,
+          "y": 113.60883625949204
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__044.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 332.45329307396656,
+          "y": 115.63265884254952
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__045.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 337.7680408556878,
+          "y": 117.74558433192117
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__046.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 343.0055073778501,
+          "y": 119.89087931860477
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "idle.look__047.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 348,
+          "y": 122
+        }
+      },
+      "markers": [
+        "complete"
+      ],
+      "durationMs": 83.33333333333333
+    }
+  ],
+  "sourceReferenceSha256": "284d1c9d54fd373d19a8b5a7c7ea680f08df5252dc08ed275eda56ef507f4ca1"
+}

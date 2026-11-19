@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "characterId": "watercolor-duck",
+  "referenceVersion": "duck-v1-nostrils",
+  "clipId": "gesture.shoo",
+  "canvas": {
+    "width": 512,
+    "height": 512
+  },
+  "groundPivot": {
+    "x": 256,
+    "y": 448
+  },
+  "frameRate": {
+    "numerator": 12,
+    "denominator": 1
+  },
+  "loop": false,
+  "entryPose": "neutral",
+  "exitPose": "neutral",
+  "safeInterruptionFrames": [
+    0,
+    9
+  ],
+  "fallbackClip": "idle.wait",
+  "sourceMasterVersion": "duck-master-v1.0",
+  "sourceMasterSha256": "39b2c145593dc8aae2b41a2b1fecbe83270dc5851a091f500f9a6ea697910fc3",
+  "sourceReferenceSha256": "284d1c9d54fd373d19a8b5a7c7ea680f08df5252dc08ed275eda56ef507f4ca1",
+  "production": {
+    "masterManifest": "assets/duck/v1/source/master.json",
+    "method": "Shared painted source parts with exact twelve-fps transforms; fixed closed bill",
+    "propsBaked": true
+  },
+  "frames": [
+    {
+      "file": "gesture.shoo__000.png",
+      "durationFrames": 2,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        }
+      },
+      "markers": [
+        "neutral"
+      ],
+      "durationMs": 166.66666666666666
+    },
+    {
+      "file": "gesture.shoo__001.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "gesture.shoo__002.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "gesture.shoo__003.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        }
+      },
+      "markers": [
+        "shoo"
+      ],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "gesture.shoo__004.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "gesture.shoo__005.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "gesture.shoo__006.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        }
+      },
+      "markers": [
+        "shoo"
+      ],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "gesture.shoo__007.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "gesture.shoo__008.png",
+      "durationFrames": 2,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        }
+      },
+      "markers": [],
+      "durationMs": 166.66666666666666
+    },
+    {
+      "file": "gesture.shoo__009.png",
+      "durationFrames": 4,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        }
+      },
+      "markers": [
+        "neutral"
+      ],
+      "durationMs": 333.3333333333333
+    }
+  ]
+}

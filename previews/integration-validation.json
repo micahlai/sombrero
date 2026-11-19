@@ -1,0 +1,125 @@
+{
+  "status": "passed",
+  "referenceVersion": "duck-v1-nostrils",
+  "sourceMasterVersion": "duck-master-v1.0",
+  "sourceMasterSha256": "39b2c145593dc8aae2b41a2b1fecbe83270dc5851a091f500f9a6ea697910fc3",
+  "frameRate": {
+    "numerator": 12,
+    "denominator": 1
+  },
+  "clipCount": 13,
+  "frameRecords": 195,
+  "errors": [],
+  "warnings": [
+    "activity.read.enter frame 1: visible pixels touch canvas edge; inspect clipping",
+    "activity.read.exit frame 5: visible pixels touch canvas edge; inspect clipping",
+    "photo.stow frame 8: visible pixels touch canvas edge; inspect clipping"
+  ],
+  "clips": [
+    {
+      "clipId": "activity.read.enter",
+      "frames": 7,
+      "uniqueFiles": 7,
+      "ticks": 7,
+      "durationMs": 583.3333333333334,
+      "file": "assets/duck/v1/clips/activity.read.enter/clip.json"
+    },
+    {
+      "clipId": "activity.read.exit",
+      "frames": 7,
+      "uniqueFiles": 7,
+      "ticks": 7,
+      "durationMs": 583.3333333333334,
+      "file": "assets/duck/v1/clips/activity.read.exit/clip.json"
+    },
+    {
+      "clipId": "activity.read.loop",
+      "frames": 5,
+      "uniqueFiles": 5,
+      "ticks": 38,
+      "durationMs": 3166.6666666666665,
+      "file": "assets/duck/v1/clips/activity.read.loop/clip.json"
+    },
+    {
+      "clipId": "gesture.shoo",
+      "frames": 10,
+      "uniqueFiles": 10,
+      "ticks": 15,
+      "durationMs": 1250,
+      "file": "assets/duck/v1/clips/gesture.shoo/clip.json"
+    },
+    {
+      "clipId": "gesture.talk",
+      "frames": 8,
+      "uniqueFiles": 8,
+      "ticks": 16,
+      "durationMs": 1333.3333333333333,
+      "file": "assets/duck/v1/clips/gesture.talk/clip.json"
+    },
+    {
+      "clipId": "idle.look",
+      "frames": 48,
+      "uniqueFiles": 48,
+      "ticks": 48,
+      "durationMs": 4000,
+      "file": "assets/duck/v1/clips/idle.look/clip.json"
+    },
+    {
+      "clipId": "idle.wait",
+      "frames": 48,
+      "uniqueFiles": 48,
+      "ticks": 48,
+      "durationMs": 4000,
+      "file": "assets/duck/v1/clips/idle.wait/clip.json"
+    },
+    {
+      "clipId": "photo.hold",
+      "frames": 3,
+      "uniqueFiles": 3,
+      "ticks": 42,
+      "durationMs": 3500,
+      "file": "assets/duck/v1/clips/photo.hold/clip.json"
+    },
+    {
+      "clipId": "photo.present",
+      "frames": 7,
+      "uniqueFiles": 7,
+      "ticks": 7,
+      "durationMs": 583.3333333333334,
+      "file": "assets/duck/v1/clips/photo.present/clip.json"
+    },
+    {
+      "clipId": "photo.stow",
+      "frames": 10,
+      "uniqueFiles": 10,
+      "ticks": 11,
+      "durationMs": 916.6666666666666,
+      "file": "assets/duck/v1/clips/photo.stow/clip.json"
+    },
+    {
+      "clipId": "react.pet.enter",
+      "frames": 9,
+      "uniqueFiles": 9,
+      "ticks": 9,
+      "durationMs": 750,
+      "file": "assets/duck/v1/clips/react.pet.enter/clip.json"
+    },
+    {
+      "clipId": "react.pet.exit",
+      "frames": 9,
+      "uniqueFiles": 9,
+      "ticks": 9,
+      "durationMs": 750,
+      "file": "assets/duck/v1/clips/react.pet.exit/clip.json"
+    },
+    {
+      "clipId": "react.pet.loop",
+      "frames": 24,
+      "uniqueFiles": 24,
+      "ticks": 24,
+      "durationMs": 2000,
+      "file": "assets/duck/v1/clips/react.pet.loop/clip.json"
+    }
+  ],
+  "visualIdentityRequiresHumanReview": true
+}

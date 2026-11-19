@@ -1,0 +1,284 @@
+{
+  "schemaVersion": 1,
+  "characterId": "watercolor-duck",
+  "referenceVersion": "duck-v1-nostrils",
+  "clipId": "photo.stow",
+  "canvas": {
+    "width": 512,
+    "height": 512
+  },
+  "groundPivot": {
+    "x": 256,
+    "y": 448
+  },
+  "frameRate": {
+    "numerator": 12,
+    "denominator": 1
+  },
+  "loop": false,
+  "entryPose": "photo-held",
+  "exitPose": "neutral",
+  "safeInterruptionFrames": [
+    9
+  ],
+  "fallbackClip": "idle.wait",
+  "sourceMasterVersion": "duck-master-v1.0",
+  "sourceMasterSha256": "39b2c145593dc8aae2b41a2b1fecbe83270dc5851a091f500f9a6ea697910fc3",
+  "sourceReferenceSha256": "284d1c9d54fd373d19a8b5a7c7ea680f08df5252dc08ed275eda56ef507f4ca1",
+  "production": {
+    "masterManifest": "assets/duck/v1/source/master.json",
+    "method": "Shared painted source parts with exact twelve-fps transforms; fixed closed bill",
+    "propsBaked": true
+  },
+  "frames": [
+    {
+      "file": "photo.stow__000.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 387,
+          "rotationDeg": 0,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 346.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": 0
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "photo.stow__001.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 387,
+          "rotationDeg": 0,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 346.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": 0
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "photo.stow__002.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 389.6,
+          "rotationDeg": -0.5999999999999999,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 349,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": -0.5999999999999999
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "photo.stow__003.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 396.1,
+          "rotationDeg": -2.0999999999999996,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 355.5,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": -2.0999999999999996
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "photo.stow__004.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 403.9,
+          "rotationDeg": -3.9000000000000004,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 363.29999999999995,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": -3.9000000000000004
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "photo.stow__005.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 409.1,
+          "rotationDeg": -5.1,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 368.5,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": -5.1
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "photo.stow__006.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 413,
+          "rotationDeg": -6,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 372.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": -6
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "photo.stow__007.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 451,
+          "rotationDeg": -6,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 410.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": -6
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "photo.stow__008.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        },
+        "prop": {
+          "x": 256,
+          "y": 509,
+          "rotationDeg": -6,
+          "scaleX": 0.2230769230769231,
+          "scaleY": 0.2230769230769231
+        },
+        "picture": {
+          "x": 212.5,
+          "y": 468.4,
+          "width": 87,
+          "height": 63.57692307692308,
+          "rotationDeg": -6
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "photo.stow__009.png",
+      "durationFrames": 2,
+      "attachments": {
+        "bubble": {
+          "x": 365,
+          "y": 130
+        }
+      },
+      "markers": [
+        "neutral",
+        "photo.stowed"
+      ],
+      "durationMs": 166.66666666666666
+    }
+  ]
+}

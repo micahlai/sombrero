@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "characterId": "watercolor-duck",
+  "referenceVersion": "duck-v1-nostrils",
+  "clipId": "react.pet.enter",
+  "canvas": {
+    "width": 512,
+    "height": 512
+  },
+  "groundPivot": {
+    "x": 256,
+    "y": 448
+  },
+  "frameRate": {
+    "numerator": 12,
+    "denominator": 1
+  },
+  "loop": false,
+  "entryPose": "neutral",
+  "exitPose": "pet",
+  "safeInterruptionFrames": [
+    8
+  ],
+  "fallbackClip": "idle.wait",
+  "sourceMasterVersion": "duck-master-v1.0",
+  "sourceMasterSha256": "39b2c145593dc8aae2b41a2b1fecbe83270dc5851a091f500f9a6ea697910fc3",
+  "authoring": "Shared watercolor raster parts with rigid face group and curved 12fps pose sampling; no independent per-frame image generation.",
+  "frames": [
+    {
+      "file": "react.pet.enter__000.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 348,
+          "y": 122
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.enter__001.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 370.289008105998,
+          "y": 135.8472391923584
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.enter__002.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 383.2885114923491,
+          "y": 144.79354487547363
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.enter__003.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 384.5559781911615,
+          "y": 145.70235324281134
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.enter__004.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 384.12882454781453,
+          "y": 145.39532826280083
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.enter__005.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 382.09666607016896,
+          "y": 143.9450117509522
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.enter__006.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 381.2274093555949,
+          "y": 143.32982156292445
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.enter__007.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 381.2147174681445,
+          "y": 143.320862140839
+        }
+      },
+      "markers": [],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "file": "react.pet.enter__008.png",
+      "durationFrames": 1,
+      "attachments": {
+        "bubble": {
+          "x": 381.6213251915402,
+          "y": 143.6082206073422
+        }
+      },
+      "markers": [
+        "complete"
+      ],
+      "durationMs": 83.33333333333333
+    }
+  ],
+  "sourceReferenceSha256": "284d1c9d54fd373d19a8b5a7c7ea680f08df5252dc08ed275eda56ef507f4ca1"
+}

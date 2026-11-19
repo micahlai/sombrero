@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 1,
+  "characterId": "watercolor-duck",
+  "referenceVersion": "duck-v1-nostrils",
+  "masterVersion": "duck-master-v1.0",
+  "status": "pilot-source-accepted",
+  "canvas": {
+    "width": 512,
+    "height": 512
+  },
+  "groundPivot": {
+    "x": 256,
+    "y": 448
+  },
+  "standingHeightApproxPx": 360,
+  "reference": {
+    "path": "../../../../generated_images/exec-0f994ff1-3130-4298-b10e-bbb99ffb5446.png",
+    "sha256": "284d1c9d54fd373d19a8b5a7c7ea680f08df5252dc08ed275eda56ef507f4ca1",
+    "neutralPoseLabel": "01"
+  },
+  "sourceBoard": {
+    "path": "../../../../generated_images/exec-3b829145-e714-4dff-bc4e-9dd4c00261fc.png",
+    "sha256": "a7ef34371a61ec319b46a4ed9c9b2f2ba2d46731b704b46f66ede1b60fa27d65"
+  },
+  "groupPivots": {
+    "head": {
+      "x": 256,
+      "y": 309
+    }
+  },
+  "anchors": {
+    "head": {
+      "x": 256,
+      "y": 309
+    },
+    "bubble": {
+      "x": 348,
+      "y": 122
+    },
+    "wingLeft": {
+      "x": 227,
+      "y": 345
+    },
+    "wingRight": {
+      "x": 285,
+      "y": 345
+    },
+    "propCenter": {
+      "x": 256,
+      "y": 366
+    },
+    "eyeCenter": {
+      "x": 256,
+      "y": 214
+    }
+  },
+  "layers": [
+    {
+      "id": "head_paint",
+      "x": 152,
+      "y": 88,
+      "width": 208,
+      "height": 230,
+      "pivot": {
+        "x": 256,
+        "y": 309
+      },
+      "group": "head",
+      "z": 5,
+      "file": "layers/head_paint.png",
+      "sha256": "2709a7eddad021b30a664ebdc357c15b22f5fc56df2a1ace448b6b79a2f29a8d",
+      "sourceCrop": {
+        "x": 67,
+        "y": 30,
+        "width": 405,
+        "height": 443
+      }
+    },
+    {
+      "id": "torso",
+      "x": 211,
+      "y": 300,
+      "width": 90,
+      "height": 112,
+      "pivot": {
+        "x": 256,
+        "y": 403
+      },
+      "z": 4,
+      "file": "layers/torso.png",
+      "sha256": "3bf3f59c04e4b557fc38162d4c161fd3e247e1ce41a7ae771c4e13b9eebcc4de",
+      "sourceCrop": {
+        "x": 655,
+        "y": 102,
+        "width": 235,
+        "height": 340
+      }
+    },
+    {
+      "id": "wing_left",
+      "x": 161,
+      "y": 326,
+      "width": 70,
+      "height": 63,
+      "pivot": {
+        "x": 227,
+        "y": 345
+      },
+      "z": 2,
+      "file": "layers/wing_left.png",
+      "sha256": "27e2febaaa414595683f2a49221415d6f5cea7a21eda7fd08093a3200e2320fa",
+      "sourceCrop": {
+        "x": 1156,
+        "y": 172,
+        "width": 219,
+        "height": 199
+      }
+    },
+    {
+      "id": "wing_right",
+      "x": 281,
+      "y": 326,
+      "width": 65,
+      "height": 63,
+      "pivot": {
+        "x": 285,
+        "y": 345
+      },
+      "z": 3,
+      "file": "layers/wing_right.png",
+      "sha256": "ad005cad4c53d59f22de34ef6a3d8c409094f9e78e13e0ae3ec566be21cd75ca",
+      "sourceCrop": {
+        "x": 168,
+        "y": 529,
+        "width": 217,
+        "height": 186
+      }
+    },
+    {
+      "id": "leg_left",
+      "x": 224,
+      "y": 400,
+      "width": 28,
+      "height": 48,
+      "pivot": {
+        "x": 246,
+        "y": 405
+      },
+      "z": 0,
+      "file": "layers/leg_left.png",
+      "sha256": "6c6fd0cd9a3631b3caa3919a0f0fabb6466449ccb416456ec87a8c552d47a1c1",
+      "sourceCrop": {
+        "x": 705,
+        "y": 537,
+        "width": 93,
+        "height": 161
+      }
+    },
+    {
+      "id": "leg_right",
+      "x": 267,
+      "y": 400,
+      "width": 28,
+      "height": 48,
+      "pivot": {
+        "x": 273,
+        "y": 405
+      },
+      "z": 1,
+      "file": "layers/leg_right.png",
+      "sha256": "bf3caed43077040f05b57582d6e17d457b4d11b127a8196857ec5d550fe9145b",
+      "sourceCrop": {
+        "x": 1239,
+        "y": 535,
+        "width": 89,
+        "height": 163
+      }
+    },
+    {
+      "id": "eyes_open",
+      "x": 222,
+      "y": 202,
+      "width": 68,
+      "height": 25,
+      "pivot": {
+        "x": 256,
+        "y": 214
+      },
+      "group": "head",
+      "z": 6,
+      "whenEyeState": "open",
+      "file": "layers/eyes_open.png",
+      "sha256": "5535990766d81b1a9e2849c303c226a72bedc79d84009c3cf941ceedb55115c7",
+      "sourceCrop": {
+        "x": 199,
+        "y": 850,
+        "width": 143,
+        "height": 61
+      }
+    },
+    {
+      "id": "eyes_closed",
+      "x": 222,
+      "y": 211,
+      "width": 68,
+      "height": 12,
+      "pivot": {
+        "x": 256,
+        "y": 214
+      },
+      "group": "head",
+      "z": 6,
+      "whenEyeState": "closed",
+      "file": "layers/eyes_closed.png",
+      "sha256": "8f0eafaa91a57e09d431308962a43c8c5c716efe5e0efa2a839210c44435f875",
+      "sourceCrop": {
+        "x": 671,
+        "y": 871,
+        "width": 200,
+        "height": 30
+      }
+    }
+  ],
+  "animation": {
+    "frameRate": {
+      "numerator": 12,
+      "denominator": 1
+    },
+    "style": "Noodly elastic body/wing follow-through; fixed rigid bill/head identity"
+  },
+  "limitations": [
+    "Layer board was carefully repainted by imagegen from approved reference, not a pixel-exact extraction of concept pose01.",
+    "Head includes bill contour and both nostrils as immutable paint; eyes are separate approved open/closed overlays.",
+    "Large torso turns/flight silhouette changes require separately approved drawn keys, not extreme cutout rotation.",
+    "Canvas and layer pivots are exact technical registration; anatomical proportions still require human visual acceptance."
+  ]
+}

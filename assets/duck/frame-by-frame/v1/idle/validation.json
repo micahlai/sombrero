@@ -1,0 +1,360 @@
+{
+  "status": "passed",
+  "clips": [
+    {
+      "status": "passed",
+      "clipId": "idle.wait",
+      "manifestPath": "assets/duck/frame-by-frame/v1/idle/clip.json",
+      "animationMethod": "individually-drawn-frames",
+      "frameRate": {
+        "numerator": 12,
+        "denominator": 1
+      },
+      "frameCount": 24,
+      "uniquePixelHashes": 24,
+      "durationSeconds": 2,
+      "errors": [],
+      "warnings": [],
+      "frames": [
+        {
+          "index": 0,
+          "file": "frames/idle.wait__000.png",
+          "hash": "cca83d8474219a3903cc1e40831dd6ad39799d71fa3e30a0d25ad592e253ea4c",
+          "bounds": {
+            "x": 130,
+            "y": 80,
+            "width": 325,
+            "height": 389
+          },
+          "nonzeroPixels": 70495,
+          "softAlphaPixels": 70449,
+          "totalPixels": 262144
+        },
+        {
+          "index": 1,
+          "file": "frames/idle.wait__001.png",
+          "hash": "498e2b0285ae2c1f8f9fc8a26af314ac4672052e39e417e8ef8819e5bd1d6493",
+          "bounds": {
+            "x": 49,
+            "y": 65,
+            "width": 408,
+            "height": 405
+          },
+          "nonzeroPixels": 69924,
+          "softAlphaPixels": 69874,
+          "totalPixels": 262144
+        },
+        {
+          "index": 2,
+          "file": "frames/idle.wait__002.png",
+          "hash": "cbba4117e9a375d29779374fb54a0f3b074fbf47b3077fbf0bb64cfa4828e9d8",
+          "bounds": {
+            "x": 51,
+            "y": 60,
+            "width": 408,
+            "height": 410
+          },
+          "nonzeroPixels": 74471,
+          "softAlphaPixels": 74433,
+          "totalPixels": 262144
+        },
+        {
+          "index": 3,
+          "file": "frames/idle.wait__003.png",
+          "hash": "90d83461074e76d9e0d539a57daacf45fce8c5c301342418fd395598645627a4",
+          "bounds": {
+            "x": 45,
+            "y": 75,
+            "width": 376,
+            "height": 395
+          },
+          "nonzeroPixels": 74161,
+          "softAlphaPixels": 74134,
+          "totalPixels": 262144
+        },
+        {
+          "index": 4,
+          "file": "frames/idle.wait__004.png",
+          "hash": "53ed4c838a58b74e6f26f891e5decddfaadf56ad096be2d82a84f41fcc4d77c8",
+          "bounds": {
+            "x": 106,
+            "y": 60,
+            "width": 341,
+            "height": 410
+          },
+          "nonzeroPixels": 79696,
+          "softAlphaPixels": 79630,
+          "totalPixels": 262144
+        },
+        {
+          "index": 5,
+          "file": "frames/idle.wait__005.png",
+          "hash": "1962175f034c389c30695487c108fab70b323ff992bfbda8342ee2f9d7823313",
+          "bounds": {
+            "x": 43,
+            "y": 62,
+            "width": 410,
+            "height": 410
+          },
+          "nonzeroPixels": 80885,
+          "softAlphaPixels": 80852,
+          "totalPixels": 262144
+        },
+        {
+          "index": 6,
+          "file": "frames/idle.wait__006.png",
+          "hash": "92c93c7f71fa96f8843aaa2e138ae2278a5af843338c4dfc2ee246af52e48495",
+          "bounds": {
+            "x": 57,
+            "y": 62,
+            "width": 402,
+            "height": 410
+          },
+          "nonzeroPixels": 80837,
+          "softAlphaPixels": 80814,
+          "totalPixels": 262144
+        },
+        {
+          "index": 7,
+          "file": "frames/idle.wait__007.png",
+          "hash": "4d51847011d80378440b9f37fbf7a560253779f3cf3b8f86a9c3a57ce9bf1ca1",
+          "bounds": {
+            "x": 45,
+            "y": 64,
+            "width": 350,
+            "height": 410
+          },
+          "nonzeroPixels": 74085,
+          "softAlphaPixels": 74064,
+          "totalPixels": 262144
+        },
+        {
+          "index": 8,
+          "file": "frames/idle.wait__008.png",
+          "hash": "f82e2a777a3ab62982909400fe5e04ea57b54c9095b0c57e77abb1ad6f6636d7",
+          "bounds": {
+            "x": 88,
+            "y": 65,
+            "width": 357,
+            "height": 410
+          },
+          "nonzeroPixels": 80477,
+          "softAlphaPixels": 80442,
+          "totalPixels": 262144
+        },
+        {
+          "index": 9,
+          "file": "frames/idle.wait__009.png",
+          "hash": "bb379a82e4e046f38b17cf3ca5e551524a8adb32ad4b6e2350e786cbe626bf33",
+          "bounds": {
+            "x": 45,
+            "y": 65,
+            "width": 410,
+            "height": 410
+          },
+          "nonzeroPixels": 87107,
+          "softAlphaPixels": 87071,
+          "totalPixels": 262144
+        },
+        {
+          "index": 10,
+          "file": "frames/idle.wait__010.png",
+          "hash": "4bba0e77fea9fd4b53303282362c75bd4454d8042d853b0bf40c7664bf5be09f",
+          "bounds": {
+            "x": 49,
+            "y": 65,
+            "width": 410,
+            "height": 410
+          },
+          "nonzeroPixels": 79938,
+          "softAlphaPixels": 79899,
+          "totalPixels": 262144
+        },
+        {
+          "index": 11,
+          "file": "frames/idle.wait__011.png",
+          "hash": "e991005f35230aa3ae6b215621bcdfa9f909c1b4aaee02fc85ddb7bedbf6cee5",
+          "bounds": {
+            "x": 51,
+            "y": 65,
+            "width": 383,
+            "height": 410
+          },
+          "nonzeroPixels": 82293,
+          "softAlphaPixels": 82247,
+          "totalPixels": 262144
+        },
+        {
+          "index": 12,
+          "file": "frames/idle.wait__012.png",
+          "hash": "9f9670fed1af0b6c974e4c7453ff7ea49cbc0fa3f29e0ece8bbd0496b6d99cb7",
+          "bounds": {
+            "x": 95,
+            "y": 67,
+            "width": 363,
+            "height": 410
+          },
+          "nonzeroPixels": 78224,
+          "softAlphaPixels": 78174,
+          "totalPixels": 262144
+        },
+        {
+          "index": 13,
+          "file": "frames/idle.wait__013.png",
+          "hash": "115a31e4b7596243fb194d6630b3231f775902471a3f8b010a951e4f7a37e1ae",
+          "bounds": {
+            "x": 51,
+            "y": 67,
+            "width": 410,
+            "height": 410
+          },
+          "nonzeroPixels": 81797,
+          "softAlphaPixels": 81759,
+          "totalPixels": 262144
+        },
+        {
+          "index": 14,
+          "file": "frames/idle.wait__014.png",
+          "hash": "98b61f9bdf40cc43504e0cb72b9be3908d247f061dc47efc54497ef85c36278d",
+          "bounds": {
+            "x": 54,
+            "y": 67,
+            "width": 410,
+            "height": 410
+          },
+          "nonzeroPixels": 81012,
+          "softAlphaPixels": 80982,
+          "totalPixels": 262144
+        },
+        {
+          "index": 15,
+          "file": "frames/idle.wait__015.png",
+          "hash": "45911bba4a74670d7fada4fc53961d5e7cb34b87f61c78137d9fee104106a6c6",
+          "bounds": {
+            "x": 61,
+            "y": 67,
+            "width": 363,
+            "height": 410
+          },
+          "nonzeroPixels": 82470,
+          "softAlphaPixels": 82416,
+          "totalPixels": 262144
+        },
+        {
+          "index": 16,
+          "file": "frames/idle.wait__016.png",
+          "hash": "a25dcb0207fa0384253cf27f6b88f669a108175cbd5e0990922ebe2e3e8e5262",
+          "bounds": {
+            "x": 55,
+            "y": 67,
+            "width": 410,
+            "height": 410
+          },
+          "nonzeroPixels": 76941,
+          "softAlphaPixels": 76879,
+          "totalPixels": 262144
+        },
+        {
+          "index": 17,
+          "file": "frames/idle.wait__017.png",
+          "hash": "46de14b51bd5ed2411289b34d9dbe89398f1567b50a998d499f6f4124bfb79c5",
+          "bounds": {
+            "x": 60,
+            "y": 68,
+            "width": 410,
+            "height": 410
+          },
+          "nonzeroPixels": 78661,
+          "softAlphaPixels": 78582,
+          "totalPixels": 262144
+        },
+        {
+          "index": 18,
+          "file": "frames/idle.wait__018.png",
+          "hash": "fa99454dcb639375547563536aad8e02e7b2a1bafdcd3aaad4f84af67ba442fd",
+          "bounds": {
+            "x": 67,
+            "y": 70,
+            "width": 408,
+            "height": 410
+          },
+          "nonzeroPixels": 72679,
+          "softAlphaPixels": 72586,
+          "totalPixels": 262144
+        },
+        {
+          "index": 19,
+          "file": "frames/idle.wait__019.png",
+          "hash": "5a8e2ba57892f149645c0fb78f157f62ddad81a7c7e1e240b7c2a707d3e20db4",
+          "bounds": {
+            "x": 69,
+            "y": 72,
+            "width": 347,
+            "height": 410
+          },
+          "nonzeroPixels": 74239,
+          "softAlphaPixels": 74193,
+          "totalPixels": 262144
+        },
+        {
+          "index": 20,
+          "file": "frames/idle.wait__020.png",
+          "hash": "4da8302b1a0f23efe5bd2f8e47e89365ceb04e58a7c628bed1838e5b338faafd",
+          "bounds": {
+            "x": 142,
+            "y": 73,
+            "width": 331,
+            "height": 410
+          },
+          "nonzeroPixels": 70247,
+          "softAlphaPixels": 70211,
+          "totalPixels": 262144
+        },
+        {
+          "index": 21,
+          "file": "frames/idle.wait__021.png",
+          "hash": "5a0e91e40a1964c22f711a0eb2032068518ee40c3fa22fb0284f3bf2442ec380",
+          "bounds": {
+            "x": 59,
+            "y": 73,
+            "width": 408,
+            "height": 393
+          },
+          "nonzeroPixels": 69192,
+          "softAlphaPixels": 69143,
+          "totalPixels": 262144
+        },
+        {
+          "index": 22,
+          "file": "frames/idle.wait__022.png",
+          "hash": "7a11be5b78ed2c8253d2c61f5514f5fc71fbab78fa4f462d45106731e0aebabb",
+          "bounds": {
+            "x": 68,
+            "y": 73,
+            "width": 395,
+            "height": 410
+          },
+          "nonzeroPixels": 70496,
+          "softAlphaPixels": 70444,
+          "totalPixels": 262144
+        },
+        {
+          "index": 23,
+          "file": "frames/idle.wait__023.png",
+          "hash": "504e2918e300f8f01c3924fe77bdde2132d61b9aafac8b297cfc5ce9736c4197",
+          "bounds": {
+            "x": 60,
+            "y": 73,
+            "width": 355,
+            "height": 410
+          },
+          "nonzeroPixels": 73489,
+          "softAlphaPixels": 73440,
+          "totalPixels": 262144
+        }
+      ],
+      "requiresVisualReview": true,
+      "note": "Distinct pixel hashes establish no exact duplicates; drawn motion and identity still require visual review."
+    }
+  ]
+}
