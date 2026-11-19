@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>sombrero · animation lab</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">s.</span><div><h1>sombrero <span>animation lab</span></h1><p>A little room to put every move through its paces.</p></div></div>
+    <div class="header-actions"><span id="asset-summary" class="asset-summary">Loading animation folders…</span><button id="reload" type="button">Reload assets</button><input id="folder-input" type="file" webkitdirectory multiple hidden aria-label="Choose final-v1 animation folder"><button id="help" class="icon-button" aria-label="Show keyboard shortcuts and help" title="Help">?</button></div>
+  </header>
+  <div id="error" class="error-banner" role="alert" hidden></div>
+  <main class="workspace">
+    <aside class="inspector" aria-label="Animation preview and inputs">
+      <section class="player-panel">
+        <div class="section-title"><h2>Preview</h2><select id="mode" aria-label="Playback mode"><option value="graph">State machine</option><option value="solo">Solo clip</option></select></div>
+        <div class="current-heading"><span id="current-id" class="state-id">1A</span><div><h3 id="current-name">Standing idle</h3><span id="clip-source" class="source-label">Loading…</span></div><span id="running-status" class="running-badge">Playing</span></div>
+        <div class="stage" id="stage">
+          <canvas id="preview" width="800" height="620" aria-label="Current animation preview"></canvas>
+          <div id="hidden-message" class="stage-message" hidden><span class="hidden-symbol" aria-hidden="true">◌</span><strong>Taking a little break.</strong><span>The duck is hidden. Trigger recall to bring it back.</span><button id="stage-recall">Recall duck</button></div>
+          <div id="loading-message" class="loading-message" hidden>Loading frames…</div>
+          <span id="placeholder-label" class="placeholder-label">Placeholder · 10 frames</span>
+          <button id="background" class="stage-option" title="Change preview background" aria-label="Change preview background">Checkerboard</button>
+        </div>
+        <div class="transport">
+          <button id="previous-frame" class="icon-button" title="Previous frame (←)" aria-label="Previous frame">|‹</button>
+          <button id="play" class="play-button" title="Play/pause (Space)">Pause</button>
+          <button id="next-frame" class="icon-button" title="Next frame (→)" aria-label="Next frame">›|</button>
+          <span id="frame-label" class="frame-label">1 / 10</span>
+          <button id="finish" class="quiet-button" title="Finish the current clip (Enter)">Finish clip ↵</button>
+        </div>
+        <input id="scrubber" class="scrubber" type="range" min="0" max="9" value="0" aria-label="Animation frame">
+        <div class="timing"><label>Drawing rate <input id="fps" type="number" min="1" max="60" step="1" value="6" aria-label="Drawings per second"> fps</label><label>Speed <select id="speed" aria-label="Playback speed"><option value="0.25">¼×</option><option value="0.5">½×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><button id="reset" class="quiet-button" title="Reset state, inputs and request queue">Restart</button></div>
+        <div class="alignment-control"><div class="alignment-options"><label><input id="use-scale-map" type="checkbox" checked> Use scale map</label><select id="scene-zoom" aria-label="Preview scene zoom"><option value="1">Fit scene</option><option value="1.5">1.5×</option><option value="2">2×</option></select></div><span id="alignment-status"></span></div>
+      </section>
+    </aside>
+    <section class="graph-panel" aria-label="Live state diagram">
+      <div class="graph-toolbar"><div><h2>State graph</h2><span id="graph-subtitle">22 states · 48 transitions</span></div><div class="graph-tools"><select id="edge-filter" aria-label="Visible transitions"><option value="all">All routes</option><option value="current">Current state routes</option><option value="defaults">Default routes</option></select><button id="details" aria-expanded="true" title="Toggle the state inspector and transition log">Details</button><button id="center-current" title="Center current state">Find current</button><button id="fit" title="Fit the full diagram">Fit all</button><button id="zoom-out" class="icon-button" aria-label="Zoom out">−</button><span id="zoom-level">100%</span><button id="zoom-in" class="icon-button" aria-label="Zoom in">+</button></div></div>
+      <div class="graph-legend"><span><i class="legend-line default"></i>Default at clip end</span><span><i class="legend-line interrupt"></i>Interrupt now</span><span><i class="legend-line afterClip"></i>After this clip</span><span><i class="legend-line recall"></i>Recall</span><span><i class="missing-key"></i>Missing artwork</span><span class="graph-instruction">Click an eligible next state to force one roll · scroll to zoom</span></div>
+      <div id="graph-viewport" class="graph-viewport"><svg id="state-graph" aria-label="Interactive animation state graph" role="group" viewBox="0 0 1240 1050"></svg><div id="graph-tooltip" class="graph-tooltip" hidden></div><div id="graph-live" class="graph-live"><span class="live-dot"></span><span id="graph-current">1A · Standing idle</span></div></div>
+      <div class="trail-bar"><span>Recent path</span><div id="trail" class="trail"><span class="muted">Transitions will appear here</span></div></div>
+      <div class="graph-bottom">
+        <section class="state-inspector"><div class="section-title"><h2>Inspect state</h2><button id="follow-current" class="quiet-button">Follow current</button></div><div class="state-picker"><select id="state-picker" aria-label="Selected animation state"></select><button id="jump">Play this state</button></div><div id="selected-meta" class="selected-meta"></div><div id="transitions" class="transition-list"></div></section>
+        <section class="log-panel"><div class="section-title"><h2>Transition log</h2><button id="clear-log" class="quiet-button">Clear</button></div><ol id="log" class="log" aria-label="Transition and input history"></ol></section>
+      </div>
+    </section>
+    <aside class="parameters" aria-label="Events and held booleans">
+      <section class="input-panel">
+        <div class="section-title"><h2>Events</h2><span id="queue-count" class="small-note">Nothing queued</span></div>
+        <div class="event-buttons">
+          <button data-event="photoShow"><span>Show photo</span><small>photoShow</small></button>
+          <button data-event="photoTake"><span>Take photo</span><small>photoTake</small></button>
+          <button data-event="bibleRead"><span>Read Bible</span><small>bibleRead</small></button>
+        </div>
+        <div class="recall-buttons"><button data-event="manualRecall">Recall duck</button><button data-event="timedAwayExpired" title="Simulate the away timer expiring; no real timer is scheduled">Away timer expired</button></div>
+        <div id="request-status" class="request-status">No active request</div>
+        <div id="queue" class="queue" aria-label="Pending events"></div>
+        <button id="clear-queue" class="quiet-button clear-queue" hidden>Clear pending events</button>
+      </section>
+      <section class="input-panel boolean-panel">
+        <div class="section-title"><h2>Booleans</h2><span class="small-note">Held until you change them</span></div>
+        <div class="flag-list">
+          <label class="flag-row"><span><strong>Pet</strong><small>pet</small></span><input type="checkbox" data-flag="pet"><span class="switch" aria-hidden="true"></span></label>
+          <label class="flag-row"><span><strong>Goodbye</strong><small>goodbye</small></span><input type="checkbox" data-flag="goodbye"><span class="switch" aria-hidden="true"></span></label>
+          <label class="flag-row"><span><strong>Showing photo</strong><small>showPhoto</small></span><input type="checkbox" data-flag="showPhoto"><span class="switch" aria-hidden="true"></span></label>
+          <label class="flag-row"><span><strong>Taking photo</strong><small>takingPhoto</small></span><input type="checkbox" data-flag="takingPhoto"><span class="switch" aria-hidden="true"></span></label>
+          <label class="flag-row"><span><strong>Reading</strong><small>reading</small></span><input type="checkbox" data-flag="reading"><span class="switch" aria-hidden="true"></span></label>
+        </div>
+        <div class="derived-flag"><label><input id="derived-event" type="checkbox" disabled> event</label><span>Goodbye or pending events</span></div>
+        <p class="input-hint">Buttons request a routine. Checkboxes keep its idle animation looping.</p>
+      </section>
+    </aside>
+  </main>
+  <footer><span id="root-path">assets/duck/final-v1</span><span>Local preview only · no camera, messages or services are activated</span></footer>
+  <dialog id="help-dialog"><h2>Make the graph move.</h2><p>Event buttons queue requests. Boolean checkboxes remain set until you change them. Red routes interrupt immediately; purple routes wait for the current animation to finish.</p><p>When the current state has multiple weighted default exits, click one of its directly connected destination nodes to force the next roll (weight 1 for that route, 0 for the others). It waits for clip completion and never overrides conditional routes. The chosen node is labeled <strong>Next roll</strong> and its route is highlighted on the diagram. Click the node again to cancel. The override clears after one transition.</p><p>Other node clicks inspect only. Choose <strong>Solo clip</strong> to loop one animation without state transitions. <strong>Play this state</strong> remains an explicit debug jump.</p><p>Put numbered PNG, WebP, JPEG or AVIF frames inside <code>assets/duck/final-v1/1A/</code>, <code>1B/</code>, etc. Folder IDs ignore case; frames use natural filename order. Then click <strong>Reload assets</strong>. Missing, empty, or unreadable animations are labeled on the graph and play ten pink-square frames.</p><p><strong>Use scale map</strong> applies the reviewed clip-level transforms in <code>final-v1/animation-scales.json</code>. Turn it off to compare original framing. Source frames are never rewritten.</p><dl><dt>Space</dt><dd>Pause / play</dd><dt>← / →</dt><dd>Step a drawing</dd><dt>Enter</dt><dd>Finish the current clip</dd></dl><p>The graph retains the source's 1.02 total weight for 1A and normalizes it when choosing a default route. Event priority follows the proposal in the project plan: goodbye, pending event, pet, default.</p><button id="close-help">Got it</button></dialog>
+  <script type="module" src="/app.mjs"></script>
+</body>
+</html>
