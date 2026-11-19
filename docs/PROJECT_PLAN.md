@@ -4,6 +4,10 @@
 
 Updated November 18, 2026. Current scope follows BACKEND_HANDOFF.md and the user's five-state correction. The earlier 12 fps preview/Electron proposal is preserved in docs/archive/PROJECT_PLAN_12fps_preview_superseded.md.
 
+## Global font update
+
+Matcha Style is the shared app font. Its OTF and supplied notices are bundled under `Sources/PetAssets/Resources/Fonts/`; `AppTypography` registers it for the process at startup, provides body/menu fonts, and supplies a system-font fallback. Current menus/submenus use it; future bubble, polaroid, rich-text, and Bible-reader controls must use the same typography. See [SOMBRERO_V1_PLAN.md](SOMBRERO_V1_PLAN.md#global-typography).
+
 ## Scope and architecture
 
 Build a macOS-only local Swift/AppKit desktop companion. No LLM, account, network service, or external integration. Pause artwork generation; import the user's existing sheets under assets/duck/v2/.

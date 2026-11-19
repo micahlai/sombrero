@@ -6,6 +6,10 @@ Updated November 18, 2026.
 
 **Implementation resumed at the user’s request.** The first source table, including sitting idle (5), is authoritative. The five-state controller, imported transparent frames, native renderer, resource fallback, and app bundle are implemented. See PROJECT_PLAN.md for the current build and validation record.
 
+## Global font update
+
+Matcha Style is the shared app font. Its OTF and supplied notices are bundled under `Sources/PetAssets/Resources/Fonts/`; `AppTypography` registers it for the process at startup, provides body/menu fonts, and supplies a system-font fallback. Current menus/submenus use it; future bubble, polaroid, rich-text, and Bible-reader controls must use the same typography. See [SOMBRERO_V1_PLAN.md](SOMBRERO_V1_PLAN.md#global-typography).
+
 ## Latest direction
 
 The user is generating artwork in Runway. Pause further art generation and focus on the macOS application/backend. Initially placeholder squares were requested; the newest request replaces those placeholders with five local sprite sheets.

@@ -1,0 +1,1481 @@
+{
+  "schemaVersion": 1,
+  "referenceState": "1a",
+  "canvas": {
+    "width": 1700,
+    "height": 1300,
+    "anchor": {
+      "x": 850,
+      "y": 1050
+    }
+  },
+  "transformConvention": "canvasX = sourceX * scale + offsetX; canvasY = sourceY * scale + offsetY",
+  "units": "source and canvas coordinates are pixels; scale is uniform in both axes",
+  "policy": "Exactly one fixed scale and translation per animation. No per-frame resizing, repositioning, warping, interpolation, or source-image changes.",
+  "review": {
+    "reviewedAtUTC": "2026-11-19T08:28:28.345137+00:00",
+    "method": "First two and last two frames of every available clip visually reviewed on contact sheets; all frame alpha bounds checked for canvas containment. Uniform transforms fitted across authored graph adjacency using endpoint head width, silhouette height, head-center position, and baseline. Transformed seam comparisons visually reviewed.",
+    "availableAnimations": [
+      "1a",
+      "1b",
+      "1c",
+      "2a",
+      "2b",
+      "3a",
+      "3b",
+      "4a"
+    ],
+    "uniqueSampleCount": 31,
+    "graphPath": "docs/sombrero-v1-state-graph.json",
+    "graphSHA256": "0a5aac90765ef6face80704283db5b52f283bbe51fa51f7c902c72e6151099a9",
+    "measurementDetails": "Geometry uses alpha \u226532. Head width/center use the upper 60% of the alpha silhouette, filtered for yellow watercolor pigment (R>130, G>100, R-B>35, G-B>15). All endpoint pair equations use equal weight; head width and silhouette height are normalized by 290 and 489 source pixels, with 1a scale fixed at 1.4. X/Y offsets fit endpoint head centers and baselines. Canvas expanded to include ALL nonzero alpha across every frame, including alpha 1\u20137 speckles in 4a.",
+    "limitations": [
+      "Uniform clip-wide transforms reduce canvas/scale seams but cannot alter authored character proportions, eye/wing poses, or internal drawing drift.",
+      "The 2b seated-to-standing drawings change head-to-body proportion; its transform is a best-fit compromise across both incoming and outgoing neighbors.",
+      "4a ends in fading smoke and an empty frame; its scale is determined from standing entry, while full-motion bounds determine canvas padding.",
+      "Missing states have identity values only as placeholders and must not be treated as calibrated. Re-review after replacing animation frames; sample hashes/counts identify stale calibration."
+    ]
+  },
+  "animations": {
+    "1a": {
+      "status": "calibrated",
+      "scale": 1.4,
+      "offsetX": 360.7,
+      "offsetY": 358.4,
+      "sourceFrameCount": 14,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sourceFrameSizes": [
+        {
+          "width": 700,
+          "height": 500
+        }
+      ],
+      "sampleFrames": [
+        {
+          "file": "1a0000.png",
+          "role": "first",
+          "index": 0,
+          "width": 700,
+          "height": 500,
+          "sha256": "de2c7fe64637ca513829c732f30ea41afb77a6ed6e239cf5b5bb311de0e5b820",
+          "alphaBounds": [
+            203,
+            5,
+            495,
+            495
+          ],
+          "alpha32Bounds": [
+            203,
+            5,
+            495,
+            495
+          ],
+          "alignmentFeatures": {
+            "headWidth": 292,
+            "headCenterX": 349.0,
+            "silhouetteHeight": 490,
+            "baselineY": 495
+          }
+        },
+        {
+          "file": "1a0001.png",
+          "role": "second",
+          "index": 1,
+          "width": 700,
+          "height": 500,
+          "sha256": "7e4a7f3cb0b2b24cdc8cc7b65d295482b6449a540e45350cf94900273e5a9236",
+          "alphaBounds": [
+            205,
+            7,
+            494,
+            493
+          ],
+          "alpha32Bounds": [
+            205,
+            7,
+            494,
+            493
+          ],
+          "alignmentFeatures": {
+            "headWidth": 289,
+            "headCenterX": 349.5,
+            "silhouetteHeight": 486,
+            "baselineY": 493
+          }
+        },
+        {
+          "file": "1a0012.png",
+          "role": "penultimate",
+          "index": 12,
+          "width": 700,
+          "height": 500,
+          "sha256": "de76bcf4583ae4e88c4779bdcda865462a3e342d3d2b0f6c229387933b6ef382",
+          "alphaBounds": [
+            205,
+            4,
+            495,
+            495
+          ],
+          "alpha32Bounds": [
+            205,
+            4,
+            495,
+            495
+          ],
+          "alignmentFeatures": {
+            "headWidth": 290,
+            "headCenterX": 350.0,
+            "silhouetteHeight": 491,
+            "baselineY": 495
+          }
+        },
+        {
+          "file": "1a0013.png",
+          "role": "last",
+          "index": 13,
+          "width": 700,
+          "height": 500,
+          "sha256": "a93f4aed487b604a709b56c9a9ba26ceddc8f5f0796c2de08d9630b8b9eba989",
+          "alphaBounds": [
+            205,
+            7,
+            494,
+            493
+          ],
+          "alpha32Bounds": [
+            205,
+            7,
+            494,
+            493
+          ],
+          "alignmentFeatures": {
+            "headWidth": 289,
+            "headCenterX": 349.5,
+            "silhouetteHeight": 486,
+            "baselineY": 493
+          }
+        }
+      ],
+      "sourceInventorySHA256": "3a549443a12adbbdb5b3c9b895f13fed6ccf5330970ccdd05a5472036eb3848a",
+      "sourceAlphaBounds": [
+        203,
+        4,
+        497,
+        495
+      ],
+      "sourceVisibleBounds": [
+        203,
+        4,
+        497,
+        495
+      ],
+      "transformedAlphaBounds": [
+        644.9,
+        364.0,
+        1056.5,
+        1051.4
+      ],
+      "transformedVisibleBounds": [
+        644.9,
+        364.0,
+        1056.5,
+        1051.4
+      ],
+      "notes": "Reference standing pose. Preserve this clip's authored motion; reference mean head center and ground baseline map to canvas anchor."
+    },
+    "1b": {
+      "status": "calibrated",
+      "scale": 1.428446,
+      "offsetX": 347.369953,
+      "offsetY": 344.946837,
+      "sourceFrameCount": 24,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sourceFrameSizes": [
+        {
+          "width": 700,
+          "height": 500
+        }
+      ],
+      "sampleFrames": [
+        {
+          "file": "1b0000.png",
+          "role": "first",
+          "index": 0,
+          "width": 700,
+          "height": 500,
+          "sha256": "bb6e7b5566ae6d32f568fe6c914fc3a8d0b8a617f47531f904937984f6deafba",
+          "alphaBounds": [
+            210,
+            5,
+            491,
+            495
+          ],
+          "alpha32Bounds": [
+            210,
+            6,
+            491,
+            494
+          ],
+          "alignmentFeatures": {
+            "headWidth": 277,
+            "headCenterX": 352.5,
+            "silhouetteHeight": 488,
+            "baselineY": 494
+          }
+        },
+        {
+          "file": "1b0001.png",
+          "role": "second",
+          "index": 1,
+          "width": 700,
+          "height": 500,
+          "sha256": "f0136d9183b2c55c4432151973df73b693e5848b1cb41c63a465bbe381d2e514",
+          "alphaBounds": [
+            210,
+            5,
+            491,
+            495
+          ],
+          "alpha32Bounds": [
+            210,
+            6,
+            491,
+            494
+          ],
+          "alignmentFeatures": {
+            "headWidth": 277,
+            "headCenterX": 352.5,
+            "silhouetteHeight": 488,
+            "baselineY": 494
+          }
+        },
+        {
+          "file": "1b0022.png",
+          "role": "penultimate",
+          "index": 22,
+          "width": 700,
+          "height": 500,
+          "sha256": "f4a01f51c1fa3190979424e407221a52ef7a69d5ba0724887558bf857ce4b7f2",
+          "alphaBounds": [
+            210,
+            7,
+            491,
+            496
+          ],
+          "alpha32Bounds": [
+            211,
+            7,
+            490,
+            495
+          ],
+          "alignmentFeatures": {
+            "headWidth": 279,
+            "headCenterX": 350.5,
+            "silhouetteHeight": 488,
+            "baselineY": 495
+          }
+        },
+        {
+          "file": "1b0023.png",
+          "role": "last",
+          "index": 23,
+          "width": 700,
+          "height": 500,
+          "sha256": "77d6d718070566cf4ed24f3df4e288ec95cf7aff0f0e6e32d151600924c96842",
+          "alphaBounds": [
+            206,
+            5,
+            493,
+            493
+          ],
+          "alpha32Bounds": [
+            207,
+            6,
+            493,
+            493
+          ],
+          "alignmentFeatures": {
+            "headWidth": 276,
+            "headCenterX": 355.0,
+            "silhouetteHeight": 487,
+            "baselineY": 493
+          }
+        }
+      ],
+      "sourceInventorySHA256": "55f2c7852f48b44e46ccf3061ef5bcd4d0c491303ed3f40af2ec4c1e05f221fe",
+      "sourceAlphaBounds": [
+        191,
+        4,
+        507,
+        496
+      ],
+      "sourceVisibleBounds": [
+        191,
+        4,
+        507,
+        496
+      ],
+      "transformedAlphaBounds": [
+        620.203,
+        350.661,
+        1071.592,
+        1053.456
+      ],
+      "transformedVisibleBounds": [
+        620.203,
+        350.661,
+        1071.592,
+        1053.456
+      ],
+      "notes": "Aligned across 1a\u21941b and 1b\u21921c/4a. Its standing silhouette is slightly narrower than 1a; a uniform fit preserves that source-model difference."
+    },
+    "1c": {
+      "status": "calibrated",
+      "scale": 1.423579,
+      "offsetX": 346.352695,
+      "offsetY": 347.426499,
+      "sourceFrameCount": 21,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sourceFrameSizes": [
+        {
+          "width": 700,
+          "height": 500
+        }
+      ],
+      "sampleFrames": [
+        {
+          "file": "1c0000.png",
+          "role": "first",
+          "index": 0,
+          "width": 700,
+          "height": 500,
+          "sha256": "8d6bc10eaf841d01bb5d9d4f34926381ee70ec7fe66675d060c8745b297ab045",
+          "alphaBounds": [
+            208,
+            5,
+            494,
+            495
+          ],
+          "alpha32Bounds": [
+            208,
+            5,
+            494,
+            495
+          ],
+          "alignmentFeatures": {
+            "headWidth": 275,
+            "headCenterX": 356.5,
+            "silhouetteHeight": 490,
+            "baselineY": 495
+          }
+        },
+        {
+          "file": "1c0001.png",
+          "role": "second",
+          "index": 1,
+          "width": 700,
+          "height": 500,
+          "sha256": "0f454ce359a8fd766d60b52e3a46c5a426c42baada37ff2cfea1aefca047d461",
+          "alphaBounds": [
+            208,
+            5,
+            494,
+            495
+          ],
+          "alpha32Bounds": [
+            208,
+            5,
+            494,
+            495
+          ],
+          "alignmentFeatures": {
+            "headWidth": 275,
+            "headCenterX": 356.5,
+            "silhouetteHeight": 490,
+            "baselineY": 495
+          }
+        },
+        {
+          "file": "1c0019.png",
+          "role": "penultimate",
+          "index": 19,
+          "width": 700,
+          "height": 500,
+          "sha256": "3e22bdee0ffb8fd3d514d6c3e399800ad4406d3ae59d9fca00790b45f980586c",
+          "alphaBounds": [
+            178,
+            0,
+            522,
+            488
+          ],
+          "alpha32Bounds": [
+            178,
+            0,
+            522,
+            488
+          ],
+          "alignmentFeatures": {
+            "headWidth": 287,
+            "headCenterX": 348.5,
+            "silhouetteHeight": 488,
+            "baselineY": 488
+          }
+        },
+        {
+          "file": "1c0020.png",
+          "role": "last",
+          "index": 20,
+          "width": 700,
+          "height": 500,
+          "sha256": "25a72dd67073014cf3ab993cd4339cad648294151c0977ee4e6f13ce75c26d9d",
+          "alphaBounds": [
+            206,
+            7,
+            494,
+            494
+          ],
+          "alpha32Bounds": [
+            206,
+            7,
+            494,
+            494
+          ],
+          "alignmentFeatures": {
+            "headWidth": 288,
+            "headCenterX": 350.0,
+            "silhouetteHeight": 487,
+            "baselineY": 494
+          }
+        }
+      ],
+      "sourceInventorySHA256": "223c1481340af36e6922888bac6f868f8f97d4cc39f1a810729c39d0d058ab6a",
+      "sourceAlphaBounds": [
+        178,
+        0,
+        522,
+        496
+      ],
+      "sourceVisibleBounds": [
+        178,
+        0,
+        522,
+        496
+      ],
+      "transformedAlphaBounds": [
+        599.75,
+        347.426,
+        1089.461,
+        1053.522
+      ],
+      "transformedVisibleBounds": [
+        599.75,
+        347.426,
+        1089.461,
+        1053.522
+      ],
+      "notes": "Aligned across 1a/1b\u21921c and 1c\u21921a. Waving/bouncing in the penultimate frame is authored motion and is not individually recentered."
+    },
+    "1d": {
+      "status": "missing",
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "sourceFrameCount": 0,
+      "sourceFrameSize": null,
+      "sampleFrames": [],
+      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+    },
+    "2a": {
+      "status": "calibrated",
+      "scale": 1.822113,
+      "offsetX": 147.32159,
+      "offsetY": 174.168668,
+      "sourceFrameCount": 20,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sourceFrameSizes": [
+        {
+          "width": 700,
+          "height": 500
+        }
+      ],
+      "sampleFrames": [
+        {
+          "file": "2a0000.png",
+          "role": "first",
+          "index": 0,
+          "width": 700,
+          "height": 500,
+          "sha256": "1f75c078e68da10bc2b5fea4db94f30c27b0b604e4ab071498395fab28c84d85",
+          "alphaBounds": [
+            227,
+            88,
+            527,
+            479
+          ],
+          "alpha32Bounds": [
+            228,
+            88,
+            527,
+            479
+          ],
+          "alignmentFeatures": {
+            "headWidth": 221,
+            "headCenterX": 384.5,
+            "silhouetteHeight": 391,
+            "baselineY": 479
+          }
+        },
+        {
+          "file": "2a0001.png",
+          "role": "second",
+          "index": 1,
+          "width": 700,
+          "height": 500,
+          "sha256": "bee1434ec46fb469b3228df29dcfb94c0d6873c218e3f7ab7c9ff86a344e4fe6",
+          "alphaBounds": [
+            231,
+            97,
+            531,
+            479
+          ],
+          "alpha32Bounds": [
+            231,
+            97,
+            531,
+            479
+          ],
+          "alignmentFeatures": {
+            "headWidth": 225,
+            "headCenterX": 391.5,
+            "silhouetteHeight": 382,
+            "baselineY": 479
+          }
+        },
+        {
+          "file": "2a0018.png",
+          "role": "penultimate",
+          "index": 18,
+          "width": 700,
+          "height": 500,
+          "sha256": "41b222bbbaa9160fd42df211af7eb222aacec4c9a581d0a140823d4d2d433b9f",
+          "alphaBounds": [
+            221,
+            141,
+            525,
+            485
+          ],
+          "alpha32Bounds": [
+            221,
+            141,
+            525,
+            485
+          ],
+          "alignmentFeatures": {
+            "headWidth": 228,
+            "headCenterX": 381.0,
+            "silhouetteHeight": 344,
+            "baselineY": 485
+          }
+        },
+        {
+          "file": "2a0019.png",
+          "role": "last",
+          "index": 19,
+          "width": 700,
+          "height": 500,
+          "sha256": "0e9e12e13aaa41c40f3c36b9ac8338009f44a9d012bc5955569930d605311806",
+          "alphaBounds": [
+            218,
+            133,
+            522,
+            485
+          ],
+          "alpha32Bounds": [
+            218,
+            133,
+            522,
+            485
+          ],
+          "alignmentFeatures": {
+            "headWidth": 226,
+            "headCenterX": 381.0,
+            "silhouetteHeight": 352,
+            "baselineY": 485
+          }
+        }
+      ],
+      "sourceInventorySHA256": "50a326cd5e4836c70f50c3de32ab8820720a0cf9d5043d8813a24c728ac4c801",
+      "sourceAlphaBounds": [
+        217,
+        88,
+        532,
+        487
+      ],
+      "sourceVisibleBounds": [
+        217,
+        88,
+        532,
+        487
+      ],
+      "transformedAlphaBounds": [
+        542.72,
+        334.515,
+        1116.686,
+        1061.538
+      ],
+      "transformedVisibleBounds": [
+        542.72,
+        334.515,
+        1116.686,
+        1061.538
+      ],
+      "notes": "Aligned standing entry to 1a and sitting exit to 3a. Ground line and source canvas remain intact; all frames share this transform."
+    },
+    "2b": {
+      "status": "calibrated",
+      "scale": 1.69622,
+      "offsetX": 252.021476,
+      "offsetY": 320.272054,
+      "sourceFrameCount": 23,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sourceFrameSizes": [
+        {
+          "width": 700,
+          "height": 500
+        }
+      ],
+      "sampleFrames": [
+        {
+          "file": "standup0000.png",
+          "role": "first",
+          "index": 0,
+          "width": 700,
+          "height": 500,
+          "sha256": "28057126e3f501f2c9d4a5016306bfe57516c0e714591958110ebf769a9480db",
+          "alphaBounds": [
+            165,
+            61,
+            532,
+            432
+          ],
+          "alpha32Bounds": [
+            165,
+            61,
+            532,
+            432
+          ],
+          "alignmentFeatures": {
+            "headWidth": 258,
+            "headCenterX": 348.0,
+            "silhouetteHeight": 371,
+            "baselineY": 432
+          }
+        },
+        {
+          "file": "standup0001.png",
+          "role": "second",
+          "index": 1,
+          "width": 700,
+          "height": 500,
+          "sha256": "ab52a160db103303f1bc308c08ecf89db3c0ff2844459d7f5db08c20fedbab14",
+          "alphaBounds": [
+            166,
+            69,
+            533,
+            432
+          ],
+          "alpha32Bounds": [
+            166,
+            69,
+            533,
+            432
+          ],
+          "alignmentFeatures": {
+            "headWidth": 257,
+            "headCenterX": 358.5,
+            "silhouetteHeight": 363,
+            "baselineY": 432
+          }
+        },
+        {
+          "file": "standup0021.png",
+          "role": "penultimate",
+          "index": 21,
+          "width": 700,
+          "height": 500,
+          "sha256": "2f7e0790e8a641eee39f5e8335aa68c22150c4ac8eb45bbd27515b4eebdad059",
+          "alphaBounds": [
+            166,
+            30,
+            534,
+            432
+          ],
+          "alpha32Bounds": [
+            166,
+            30,
+            534,
+            432
+          ],
+          "alignmentFeatures": {
+            "headWidth": 229,
+            "headCenterX": 350.5,
+            "silhouetteHeight": 402,
+            "baselineY": 432
+          }
+        },
+        {
+          "file": "standup0022.png",
+          "role": "last",
+          "index": 22,
+          "width": 700,
+          "height": 500,
+          "sha256": "2dbd39daba8266f63e4b001f67114660032f81796381414ea8d9001397e5bcd0",
+          "alphaBounds": [
+            166,
+            25,
+            534,
+            432
+          ],
+          "alpha32Bounds": [
+            166,
+            25,
+            534,
+            432
+          ],
+          "alignmentFeatures": {
+            "headWidth": 229,
+            "headCenterX": 349.5,
+            "silhouetteHeight": 407,
+            "baselineY": 432
+          }
+        }
+      ],
+      "sourceInventorySHA256": "f09feed589ab534e52d5e3a8e777d9b59fb3c5a0efe442435b44b4daf2925007",
+      "sourceAlphaBounds": [
+        165,
+        24,
+        535,
+        433
+      ],
+      "sourceVisibleBounds": [
+        165,
+        24,
+        535,
+        433
+      ],
+      "transformedAlphaBounds": [
+        531.898,
+        360.981,
+        1159.499,
+        1054.735
+      ],
+      "transformedVisibleBounds": [
+        531.898,
+        360.981,
+        1159.499,
+        1054.735
+      ],
+      "notes": "One compromise fit aligns sitting entry from 3a/3b and standing exit to 1a. Source head-to-body proportions change across the clip; residual seam differences cannot be removed by a single uniform transform."
+    },
+    "3a": {
+      "status": "calibrated",
+      "scale": 1.869054,
+      "offsetX": 126.379516,
+      "offsetY": 146.493981,
+      "sourceFrameCount": 3,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sourceFrameSizes": [
+        {
+          "width": 700,
+          "height": 500
+        }
+      ],
+      "sampleFrames": [
+        {
+          "file": "3a0000.png",
+          "role": "first",
+          "index": 0,
+          "width": 700,
+          "height": 500,
+          "sha256": "5f02d1a77e10045ca66e0650a05d39b31494310b32bce40bb343f3f62f18d7af",
+          "alphaBounds": [
+            225,
+            148,
+            530,
+            487
+          ],
+          "alpha32Bounds": [
+            225,
+            148,
+            530,
+            487
+          ],
+          "alignmentFeatures": {
+            "headWidth": 228,
+            "headCenterX": 383.0,
+            "silhouetteHeight": 339,
+            "baselineY": 487
+          }
+        },
+        {
+          "file": "3a0001.png",
+          "role": "second",
+          "index": 1,
+          "width": 700,
+          "height": 500,
+          "sha256": "164fe0046322f906e2c9c735fffd9f3e1bf8437a069f1e53e11d164420486f62",
+          "alphaBounds": [
+            228,
+            146,
+            532,
+            485
+          ],
+          "alpha32Bounds": [
+            228,
+            146,
+            532,
+            485
+          ],
+          "alignmentFeatures": {
+            "headWidth": 229,
+            "headCenterX": 386.5,
+            "silhouetteHeight": 339,
+            "baselineY": 485
+          }
+        },
+        {
+          "file": "3a0001.png",
+          "role": "penultimate",
+          "index": 1,
+          "width": 700,
+          "height": 500,
+          "sha256": "164fe0046322f906e2c9c735fffd9f3e1bf8437a069f1e53e11d164420486f62",
+          "alphaBounds": [
+            228,
+            146,
+            532,
+            485
+          ],
+          "alpha32Bounds": [
+            228,
+            146,
+            532,
+            485
+          ],
+          "alignmentFeatures": {
+            "headWidth": 229,
+            "headCenterX": 386.5,
+            "silhouetteHeight": 339,
+            "baselineY": 485
+          }
+        },
+        {
+          "file": "3a0002.png",
+          "role": "last",
+          "index": 2,
+          "width": 700,
+          "height": 500,
+          "sha256": "d6129c553eb5a1c98b8cc947f58692eeda1335e19ad0ee50f47e31ac10f8ac10",
+          "alphaBounds": [
+            227,
+            148,
+            532,
+            488
+          ],
+          "alpha32Bounds": [
+            227,
+            148,
+            532,
+            488
+          ],
+          "alignmentFeatures": {
+            "headWidth": 226,
+            "headCenterX": 385.0,
+            "silhouetteHeight": 340,
+            "baselineY": 488
+          }
+        }
+      ],
+      "sourceInventorySHA256": "cd3e23abaa27af3a55f54a11a2efef72f6f8c06a8cdac0478c59f35fea9a6dbc",
+      "sourceAlphaBounds": [
+        225,
+        146,
+        532,
+        488
+      ],
+      "sourceVisibleBounds": [
+        225,
+        146,
+        532,
+        488
+      ],
+      "transformedAlphaBounds": [
+        546.917,
+        419.376,
+        1120.716,
+        1058.592
+      ],
+      "transformedVisibleBounds": [
+        546.917,
+        419.376,
+        1120.716,
+        1058.592
+      ],
+      "notes": "Aligned to sitting exit of 2a and to 3b/2b. Only three unique frames exist, so first-two and last-two samples overlap at 3a0001.png."
+    },
+    "3b": {
+      "status": "calibrated",
+      "scale": 1.847296,
+      "offsetX": 137.124277,
+      "offsetY": 153.695893,
+      "sourceFrameCount": 18,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sourceFrameSizes": [
+        {
+          "width": 700,
+          "height": 500
+        }
+      ],
+      "sampleFrames": [
+        {
+          "file": "3b0000.png",
+          "role": "first",
+          "index": 0,
+          "width": 700,
+          "height": 500,
+          "sha256": "629a86f1f8fd257d34908afb44e0875946045853ab9443c2c0d8f074c5364e4a",
+          "alphaBounds": [
+            228,
+            139,
+            531,
+            489
+          ],
+          "alpha32Bounds": [
+            228,
+            139,
+            531,
+            489
+          ],
+          "alignmentFeatures": {
+            "headWidth": 230,
+            "headCenterX": 378.0,
+            "silhouetteHeight": 350,
+            "baselineY": 489
+          }
+        },
+        {
+          "file": "3b0001.png",
+          "role": "second",
+          "index": 1,
+          "width": 700,
+          "height": 500,
+          "sha256": "5a3c4f6a3dd771d8bac6c2a4aedb0d5d5337fdfe649e296b591bf8bed3e8d7ed",
+          "alphaBounds": [
+            231,
+            140,
+            533,
+            489
+          ],
+          "alpha32Bounds": [
+            231,
+            140,
+            533,
+            489
+          ],
+          "alignmentFeatures": {
+            "headWidth": 238,
+            "headCenterX": 385.0,
+            "silhouetteHeight": 349,
+            "baselineY": 489
+          }
+        },
+        {
+          "file": "3b0016.png",
+          "role": "penultimate",
+          "index": 16,
+          "width": 700,
+          "height": 500,
+          "sha256": "e66a50210324ed5289fb9aea21f22e09de11f08a79f30581e0015daf58fb0262",
+          "alphaBounds": [
+            227,
+            148,
+            532,
+            488
+          ],
+          "alpha32Bounds": [
+            227,
+            148,
+            532,
+            488
+          ],
+          "alignmentFeatures": {
+            "headWidth": 226,
+            "headCenterX": 385.0,
+            "silhouetteHeight": 340,
+            "baselineY": 488
+          }
+        },
+        {
+          "file": "3b0017.png",
+          "role": "last",
+          "index": 17,
+          "width": 700,
+          "height": 500,
+          "sha256": "42e84cf71468c262b0634bca187bd69e741d66ade7d4f99589387153de6539be",
+          "alphaBounds": [
+            225,
+            134,
+            530,
+            486
+          ],
+          "alpha32Bounds": [
+            225,
+            134,
+            530,
+            486
+          ],
+          "alignmentFeatures": {
+            "headWidth": 228,
+            "headCenterX": 388.0,
+            "silhouetteHeight": 352,
+            "baselineY": 486
+          }
+        }
+      ],
+      "sourceInventorySHA256": "67a919ad400a5325d40e297facf72fd41180fc20481386151594fa01b5b44c09",
+      "sourceAlphaBounds": [
+        225,
+        132,
+        534,
+        489
+      ],
+      "sourceVisibleBounds": [
+        225,
+        132,
+        534,
+        489
+      ],
+      "transformedAlphaBounds": [
+        552.766,
+        397.539,
+        1123.58,
+        1057.024
+      ],
+      "transformedVisibleBounds": [
+        552.766,
+        397.539,
+        1123.58,
+        1057.024
+      ],
+      "notes": "Aligned across 3a\u21943b and 3b\u21922b. The look/lean motion and its slight end-frame height variation are retained."
+    },
+    "3c": {
+      "status": "missing",
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "sourceFrameCount": 0,
+      "sourceFrameSize": null,
+      "sampleFrames": [],
+      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+    },
+    "4a": {
+      "status": "calibrated",
+      "scale": 2.484649,
+      "offsetX": -17.58271,
+      "offsetY": 24.139534,
+      "sourceFrameCount": 27,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sourceFrameSizes": [
+        {
+          "width": 700,
+          "height": 500
+        }
+      ],
+      "sampleFrames": [
+        {
+          "file": "4a0000.png",
+          "role": "first",
+          "index": 0,
+          "width": 700,
+          "height": 500,
+          "sha256": "b875b191e73619aea53c0d08222acf0aa4e904b2a6d6e16b5677590bb7eaf351",
+          "alphaBounds": [
+            272,
+            131,
+            429,
+            412
+          ],
+          "alpha32Bounds": [
+            272,
+            131,
+            429,
+            412
+          ],
+          "alignmentFeatures": {
+            "headWidth": 156,
+            "headCenterX": 350.0,
+            "silhouetteHeight": 281,
+            "baselineY": 412
+          }
+        },
+        {
+          "file": "4a0001.png",
+          "role": "second",
+          "index": 1,
+          "width": 700,
+          "height": 500,
+          "sha256": "9822eceeeb6e1ee5e6ca72d630bca725a7aee2574a3700c70fbb2d3b890e015c",
+          "alphaBounds": [
+            268,
+            132,
+            452,
+            414
+          ],
+          "alpha32Bounds": [
+            268,
+            132,
+            452,
+            414
+          ],
+          "alignmentFeatures": {
+            "headWidth": 162,
+            "headCenterX": 349.0,
+            "silhouetteHeight": 282,
+            "baselineY": 414
+          }
+        },
+        {
+          "file": "4a0025.png",
+          "role": "penultimate",
+          "index": 25,
+          "width": 700,
+          "height": 500,
+          "sha256": "dc533b241f868c28c51697ce7c161e957b823f612d73858f4f861060c0cb48cc",
+          "alphaBounds": [
+            329,
+            166,
+            494,
+            335
+          ],
+          "alpha32Bounds": [
+            329,
+            166,
+            494,
+            304
+          ],
+          "alignmentFeatures": null
+        },
+        {
+          "file": "4a0026.png",
+          "role": "last",
+          "index": 26,
+          "width": 700,
+          "height": 500,
+          "sha256": "87fb4dd2c0e66b516f88a2f2683614765ef8161295d323ca1345632b591ba83c",
+          "alphaBounds": null,
+          "alpha32Bounds": null,
+          "alignmentFeatures": null
+        }
+      ],
+      "sourceInventorySHA256": "38c4a6db5b36115a6dc3828f090358980fbedc8fd4cff8c96f2db8156c83cba2",
+      "sourceAlphaBounds": [
+        29,
+        13,
+        675,
+        500
+      ],
+      "sourceVisibleBounds": [
+        198,
+        70,
+        581,
+        431
+      ],
+      "transformedAlphaBounds": [
+        54.472,
+        56.44,
+        1659.555,
+        1266.464
+      ],
+      "transformedVisibleBounds": [
+        474.378,
+        198.065,
+        1425.998,
+        1095.023
+      ],
+      "notes": "Standing entry aligned to 1a/1b. Final frames are intentionally fading smoke/sparks and then empty, not a standing scale reference. Canvas padding retains the raised wing, smoke, and even very faint nonzero-alpha source speckles."
+    },
+    "4b": {
+      "status": "missing",
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "sourceFrameCount": 0,
+      "sourceFrameSize": null,
+      "sampleFrames": [],
+      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+    },
+    "timeout": {
+      "status": "hidden",
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "sourceFrameCount": 0,
+      "sourceFrameSize": null,
+      "sampleFrames": [],
+      "notes": "Hidden timeout has no sprite or scale."
+    },
+    "5a": {
+      "status": "missing",
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "sourceFrameCount": 0,
+      "sourceFrameSize": null,
+      "sampleFrames": [],
+      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+    },
+    "5b": {
+      "status": "missing",
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "sourceFrameCount": 0,
+      "sourceFrameSize": null,
+      "sampleFrames": [],
+      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+    },
+    "5c": {
+      "status": "missing",
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "sourceFrameCount": 0,
+      "sourceFrameSize": null,
+      "sampleFrames": [],
+      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+    },
+    "5d": {
+      "status": "missing",
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "sourceFrameCount": 0,
+      "sourceFrameSize": null,
+      "sampleFrames": [],
+      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+    },
+    "6a": {
+      "status": "missing",
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "sourceFrameCount": 0,
+      "sourceFrameSize": null,
+      "sampleFrames": [],
+      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+    },
+    "6b": {
+      "status": "missing",
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "sourceFrameCount": 0,
+      "sourceFrameSize": null,
+      "sampleFrames": [],
+      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+    },
+    "6c": {
+      "status": "missing",
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "sourceFrameCount": 0,
+      "sourceFrameSize": null,
+      "sampleFrames": [],
+      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+    },
+    "7a": {
+      "status": "missing",
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "sourceFrameCount": 0,
+      "sourceFrameSize": null,
+      "sampleFrames": [],
+      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+    },
+    "7b": {
+      "status": "missing",
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "sourceFrameCount": 0,
+      "sourceFrameSize": null,
+      "sampleFrames": [],
+      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+    },
+    "7c": {
+      "status": "missing",
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "sourceFrameCount": 0,
+      "sourceFrameSize": null,
+      "sampleFrames": [],
+      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+    }
+  },
+  "adjacencyChecks": [
+    {
+      "from": "1a",
+      "to": "1b",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": 0.599,
+      "headCenterDeltaPixels": 0.547,
+      "headWidthDeltaPercent": -2.374,
+      "silhouetteHeightDeltaPercent": 1.927
+    },
+    {
+      "from": "1a",
+      "to": "1c",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": 2.098,
+      "headCenterDeltaPixels": 3.509,
+      "headWidthDeltaPercent": -3.409,
+      "silhouetteHeightDeltaPercent": 1.996
+    },
+    {
+      "from": "1a",
+      "to": "2a",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": -3.039,
+      "headCenterDeltaPixels": 3.951,
+      "headWidthDeltaPercent": 0.254,
+      "silhouetteHeightDeltaPercent": 2.975
+    },
+    {
+      "from": "1a",
+      "to": "4a",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": 0.3,
+      "headCenterDeltaPixels": 0.452,
+      "headWidthDeltaPercent": -2.527,
+      "silhouetteHeightDeltaPercent": 2.271
+    },
+    {
+      "from": "1b",
+      "to": "1a",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": -0.599,
+      "headCenterDeltaPixels": -1.604,
+      "headWidthDeltaPercent": 2.6,
+      "silhouetteHeightDeltaPercent": -1.891
+    },
+    {
+      "from": "1b",
+      "to": "1c",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": 1.499,
+      "headCenterDeltaPixels": 2.604,
+      "headWidthDeltaPercent": -1.239,
+      "silhouetteHeightDeltaPercent": 0.17
+    },
+    {
+      "from": "1b",
+      "to": "4a",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": -0.3,
+      "headCenterDeltaPixels": -0.452,
+      "headWidthDeltaPercent": -0.337,
+      "silhouetteHeightDeltaPercent": 0.44
+    },
+    {
+      "from": "1c",
+      "to": "1a",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": 3.596,
+      "headCenterDeltaPixels": 6.112,
+      "headWidthDeltaPercent": -0.63,
+      "silhouetteHeightDeltaPercent": -1.555
+    },
+    {
+      "from": "2a",
+      "to": "3a",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": -3.039,
+      "headCenterDeltaPixels": 3.951,
+      "headWidthDeltaPercent": 3.254,
+      "silhouetteHeightDeltaPercent": -0.077
+    },
+    {
+      "from": "2b",
+      "to": "1a",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": -3.039,
+      "headCenterDeltaPixels": 3.952,
+      "headWidthDeltaPercent": 4.702,
+      "silhouetteHeightDeltaPercent": -0.426
+    },
+    {
+      "from": "3a",
+      "to": "2b",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": -2.75,
+      "headCenterDeltaPixels": 3.844,
+      "headWidthDeltaPercent": 2.72,
+      "silhouetteHeightDeltaPercent": -1.896
+    },
+    {
+      "from": "3a",
+      "to": "3b",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": 1.235,
+      "headCenterDeltaPixels": -5.499,
+      "headWidthDeltaPercent": 1.66,
+      "silhouetteHeightDeltaPercent": 1.747
+    },
+    {
+      "from": "3b",
+      "to": "2b",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": -0.29,
+      "headCenterDeltaPixels": 0.107,
+      "headWidthDeltaPercent": 4.159,
+      "silhouetteHeightDeltaPercent": -2.605
+    },
+    {
+      "from": "3b",
+      "to": "3a",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": 1.525,
+      "headCenterDeltaPixels": -5.606,
+      "headWidthDeltaPercent": 1.846,
+      "silhouetteHeightDeltaPercent": -0.869
+    }
+  ]
+}
