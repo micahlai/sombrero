@@ -177,7 +177,7 @@ function renderInspector() {
     const destination=document.createElement('span');destination.className='route-id';destination.textContent=edge.to.toUpperCase();
     const condition=document.createElement('span');condition.className='route-condition';
     const weight=controller.defaultWeight(edge);
-    condition.textContent=edge.kind==='default'?`weight ${weight} · ${(weight/total*100).toFixed(2)}%${weight!==edge.weight?' · preview override':''}`:edge.guard;
+    condition.textContent=edge.kind==='recall'?`weight ${weight} · ${(weight*100).toFixed(0)}% · window_available ${controller.flags.window_available}`:edge.kind==='default'?`weight ${weight} · ${(weight/total*100).toFixed(2)}%${weight!==edge.weight?' · preview override':''}`:edge.guard;
     const kind=document.createElement('span');kind.className=`route-kind ${edge.kind}`;
     kind.textContent={default:'clip end',interrupt:'immediate',afterClip:'after clip',recall:'recall'}[edge.kind];
     row.append(destination,condition,kind);list.append(row);

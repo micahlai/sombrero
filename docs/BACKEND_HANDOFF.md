@@ -6,9 +6,9 @@ Updated November 18, 2026.
 
 **Implementation resumed at the user’s request.** The first source table, including sitting idle (5), is authoritative. The five-state controller, imported transparent frames, native renderer, resource fallback, and app bundle are implemented. See PROJECT_PLAN.md for the current build and validation record.
 
-## Global font update
+## Speech font update
 
-Matcha Style is the shared app font. Its OTF and supplied notices are bundled under `Sources/PetAssets/Resources/Fonts/`; `AppTypography` registers it for the process at startup, provides body/menu fonts, and supplies a system-font fallback. Current menus/submenus use it; future bubble, polaroid, rich-text, and Bible-reader controls must use the same typography. See [SOMBRERO_V1_PLAN.md](SOMBRERO_V1_PLAN.md#global-typography).
+Matcha Style is used only for speech-bubble text and drawn menu controls. Its OTF and supplied notices are bundled under `Sources/PetAssets/Resources/Fonts/`; `AppTypography` registers it on demand and provides a system-font fallback. Native right-click menus, menu-bar controls, and submenus use standard macOS typography. Do not install it as the global app font. See [SOMBRERO_V1_PLAN.md](SOMBRERO_V1_PLAN.md#speech-typography).
 
 ## Latest direction
 

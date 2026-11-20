@@ -1,17 +1,16 @@
 import AppKit
 import CoreText
 
-/// Shared typography for app menus and future bubble, reader, and composer text.
+/// Project typography for speech-bubble text. Native menus use macOS defaults.
 /// Font registration is process-scoped, so the bundled face needs no system installation.
 public enum AppTypography {
-    public static let menuSize: CGFloat = 16
     public static let bodySize: CGFloat = 18
 
     public static let postScriptName: String? = {
         let bases = [Bundle.main.resourceURL, Bundle.main.bundleURL,
                      Bundle.main.executableURL?.deletingLastPathComponent()].compactMap { $0 }
-        let candidates = bases.map {
-            $0.appendingPathComponent("WatercolorDuck_PetAssets.bundle/Fonts/MatchaStyle.otf")
+        let candidates = bases.flatMap { base in
+            ["WatercolorDuck_PetAssets.bundle/Fonts/MatchaStyle.otf", "WatercolorDuck_PetAssets.bundle/Contents/Resources/Fonts/MatchaStyle.otf"].map { base.appendingPathComponent($0) }
         }
         guard let url = candidates.first(where: { FileManager.default.fileExists(atPath: $0.path) }),
               let provider = CGDataProvider(url: url as CFURL),
@@ -35,9 +34,5 @@ public enum AppTypography {
         let pointSize = size.isFinite && size > 0 ? size : bodySize
         if let name = postScriptName, let font = NSFont(name: name, size: pointSize) { return font }
         return NSFont.systemFont(ofSize: pointSize)
-    }
-
-    public static func installDefaults() {
-        NSFont.setUser(font())
     }
 }

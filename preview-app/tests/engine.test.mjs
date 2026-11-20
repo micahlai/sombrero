@@ -11,16 +11,15 @@ test('guard parser handles precedence without executing arbitrary code', () => {
   assert.throws(() => evaluateGuard('pet;alert(1)', {pet: true}));
   assert.throws(() => evaluateGuard('missing', {}));
 });
-test('standing pet interrupts; release waits until clip end', () => {
+test('standing pet interrupts and release exits immediately', () => {
   const c = make(); c.setFlag('pet', true); assert.equal(c.state, '1d');
-  c.setFlag('pet', false); assert.equal(c.state, '1d');
-  c.complete(); assert.equal(c.state, '1c'); c.complete(); assert.equal(c.state, '1a');
+  c.setFlag('pet', false); assert.equal(c.state, '1c');
+  c.complete(); assert.equal(c.state, '1a');
 });
 test('required sitting-pet photo route skips gateways without losing request', () => {
   const c = make(() => { throw Error('No RNG expected'); });
-  c.jump('3c'); c.setFlag('pet', true); c.setFlag('showPhoto', true);
-  c.trigger('photoShow'); assert.equal(c.state, '3c');
-  c.complete(); assert.equal(c.state, '2b'); assert.equal(c.signals.event, true);
+  c.jump('3a'); c.setFlag('pet', true); c.setFlag('showPhoto', true);
+  c.trigger('photoShow'); assert.equal(c.state, '2b'); assert.equal(c.signals.event, true);
   assert.deepEqual(c.history.slice(-2).map(h => [h.to, h.skipped]), [['3a', false], ['2b', true]]);
   c.complete(); assert.equal(c.state, '5a'); assert.equal(c.signals.event, false);
   assert.equal(c.active, 'photoShow');
@@ -31,8 +30,8 @@ test('required sitting-pet photo route skips gateways without losing request', (
   c.complete(); assert.equal(c.state, '5d');
 });
 test('page-two requests outrank pet and stay FIFO during active routines', () => {
-  const c = make(); c.jump('1d'); c.trigger('photoShow'); c.trigger('bibleRead');
-  c.setFlag('pet', true); c.complete(); assert.equal(c.state, '5a');
+  const c = make(); c.setFlag('pet', true); c.trigger('photoShow'); c.trigger('bibleRead');
+  assert.equal(c.state, '5a');
   assert.equal(c.active, 'photoShow'); assert.deepEqual(c.queue, ['bibleRead']);
   c.complete(); c.complete(); c.complete(); assert.equal(c.state, '5d');
   c.complete(); assert.equal(c.state, '7a'); assert.equal(c.active, 'bibleRead');
@@ -65,9 +64,9 @@ test('event includes goodbye and remains true while either goodbye or requests a
   c.reset(); assert.equal(c.signals.event, false);
 });
 test('goodbye exits sitting pet even while pet stays held and clears on timeout', () => {
-  const c = make(); c.jump('3c'); c.setFlag('pet', true); c.setFlag('goodbye', true);
+  const c = make(); c.jump('3a'); c.setFlag('pet', true); c.setFlag('goodbye', true);
   assert.equal(c.signals.event, true);
-  c.complete(); assert.equal(c.state, '2b');
+  assert.equal(c.state, '2b');
   c.complete(); assert.equal(c.state, '4a');
   c.complete(); assert.equal(c.state, 'timeout'); assert.equal(c.signals.event, false);
 });
@@ -96,9 +95,9 @@ test('solo mode loops and suspends graph guards; resuming applies pending guards
 });
 test('debug jumps start a new path while retaining the transition log', () => {
   const c = make(); c.complete(); assert.equal(c.history.length, 1);
-  c.jump('3c'); assert.equal(c.history.length, 0);
+  c.setMode(false); c.jump('3c'); assert.equal(c.history.length, 0);
   assert.ok(c.log.some(entry => entry.kind === 'default'));
-  c.complete(); assert.equal(c.history[0].from, '3c');
+  c.setMode(true); assert.equal(c.history[0].from, '3c');
 });
 test('click override only arms directly connected weighted options, without jumping', () => {
   const c=make();
@@ -128,10 +127,10 @@ test('override can be canceled and cannot survive reset, jump, or solo mode', ()
   c.forceDefault('1b');c.setMode(false);assert.equal(c.defaultOverride,null);
   assert.equal(c.forceDefault('1b'),false);
 });
-test('all 48 authored edges are reachable with suitable flags and RNG', () => {
+test('all authored edges are reachable with suitable flags and RNG', () => {
   const visited = new Set();
-  const flagNames = ['pet','goodbye','showPhoto','takingPhoto','reading'];
-  for (const state of graph.states) for (let bits = 0; bits < 32; bits++) {
+  const flagNames = ['pet','goodbye','showPhoto','takingPhoto','reading','window_available'];
+  for (const state of graph.states) for (let bits = 0; bits < 64; bits++) {
     for (const event of [null, 'photoShow','photoTake','bibleRead']) for (const sample of [0,.1,.8,.956,.98,.99,.9999]) {
       const c = make(() => sample); c.state = state.id;
       c.flags = Object.fromEntries(flagNames.map((n,i) => [n, Boolean(bits & (1 << i))]));
@@ -142,4 +141,27 @@ test('all 48 authored edges are reachable with suitable flags and RNG', () => {
     }
   }
   assert.deepEqual(graph.transitions.map((_,i) => `edge-${i}`).filter(id => !visited.has(id)), []);
+});
+
+test('both pet exits invalidate stale clips immediately and held loops stay finite', () => {
+  for (const [idle,petState,released] of [['1a','1d','1c'],['3a','3c','3a']]) {
+    const c=make(()=>{throw Error('No random roll expected');});
+    c.jump(idle);c.setFlag('pet',true);assert.equal(c.state,petState);
+    c.complete();assert.equal(c.state,petState);
+    const stale=c.generation;c.setFlag('pet',false);assert.equal(c.state,released);
+    assert.equal(c.complete(stale),false);
+  }
+});
+test('manual and timed recall use 20/80 weights only when a window is available', () => {
+  for (const event of ['manualRecall','timedAwayExpired']) {
+    for (const [sample,expected] of [[0,'4b'],[.199999,'4b'],[.2,'4c'],[.999999,'4c']]) {
+      let calls=0;const c=make(()=>{calls++;return sample;});
+      c.jump('timeout');c.setFlag('window_available',true);c.trigger(event);
+      assert.equal(c.state,expected);assert.equal(calls,1);
+      c.complete();assert.equal(c.state,expected==='4c'?'3a':'1b');
+    }
+    const c=make(()=>{throw Error('Unavailable window must not consume RNG');});
+    c.jump('timeout');c.trigger(event);assert.equal(c.state,'4b');
+    assert.equal(c.outgoing('timeout').filter(e=>e.to==='4c').map(e=>c.edgeWeight(e))[0],0);
+  }
 });

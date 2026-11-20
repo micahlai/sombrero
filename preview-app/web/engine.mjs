@@ -1,5 +1,5 @@
 // Pure graph controller. No DOM, timers, rendering, native shell, or services.
-export const FLAG_NAMES = ['pet', 'goodbye', 'showPhoto', 'takingPhoto', 'reading'];
+export const FLAG_NAMES = ['pet', 'goodbye', 'showPhoto', 'takingPhoto', 'reading', 'window_available'];
 
 export function evaluateGuard(expression, flags) {
   if (!expression) return true;
@@ -46,6 +46,8 @@ export class GraphController {
       if (!this.states.has(edge.from) || !this.states.has(edge.to)) throw new Error('Unknown transition state');
       if (!['default', 'interrupt', 'afterClip', 'recall'].includes(edge.kind)) throw new Error('Unknown transition kind');
       if (edge.kind === 'default' && (!Number.isFinite(edge.weight) || edge.weight <= 0)) throw new Error('Invalid transition weight');
+      if (edge.weightByFlag && (!FLAG_NAMES.includes(edge.weightByFlag.flag) ||
+          ![edge.weightByFlag.true, edge.weightByFlag.false].every(n => Number.isFinite(n) && n >= 0))) throw new Error('Invalid conditional weight');
       evaluateGuard(edge.guard, guardFlags);
     }
     for (const target of Object.values(graph.eventTargets)) if (!this.states.has(target)) throw new Error('Unknown event target');
@@ -105,7 +107,19 @@ export class GraphController {
     if (edge.kind === 'default' && override?.from === edge.from && override.generation === this.generation) {
       return edge.to === override.to ? 1 : 0;
     }
-    return edge.weight;
+    return this.edgeWeight(edge);
+  }
+  edgeWeight(edge) {
+    return edge.weightByFlag ? edge.weightByFlag[String(Boolean(this.flags[edge.weightByFlag.flag]))] : edge.weight;
+  }
+  chooseWeighted(edges) {
+    const candidates = edges.filter(e => this.edgeWeight(e) > 0);
+    if (candidates.length < 2) return candidates[0];
+    const sample = this.random();
+    if (!Number.isFinite(sample) || sample < 0 || sample >= 1) throw new Error('Random sample must be in [0, 1)');
+    let remaining = sample * candidates.reduce((sum, edge) => sum + this.edgeWeight(edge), 0);
+    for (const edge of candidates) { remaining -= this.edgeWeight(edge); if (remaining < 0) return edge; }
+    return candidates.at(-1);
   }
   eligible(kind) {
     return this.outgoing().filter(e => e.kind === kind && evaluateGuard(e.guard, this.signals));
@@ -132,7 +146,8 @@ export class GraphController {
         this.note('input', `${name}: only applies in timeout`);
         return false;
       }
-      const edge = this.outgoing().find(e => e.kind === 'recall');
+      const signals = {...this.signals, [name]: true};
+      const edge = this.chooseWeighted(this.outgoing().filter(e => e.kind === 'recall' && evaluateGuard(e.guard, signals)));
       if (!edge) return false;
       this.note('input', name);
       this.take(edge, false);

@@ -124,7 +124,7 @@ drawing clock without fast-forwarding on return.
 ## Graph behavior and authority
 
 The app reads `docs/sombrero-v1-state-graph.json`, with the semantics described in
-`docs/SOMBRERO_V1_PLAN.md`. All 22 states and 48 edges are shown. Graph labels show
+`docs/SOMBRERO_V1_PLAN.md`. All 23 states and 50 edges are shown. Graph labels show
 raw default weights; hover an edge or open Details for normalized probabilities.
 The raw `1a` total is 1.02 and is intentionally preserved.
 
@@ -132,7 +132,7 @@ The raw `1a` total is 1.02 and is intentionally preserved.
   state**. Skipped gateways appear dashed in the recent-path display/log.
 - Purple edges wait for the last drawing's hold to finish. Defaults are sampled
   only at clip completion, with one normalized weighted choice. Deterministic
-  and conditional routes consume no randomness.
+  and conditional routes consume no randomness. Pet release/event exits are red; held pet self-loops remain purple. Manual/timed recall uses the `window_available` checkbox: checked means 80% 4C / 20% 4B; unchecked means 100% 4B without a random roll.
 - The plan's proposed tie-break is explicit here: goodbye, pending page-two
   request, pet, then default, only where the graph provides a route.
 - The required `3c → 3a (skip) → 2b → 1a (skip) → 5a` path retains the photo-show
@@ -141,8 +141,7 @@ The raw `1a` total is 1.02 and is intentionally preserved.
 - Clip generation tokens reject stale completions after an interrupt/reset/jump.
   A bounded resolver detects immediate-transition cycles.
 
-This is an independent JavaScript test controller, not a replacement for the
-production Swift controller. Changes here do not imply production integration.
+This JavaScript test controller and the native Swift controller implement the same pet-exit and recall branches. The native app obtains window availability from focused-window geometry; this preview simulates it with a checkbox.
 Away timers, viewers, camera capture, photo delivery, and reading content are
 represented by buttons/flags, not real external operations.
 
@@ -168,5 +167,4 @@ case-insensitive folder names, missing/empty assets, and the file-based bundle.
 - `server.py`: asset inventory and optional localhost file server.
 - `launch.py`: dependency-free browser launcher/bundler.
 
-Only `preview-app/` belongs to this change. Existing repository modifications,
-native app code, source artwork, and project planning files are left as found.
+The current worktree also includes the matching native app/controller, graph data, and compact speech-bubble updates. Source artwork is copied unchanged into the native bundle.

@@ -20,12 +20,15 @@ final class PetPanel: NSPanel {
 final class SpriteView: NSView {
     weak var coordinator: PetCoordinator?
     var sprite: SpriteLibrary.Frame?
+    var state: DuckState = .look
     private var pointerOrigin: NSPoint?
     private var windowOrigin: NSPoint?
     private var didDrag = false
-    var interactiveRect: NSRect { bounds.insetBy(dx: 12, dy: 12) }
+    var interactiveRect: NSRect {
+        NSRect(x: bounds.width * 0.4, y: bounds.height * 0.26, width: bounds.width * 0.2, height: bounds.height * 0.2)
+    }
     func containsInteractivePoint(_ point: NSPoint) -> Bool {
-        if let sprite { return sprite.contains(x: point.x / bounds.width, y: 1 - point.y / bounds.height) }
+        if let sprite { return sprite.contains(x: point.x / bounds.width, y: point.y / bounds.height) }
         return interactiveRect.contains(point)
     }
     override var acceptsFirstResponder: Bool { false }
@@ -36,10 +39,16 @@ final class SpriteView: NSView {
         super.draw(dirtyRect)
         if let sprite, let context = NSGraphicsContext.current?.cgContext {
             context.interpolationQuality = .high
-            context.draw(sprite.image, in: bounds)
+            let rect = sprite.placement
+            context.draw(sprite.image, in: NSRect(x: rect.minX * bounds.width, y: rect.minY * bounds.height,
+                width: rect.width * bounds.width, height: rect.height * bounds.height))
         } else {
-            NSColor.systemYellow.setFill()
+            NSColor.systemPink.setFill()
             NSBezierPath(rect: interactiveRect).fill()
+            let text = state.rawValue.uppercased() as NSString
+            let attributes: [NSAttributedString.Key: Any] = [.font: NSFont.systemFont(ofSize: 12, weight: .semibold), .foregroundColor: NSColor.white]
+            let size = text.size(withAttributes: attributes)
+            text.draw(at: NSPoint(x: interactiveRect.midX - size.width / 2, y: interactiveRect.midY - size.height / 2), withAttributes: attributes)
         }
     }
 
@@ -59,6 +68,7 @@ final class SpriteView: NSView {
     override func mouseUp(with event: NSEvent) {
         pointerOrigin = nil; windowOrigin = nil
         coordinator?.endPointerGesture()
+        if !didDrag { coordinator?.toggleBubble() }
     }
     override func rightMouseDown(with event: NSEvent) { coordinator?.showContextMenu(event: event, view: self) }
 }

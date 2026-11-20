@@ -1,6 +1,6 @@
 # sombrero — first release plan
 
-Updated November 19, 2026 (America/New_York). Planning deliverable; this document does not claim the release features are implemented. The running prototype remains the five-state, 6 fps app until its controller is replaced.
+Updated November 19, 2026 (America/New_York). The native app now runs the full local animation graph at 6 fps, loads the ten available `assets/duck/final-v1` clips with their shared scale/position calibration, and uses labeled pink squares for the twelve missing clips. The speech menu uses the five `speech_small` drawings, holds the last drawing for controls, and reverses them on close. Hover petting, click-versus-drag, timed/manual goodbye, recall, and a native animation-preview submenu are implemented. Message/photo, camera, and Bible menu actions exercise their full animation routes with local placeholder content; networking, capture, and the daily reader below remain future work.
 
 ## Authority and release scope
 
@@ -8,19 +8,19 @@ The duck's name is **sombrero** and the product name is **sombrero**. Keep the n
 
 The source is the latest two-page hand-drawn PDF, visually inspected as rendered images rather than inferred from OCR. A copy is at `docs/reference/sombrero-v1-state-diagram.pdf`, SHA-256 `24b6cef91b52f27557fa3b4d4d415cd031f5cbea8a9526c848b27911464dc2ab`. The earlier five-state random controller and its 40/40/20 and 80/20 weights describe only the prototype and are superseded for the release.
 
-Related data: `docs/sombrero-v1-state-graph.json` transcribes the colored arrows, and `docs/sombrero-v1-verse-catalog.json` lists 100 starter references and topics. New final animation sheets have not been supplied. Keep the old assets; do not assume their five numeric filenames map to this graph's numbered-lettered identifiers.
+Related data: `docs/sombrero-v1-state-graph.json` transcribes the colored arrows, and `docs/sombrero-v1-verse-catalog.json` lists 100 starter references and topics. `tools/import-final-sprites.py` copies final source frames unchanged into the native resource bundle, including `animation-scales.json` transforms in its manifest. The Mac build runs this import automatically. Old numeric prototype assets remain in the repository and are excluded from the app bundle.
 
 Current cadence remains 6 drawings/second: a 24 fps timeline with each drawing held for four frames. Each animation has its own complete sprite sheet identified by a string ID such as `3c`. Timeout has no sprite or active duck window. Final sheet manifests will record actual frame order/count, alpha, registration, and holds; do not assume uniform grids or interpolate missing drawings.
 
-## Global typography
+## Speech typography
 
-Use **Matcha Style** as the global app font for the speech-bubble menu, control-panel menus, notification text, polaroid viewer/composer, rich-text editor defaults, and Bible reader. Share `AppTypography` from PetAssets; use its font factory for every new native control or attributed-string default. Current sizes are 16 pt for menus and 18 pt for body text, with sizing adjusted for readability as the new UI is implemented. Rich-text formatting remains supported; the base face is Matcha Style.
+Use **Matcha Style** only for speech-bubble text and its drawn menu controls, via `AppTypography` from PetAssets (9 pt compact menu/body text, adjusted for readability). Native macOS right-click menus, menu-bar controls, and their submenus use the standard system font. Other app UI keeps native typography unless explicitly requested otherwise.
 
 The supplied `Downloads/matcha_style/Matcha Style.otf` is imported unchanged as `Sources/PetAssets/Resources/Fonts/MatchaStyle.otf`. Bundle the OTF once rather than registering both OTF and TTF versions of the same face. Keep the supplied `More Info.txt` and `Read Me.pdf` alongside it as `More-Info.txt` and `Read-Me.pdf`. The supplied notice permits personal and commercial use.
 
-CoreText registers the font for this app process on startup; no system font installation is required. `AppTypography.installDefaults()` sets the application user font, and existing native menus/submenus explicitly use the shared font. Future bubble/reader/composer implementations must use it explicitly too; native system defaults alone do not style every AppKit control. Unsupported glyphs can use normal font fallback, and a missing/corrupt font resource falls back to the system font so recovery controls remain readable.
+CoreText registers the font for this app process when speech text first requests it; no system font installation is required. Speech labels and buttons set the font explicitly. Do not set a global application font or override native menu fonts. Unsupported glyphs and missing/corrupt font resources fall back to system typography.
 
-This typography import is implemented in the current prototype. The other first-release features described here remain planned until implemented.
+The local implementation status is summarized above; service, camera, and verse features below remain planned.
 
 ## State inventory and black arrows
 
@@ -31,15 +31,16 @@ Black arrows run only at clip completion when no permitted red/purple condition 
 | 1a | Standing idle | 1a .975; 1b .02; 1c .02; 2a .005 |
 | 1b | Standing look | 1a .8; 1c .2 |
 | 1c | Standing wave | 1a 1 |
-| 1d | Standing pet | Conditional purple arrows only |
+| 1d | Standing pet | Red release/event exits; purple self-loop |
 | 2a | Sit down | 3a 1 |
 | 2b | Stand up | 1a 1 |
 | 3a | Sitting idle | 3a .985; 3b .01; 2b .005 |
 | 3b | Sitting look | 3b .1; 3a .9 |
-| 3c | Sitting pet | Conditional purple arrows only |
+| 3c | Sitting pet | Red release/event exits; purple self-loop |
 | 4a | Goodbye standing | timeout 1 |
 | 4b | Peek in | 1b 1 |
-| timeout | Hidden/static | No automatic animation; recall or a configured away timer leads to 4b |
+| 4c | Window peek in | 3a 1 |
+| timeout | Hidden/static | No automatic animation; recall/away timer chooses 4c .8 / 4b .2 when window_available; otherwise 4b 1 |
 | 5a | Grab photo | 5b 1 |
 | 5b | Show photo | 5c 1 |
 | 5c | Showing photo idle | Conditional purple arrows only |
@@ -51,7 +52,7 @@ Black arrows run only at clip completion when no permitted red/purple condition 
 | 7b | Bible idle | Conditional purple arrows only |
 | 7c | Stow Bible | 1a 1 |
 
-There are 21 animation states plus one hidden timeout state. The black weights from 1a total 1.02. Under the user's relative-weight instruction, the resulting probabilities are approximately 95.588% idle, 1.961% look, 1.961% wave, and 0.490% sit down. Keep this discrepancy visible; do not silently change a handwritten weight to make the numbers sum to one.
+There are 22 animation states plus one hidden timeout state. The black weights from 1a total 1.02. Under the user's relative-weight instruction, the resulting probabilities are approximately 95.588% idle, 1.961% look, 1.961% wave, and 0.490% sit down. Keep this discrepancy visible; do not silently change a handwritten weight to make the numbers sum to one.
 
 ## Red and purple arrows
 
@@ -63,12 +64,12 @@ Red means interrupt the current animation immediately, including before the firs
 | 1a, 1b | goodbye | Red, immediate | 4a |
 | 1b | event | Purple, finish clip | 1a |
 | 1d | pet and not event | Purple, repeat at end | 1d |
-| 1d | event | Purple, finish clip | 1a |
-| 1d | not pet | Purple, finish clip | 1c |
+| 1d | event | Red, immediate | 1a |
+| 1d | not pet | Red, immediate | 1c |
 | 3a, 3b | pet | Red, immediate | 3c |
 | 3a, 3b | event | Red, immediate | 2b |
 | 3c | pet and not event | Purple, repeat at end | 3c |
-| 3c | not pet or event | Purple, finish clip | 3a |
+| 3c | not pet or event | Red, immediate | 3a |
 | 1a | photo-show request | Red, immediate | 5a |
 | 1a | photo-take request | Red, immediate | 6a |
 | 1a | Bible-read request | Red, immediate | 7a |
@@ -88,7 +89,7 @@ The user's required example is an acceptance test:
 
 | Step | Expected behavior |
 | --- | --- |
-| Photo-show selected during 3c | Retain photoShow request and set event true; finish 3c |
+| Photo-show selected during 3c | Retain photoShow request and set event true; interrupt 3c immediately |
 | Enter 3a | Its red event edge is already true; skip rendering 3a and start 2b |
 | Finish 2b | Reach 1a |
 | Enter 1a | Dispatch the retained photoShow request immediately; skip rendering 1a and start 5a |
@@ -107,10 +108,10 @@ The user clarified two away modes:
 
 | Selection | Hidden behavior | Return |
 | --- | --- | --- |
-| Until I say so | No automatic return, including after incoming messages or a verse becoming ready | Explicit control-panel recall → 4b |
-| For N minutes | Persist an absolute return deadline | Deadline → 4b; manual recall may return earlier |
+| Until I say so | No automatic return, including after incoming messages or a verse becoming ready | Explicit control-panel recall → weighted 4b / 4c |
+| For N minutes | Persist an absolute return deadline | Deadline → weighted 4b / 4c; manual recall may return earlier |
 
-Both continue 4b → 1b. Start the away duration when 4a completes and timeout is entered. Validate positive finite minutes. A sleeping/offline app returns at the next opportunity after an expired deadline; do not replay missed time. Persist hidden mode/deadline across relaunch, and preserve unread notifications while away. Clear transient pet/goodbye state on entering timeout. Timed wake never overrides a later manual-until-recall choice.
+4b continues to 1b (standing look); 4c continues to 3a (sitting idle). On each manual or timed recall, sample `window_available`: choose 4c with weight 0.8 and 4b with weight 0.2 when true; otherwise choose 4b deterministically without consuming randomness. The native app reads the external focused window through Accessibility, rejects minimized/full-screen windows, and reserves a clearance of 0.46 times the duck viewport height plus 8 points above the window. Missing permission, unavailable geometry, or insufficient clearance means false. The native menu offers Enable Window Peek to request Accessibility permission; it never prompts on startup. The preview exposes a manual `window_available` checkbox. 4c positions the duck above the focused window; its authored artwork is still missing, so it uses the pink placeholder. The previous desktop placement is preserved for 4b and normal recovery. Start the away duration when 4a completes and timeout is entered. Validate positive finite minutes. A sleeping/offline app returns at the next opportunity after an expired deadline; do not replay missed time. Persist hidden mode/deadline across relaunch, and preserve unread notifications while away. Clear transient pet/goodbye state on entering timeout. Timed wake never overrides a later manual-until-recall choice.
 
 The diagram places goodbye on 1a/1b only. Proposed menu recovery from sitting or an active routine: enqueue a pending goodbye, suppress new petting, use the existing return-to-standing path, and start 4a at the next supported gateway. Sitting recovery can reuse event-style routing to 2b, but this is a proposed extension because goodbye is not a page-two event. The native control panel must retain an immediate hide/quit path even if an asset or routine fails.
 
@@ -118,7 +119,7 @@ The diagram places goodbye on 1a/1b only. Proposed menu recovery from sitting or
 
 Interpret “icon” as the on-screen duck sprite. Hovering its padded alpha hit area sets pet true; leaving sets false. Re-evaluate when the animation moves beneath a stationary pointer. Moving from the duck to its active speech-bubble menu should keep that interaction stable; proposed behavior holds the last pet signal while interacting with the bubble, clearing it on dismissal/leave. Do not toggle on every sparse watercolor hole. Hovering a macOS menu-bar item should not trigger petting unless separately requested.
 
-A primary click after the existing drag threshold opens a drawn speech bubble anchored to the duck. Use accessible native controls inside the bubble; the original duck panel stays non-key, while text-editing windows may become key only after explicit interaction. Retain drag and context-menu recovery. Bubble geometry counts as interactive; empty pixels outside the duck/bubble pass through.
+A primary click after the existing drag threshold opens a compact drawn speech bubble, approximately 118 × 133 points (one-third the previous dimensions), anchored outside the current clip’s combined painted bounds with an 8-point gap. Prefer above, then either side, then below if near the screen edge. The menu has no product-name heading; labels and buttons use fixed dark-brown ink in light and dark appearance. Use accessible native controls inside the bubble; the original duck panel stays non-key, while text-editing windows may become key only after explicit interaction. Retain drag and context-menu recovery. Bubble geometry counts as interactive; empty pixels outside the duck/bubble pass through.
 
 | Menu item | Availability | Effect |
 | --- | --- | --- |
@@ -198,13 +199,13 @@ The menu bubble and verse bubble have separate modes. Switching to the reading c
 ## Implementation order and acceptance gates
 
 1. **Graph controller:** replace numeric prototype states with typed string IDs, validated graph data, priority policy, pending/active requests, and tokenized clip commands. Exhaustively test every pictured edge, entry-time skips, RNG weights, stale completions, and recovery paths. Map final assets only when supplied.
-2. **Local interaction and lifecycle:** hover signal, click/drag separation, drawn menu, notification overlay, timeout visibility, two away modes, recall through 4b, restart and wake reconciliation. Test input pass-through and focus behavior across every visible UI region.
+2. **Local interaction and lifecycle:** hover signal, click/drag separation, drawn menu, notification overlay, timeout visibility, two away modes, recall through weighted 4b/4c, restart and wake reconciliation. Test input pass-through and focus behavior across every visible UI region.
 3. **Python test service:** provision two test identities, SQLite/media, API contract, durable sync, read receipts, upload limits, outbox and retries. Test third-device rejection, duplicated/lost replies, corrupted upload, server restart, absent media volume, and authorization for peer attachments. Do not collect photos during tests without explicit capture interaction.
 4. **Receive/compose/camera:** separate polaroid windows with native placeholder framing, rich-text round trip, camera selection/permission/device loss, successful capture flag, cancel/retake recovery, explicit send, and integration of 5a–5d/6a–6c. Confirm flash timing against the purple exit rule.
 5. **Daily verse:** exact verified offline text, persisted 11:00–19:00 schedule, three-day exclusion, bubble reader and 7a–7c. Test DST, timezone/date changes, offline startup, after-hours launch, and unread/read badge independence.
 6. **Two-laptop/Pi rehearsal:** app rename plus preference migration preserving old placement, actual camera/Continuity tests on target macOS versions, signed app identity and camera usage strings, realistic media transfer, drive removal/recovery, Spaces/fullscreen/sleep, then a complete real-user flow on both laptops.
 
-The current 14 prototype checks are not proof of this release controller or server. They stay useful as regression coverage while new graph and workflow tests are added. A release build must exercise the new paths with real completion timing rather than frame-by-frame unit tests alone.
+The core checks cover local graph routing, authored default weights, requests through skipped gateways, drawing timing, stale completion rejection, bubble reversal, packaged assets, fallback, and placement. `scripts/test-ui-macos.sh` renders every bubble mode and checks text/control containment plus flipped and scaled placement. These checks do not validate the future server, camera, or daily reader. Rebuild with `scripts/build-macos.sh`, then reopen `build/WatercolorDuck.app`; primary-click the duck for its speech menu, or use the native control panel's Open Speech Menu / Preview Animation commands.
 
 ## Remaining decisions, with proposed defaults
 

@@ -4,13 +4,13 @@ const COLORS = {default:'#91a7b9',interrupt:'#e27480',afterClip:'#bb9ce7',recall
 const LAYOUT = {
   '1a':[80,135], '1b':[350,135], '1c':[80,260], '1d':[350,260],
   '2a':[80,455], '2b':[350,455], '3a':[80,575], '3b':[350,575], '3c':[215,690],
-  '4a':[50,890], timeout:[235,890], '4b':[420,890],
+  '4a':[50,890], timeout:[235,890], '4b':[420,890], '4c':[420,1010],
   '5a':[690,135], '5b':[960,135], '5c':[960,245], '5d':[690,245],
   '6a':[690,435], '6b':[960,435], '6c':[825,550],
   '7a':[690,735], '7b':[960,735], '7c':[825,850],
 };
 const SECTIONS = [
-  [30,60,550,310,'Standing'],[30,405,550,385,'Sitting'],[30,825,550,180,'Away'],
+  [30,60,550,310,'Standing'],[30,405,550,385,'Sitting'],[30,825,550,300,'Away'],
   [650,60,550,285,'Photo'],[650,365,550,285,'Camera'],[650,675,550,285,'Bible'],
 ];
 function element(name, attributes = {}, text) {
@@ -26,7 +26,7 @@ export class GraphView {
     this.svg = svg; this.viewport = viewport; this.graph = graph; this.onSelect = onSelect;
     this.tooltip = document.querySelector('#graph-tooltip');
     this.zoomLabel = document.querySelector('#zoom-level');
-    this.base = {x:0,y:0,width:1240,height:1030}; this.camera = {...this.base};
+    this.base = {x:0,y:0,width:1240,height:1150}; this.camera = {...this.base};
     this.nodes = new Map(); this.paths = new Map(); this.captions = new Map(); this.edges = [];
     this.filter = 'all'; this.drag = null;
     this.build();
@@ -101,7 +101,7 @@ export class GraphView {
     }
     for (const [index,state] of this.graph.states.entries()) {
       const [x,y] = LAYOUT[state.id] ?? [60 + index % 4 * 280,1100 + Math.floor(index/4)*125];
-      const width = ['4a','4b','timeout'].includes(state.id) ? 150 : 160;
+      const width = ['4a','4b','4c','timeout'].includes(state.id) ? 150 : 160;
       this.nodes.set(state.id,{x,y,width,state});
     }
     const edgeGroup = element('g'); const captionGroup = element('g');
@@ -111,7 +111,7 @@ export class GraphView {
       path.addEventListener('pointermove',event => this.showTooltip(event,this.edgeDescription(edge)));
       path.addEventListener('pointerleave',() => { this.tooltip.hidden = true; });
       edgeGroup.append(path); this.paths.set(id,path);
-      const text = edge.kind === 'default' ? (edge.weight === 1 ? '' : String(edge.weight)) : edge.guard;
+      const text = edge.kind === 'recall' ? `Recall · ${edge.weight}` : edge.kind === 'default' ? (edge.weight === 1 ? '' : String(edge.weight)) : edge.guard;
       const caption = element('text',{x,y,class:`edge-caption ${edge.kind}`,'text-anchor':'middle'},text);
       captionGroup.append(caption); this.captions.set(id,caption); this.edges.push({...edge,id});
     });
@@ -152,6 +152,10 @@ export class GraphView {
     if (edge.kind==='default') {
       const sum = this.graph.transitions.filter(e => e.from===edge.from&&e.kind==='default').reduce((a,e) => a+e.weight,0);
       condition = `Weight ${edge.weight}; normalized probability ${pct(edge.weight/sum)}`;
+    }
+    if (edge.kind==='recall') {
+      const weight = this.controller?.edgeWeight(edge) ?? edge.weight;
+      condition = `${edge.guard}\nCurrent weight ${weight}; window_available: true → ${edge.weightByFlag.true}, false → ${edge.weightByFlag.false}`;
     }
     return `${edge.from.toUpperCase()} → ${edge.to.toUpperCase()}\n${type}\n${condition}`;
   }
@@ -212,7 +216,7 @@ export class GraphView {
     for (const edge of this.edges) {
       const path=this.paths.get(edge.id), caption=this.captions.get(edge.id);
       const outgoing=edge.from===controller.state;
-      const eligible=outgoing&&edge.kind!=='default'&&evaluateGuard(edge.guard,controller.signals)&&controller.followGraph;
+      const eligible=outgoing&&edge.kind!=='default'&&(edge.kind==='recall'?controller.edgeWeight(edge)>0:evaluateGuard(edge.guard,controller.signals))&&controller.followGraph;
       const hidden=this.filter==='current'?!outgoing:this.filter==='defaults'&&edge.kind!=='default';
       const forced=edge.kind==='default'&&controller.defaultOverride?.from===edge.from;
       path.classList.toggle('forced-route',forced&&controller.defaultOverride.to===edge.to);
@@ -221,6 +225,7 @@ export class GraphView {
         const label=forced?String(controller.defaultWeight(edge)):edge.weight===1?'':String(edge.weight);
         if(caption.textContent!==label)caption.textContent=label;
       }
+      if(edge.kind==='recall') caption.textContent=`Recall · ${controller.edgeWeight(edge)}`;
       path.classList.toggle('outgoing',outgoing); path.classList.toggle('eligible',eligible);
       path.classList.toggle('taken',taken.has(edge.id)); path.classList.toggle('hidden-edge',hidden);
       path.setAttribute('marker-end',`url(#arrow-${taken.has(edge.id)?'active':edge.kind})`);

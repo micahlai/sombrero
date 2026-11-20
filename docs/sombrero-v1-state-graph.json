@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "planning-only-not-wired-to-prototype",
+  "status": "implemented-local-animation-graph",
   "source": {
     "path": "docs/reference/sombrero-v1-state-diagram.pdf",
     "sha256": "24b6cef91b52f27557fa3b4d4d415cd031f5cbea8a9526c848b27911464dc2ab",
@@ -76,6 +76,12 @@
     {
       "id": "4b",
       "name": "Peek in",
+      "kind": "clip",
+      "asset": null
+    },
+    {
+      "id": "4c",
+      "name": "Window peek in",
       "kind": "clip",
       "asset": null
     },
@@ -372,13 +378,13 @@
     {
       "from": "1d",
       "to": "1a",
-      "kind": "afterClip",
+      "kind": "interrupt",
       "guard": "event"
     },
     {
       "from": "1d",
       "to": "1c",
-      "kind": "afterClip",
+      "kind": "interrupt",
       "guard": "!pet"
     },
     {
@@ -390,7 +396,7 @@
     {
       "from": "3c",
       "to": "3a",
-      "kind": "afterClip",
+      "kind": "interrupt",
       "guard": "!pet || event"
     },
     {
@@ -433,7 +439,31 @@
       "from": "timeout",
       "to": "4b",
       "kind": "recall",
-      "guard": "manualRecall || timedAwayExpired"
+      "guard": "manualRecall || timedAwayExpired",
+      "weight": 0.2,
+      "weightByFlag": {
+        "flag": "window_available",
+        "true": 0.2,
+        "false": 1
+      }
+    },
+    {
+      "from": "timeout",
+      "to": "4c",
+      "kind": "recall",
+      "guard": "manualRecall || timedAwayExpired",
+      "weight": 0.8,
+      "weightByFlag": {
+        "flag": "window_available",
+        "true": 0.8,
+        "false": 0
+      }
+    },
+    {
+      "from": "4c",
+      "to": "3a",
+      "kind": "default",
+      "weight": 1
     }
   ],
   "eventTargets": {
@@ -453,6 +483,8 @@
     "Single black arrows without a written weight are treated as deterministic weight 1.",
     "Check red guards on entry before issuing play; skipped gateway clips render no frame.",
     "No implicit event-interrupt edges are added to other states.",
-    "Camera captured clears takingPhoto immediately; purple exit waits for the current 6b clip."
+    "Camera captured clears takingPhoto immediately; purple exit waits for the current 6b clip.",
+    "Pet release/event exits are immediate; pet self-loops still wait for clip completion.",
+    "Recall chooses 4c:0.8 / 4b:0.2 when window_available is true, otherwise 4b deterministically. 4c continues to 3a."
   ]
 }

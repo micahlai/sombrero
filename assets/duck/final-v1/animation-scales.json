@@ -1765,6 +1765,16 @@
       "sourceFrameSize": null,
       "sampleFrames": [],
       "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+    },
+    "4c": {
+      "status": "missing",
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "sourceFrameCount": 0,
+      "sourceFrameSize": null,
+      "sampleFrames": [],
+      "notes": "Window peek entry; no final frames available. Ten-frame pink-square placeholder until authored and calibrated."
     }
   },
   "adjacencyChecks": [

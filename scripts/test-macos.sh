@@ -35,5 +35,9 @@ for file in sorted(pathlib.Path('Tests/PetCoreTests').glob('*.swift')):
     preamble+='\n'+text.replace('import XCTest','').replace('@testable import PetCore','import PetCore')
 out.write_text(preamble+'\n'+'\n'.join(calls)+f'\nprint("Passed {len(calls)} checks")\n')
 PY
-swiftc -I "$bin_dir/Modules" "$bin_dir/checks.swift" "$bin_dir"/PetCore.build/*.swift.o "$bin_dir"/PetAssets.build/*.swift.o -o "$bin_dir/duck-checks"
+if [[ -f "$bin_dir/PetCore.o" ]]; then
+    swiftc -I "$bin_dir" "$bin_dir/checks.swift" "$bin_dir/PetCore.o" "$bin_dir/PetAssets.o" -o "$bin_dir/duck-checks"
+else
+    swiftc -I "$bin_dir/Modules" "$bin_dir/checks.swift" "$bin_dir"/PetCore.build/*.swift.o "$bin_dir"/PetAssets.build/*.swift.o -o "$bin_dir/duck-checks"
+fi
 "$bin_dir/duck-checks"
