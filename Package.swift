@@ -2,9 +2,9 @@
 import PackageDescription
 
 let package = Package(
-    name: "WatercolorDuck",
+    name: "sombrero",
     platforms: [.macOS(.v13)],
-    products: [.executable(name: "WatercolorDuck", targets: ["DesktopPet"])],
+    products: [.executable(name: "sombrero", targets: ["DesktopPet"])],
     targets: [
         .target(name: "PetCore"),
         .target(name: "PetAssets", dependencies: ["PetCore"], exclude: ["Resources/Duck"], resources: [.copy("Resources/FinalDuck"), .copy("Resources/Fonts")]),

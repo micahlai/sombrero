@@ -61,7 +61,7 @@ Restore placement by display ID and normalized visible work area; clamp on relea
 
 ## Build and validation
 
-- scripts/build-macos.sh builds and ad-hoc-signs build/WatercolorDuck.app with its resource bundle.
+- scripts/build-macos.sh builds and ad-hoc-signs build/sombrero.app with its resource bundle.
 - scripts/test-macos.sh runs the existing synchronous test methods with lightweight assertions under Command Line Tools, whose installation lacks XCTest. Standard swift test remains supported with a compatible full Xcode toolchain; the installed Xcode and CLT XCTest modules are incompatible.
 - Test probabilities/boundaries, required no-RNG transition, clip durations/completions/repeats, pause/hide/sleep clock rebasing, packaged frame counts/masks, missing/corrupt resource fallback, preferences, and negative-origin/disconnected-display geometry.
 - Manual tests remain necessary for topmost focus, transparent mouse pass-through, drag/recover, hide/show, Spaces, fullscreen, Stage Manager, screen unplugging, sleep/wake, and relaunch.

@@ -19,6 +19,26 @@
             "target": "WatercolorDuck",
             "configuration": "release",
             "preLaunchTask": "swift: Build Release WatercolorDuck"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:desktop-pet}",
+            "name": "Debug sombrero",
+            "target": "sombrero",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug sombrero"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:desktop-pet}",
+            "name": "Release sombrero",
+            "target": "sombrero",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release sombrero"
         }
     ]
 }

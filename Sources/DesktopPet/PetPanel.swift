@@ -8,12 +8,12 @@ final class PetPanel: NSPanel {
     init(size: CGFloat) {
         super.init(contentRect: NSRect(x: 0, y: 0, width: size, height: size),
                    styleMask: [.borderless, .nonactivatingPanel], backing: .buffered, defer: false)
-        title = "Watercolor Duck"
+        title = "sombrero"
         isOpaque = false; backgroundColor = .clear; hasShadow = false
         hidesOnDeactivate = false; isFloatingPanel = true; becomesKeyOnlyIfNeeded = true
         isReleasedWhenClosed = false; isMovableByWindowBackground = false
         animationBehavior = .none
-        setAccessibilityLabel("Watercolor Duck companion")
+        setAccessibilityLabel("sombrero companion")
     }
 }
 

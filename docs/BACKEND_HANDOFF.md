@@ -86,7 +86,7 @@ Implementation rules for the next task:
 
 ## Implemented native app
 
-The accessibility setter is fixed. scripts/build-macos.sh compiles and ad-hoc-signs build/WatercolorDuck.app, including the SwiftPM resource bundle. PetCore/SpritePlayback.swift contains the pure controller and clocks; PetAssets/SpriteLibrary.swift validates resources and masks; DesktopPet renders full frames and retains native recovery controls. Originals remain unchanged.
+The accessibility setter is fixed. scripts/build-macos.sh compiles and ad-hoc-signs build/sombrero.app, including the SwiftPM resource bundle. PetCore/SpritePlayback.swift contains the pure controller and clocks; PetAssets/SpriteLibrary.swift validates resources and masks; DesktopPet renders full frames and retains native recovery controls. Originals remain unchanged.
 
 scripts/test-macos.sh passes 14 checks using the same synchronous methods as the XCTest suite, via lightweight assertions. The CLT installation lacks XCTest and the full Xcode XCTest interface is incompatible with the CLT compiler. No license was accepted. The original PetBehavior remains for legacy tests/preferences; the active sprite controller is DuckController, not the old petting placeholder logic.
 

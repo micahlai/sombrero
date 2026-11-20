@@ -50,9 +50,9 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     func start() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "square.fill", accessibilityDescription: "Duck controls")
+            button.image = NSImage(systemSymbolName: "square.fill", accessibilityDescription: "sombrero controls")
             button.image?.isTemplate = true
-            button.toolTip = "Watercolor Duck — show, hide, or recover your companion"
+            button.toolTip = "sombrero — show, hide, or recover your companion"
         }
         statusItem.menu = makeMenu()
         applyWindowPolicy()
@@ -221,7 +221,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
 
     private func makeMenu() -> NSMenu {
         let menu = NSMenu(); menu.delegate = self; menu.autoenablesItems = false
-        let heading = NSMenuItem(title: "Watercolor Duck", action: nil, keyEquivalent: ""); heading.isEnabled = false
+        let heading = NSMenuItem(title: "sombrero", action: nil, keyEquivalent: ""); heading.isEnabled = false
         menu.addItem(heading); menu.addItem(.separator())
         menu.addItem(item(behavior.isVisible ? "Hide Pet" : "Show Pet", #selector(toggleVisibility)))
         menu.addItem(item("Bring Back to This Screen", #selector(bringBack)))
@@ -257,7 +257,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         }
         sizes.submenu = submenu; menu.addItem(sizes)
         menu.addItem(.separator())
-        menu.addItem(item("Quit Watercolor Duck", #selector(quit), key: "q"))
+        menu.addItem(item("Quit sombrero", #selector(quit), key: "q"))
         return menu
     }
 

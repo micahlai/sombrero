@@ -5,6 +5,7 @@ final class PreferenceStore {
     let file: URL
     init() {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        // Retain the legacy path so the sombrero rename preserves existing settings.
         file = base.appendingPathComponent("WatercolorDuck/preferences.json")
     }
 

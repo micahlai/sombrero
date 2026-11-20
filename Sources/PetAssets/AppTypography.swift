@@ -10,7 +10,7 @@ public enum AppTypography {
         let bases = [Bundle.main.resourceURL, Bundle.main.bundleURL,
                      Bundle.main.executableURL?.deletingLastPathComponent()].compactMap { $0 }
         let candidates = bases.flatMap { base in
-            ["WatercolorDuck_PetAssets.bundle/Fonts/MatchaStyle.otf", "WatercolorDuck_PetAssets.bundle/Contents/Resources/Fonts/MatchaStyle.otf"].map { base.appendingPathComponent($0) }
+            ["sombrero_PetAssets.bundle/Fonts/MatchaStyle.otf", "sombrero_PetAssets.bundle/Contents/Resources/Fonts/MatchaStyle.otf"].map { base.appendingPathComponent($0) }
         }
         guard let url = candidates.first(where: { FileManager.default.fileExists(atPath: $0.path) }),
               let provider = CGDataProvider(url: url as CFURL),

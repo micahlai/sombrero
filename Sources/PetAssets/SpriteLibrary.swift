@@ -26,7 +26,7 @@ public final class SpriteLibrary {
     public init(directory: URL? = nil) {
         let bases = [Bundle.main.resourceURL, Bundle.main.bundleURL, Bundle.main.executableURL?.deletingLastPathComponent()].compactMap { $0 }
         let candidates = bases.flatMap { base in
-            ["WatercolorDuck_PetAssets.bundle/FinalDuck", "WatercolorDuck_PetAssets.bundle/Contents/Resources/FinalDuck"].map { base.appendingPathComponent($0) }
+            ["sombrero_PetAssets.bundle/FinalDuck", "sombrero_PetAssets.bundle/Contents/Resources/FinalDuck"].map { base.appendingPathComponent($0) }
         }
         let root = directory ?? candidates.first { FileManager.default.fileExists(atPath: $0.path) } ?? bases[0].appendingPathComponent("missing-duck-resources")
         var counts = Dictionary(uniqueKeysWithValues: DuckState.allCases.filter { $0 != .timeout }.map { ($0, 10) })

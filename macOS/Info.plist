@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
-    <key>CFBundleName</key><string>Watercolor Duck</string>
-    <key>CFBundleDisplayName</key><string>Watercolor Duck</string>
+    <key>CFBundleName</key><string>sombrero</string>
+    <key>CFBundleDisplayName</key><string>sombrero</string>
+    <!-- Preserve the installed app identity, preferences, and permission association. -->
     <key>CFBundleIdentifier</key><string>com.desktop-pet.watercolor-duck</string>
-    <key>CFBundleExecutable</key><string>WatercolorDuck</string>
+    <key>CFBundleExecutable</key><string>sombrero</string>
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>CFBundleShortVersionString</key><string>0.1.0</string>
     <key>CFBundleVersion</key><string>1</string>

@@ -4,7 +4,7 @@ Updated November 19, 2026 (America/New_York). The native app now runs the full l
 
 ## Authority and release scope
 
-The duck's name is **sombrero** and the product name is **sombrero**. Keep the native macOS Swift/AppKit app. This release adds the user's full animation graph, hover petting, a drawn speech-bubble menu, timed/manual dismissal, two-laptop photo and rich-text messaging, camera capture, and daily Bible reading. There is no LLM.
+The duck's name is **sombrero** and the product name is **sombrero**. The built bundle is `build/sombrero.app`, with a `sombrero` executable. The legacy bundle identifier and application-support preferences path are retained to preserve existing settings and app identity. Keep the native macOS Swift/AppKit app. This release adds the user's full animation graph, hover petting, a drawn speech-bubble menu, timed/manual dismissal, two-laptop photo and rich-text messaging, camera capture, and daily Bible reading. There is no LLM.
 
 The source is the latest two-page hand-drawn PDF, visually inspected as rendered images rather than inferred from OCR. A copy is at `docs/reference/sombrero-v1-state-diagram.pdf`, SHA-256 `24b6cef91b52f27557fa3b4d4d415cd031f5cbea8a9526c848b27911464dc2ab`. The earlier five-state random controller and its 40/40/20 and 80/20 weights describe only the prototype and are superseded for the release.
 
@@ -205,7 +205,7 @@ The menu bubble and verse bubble have separate modes. Switching to the reading c
 5. **Daily verse:** exact verified offline text, persisted 11:00–19:00 schedule, three-day exclusion, bubble reader and 7a–7c. Test DST, timezone/date changes, offline startup, after-hours launch, and unread/read badge independence.
 6. **Two-laptop/Pi rehearsal:** app rename plus preference migration preserving old placement, actual camera/Continuity tests on target macOS versions, signed app identity and camera usage strings, realistic media transfer, drive removal/recovery, Spaces/fullscreen/sleep, then a complete real-user flow on both laptops.
 
-The core checks cover local graph routing, authored default weights, requests through skipped gateways, drawing timing, stale completion rejection, bubble reversal, packaged assets, fallback, and placement. `scripts/test-ui-macos.sh` renders every bubble mode and checks text/control containment plus flipped and scaled placement. These checks do not validate the future server, camera, or daily reader. Rebuild with `scripts/build-macos.sh`, then reopen `build/WatercolorDuck.app`; primary-click the duck for its speech menu, or use the native control panel's Open Speech Menu / Preview Animation commands.
+The core checks cover local graph routing, authored default weights, requests through skipped gateways, drawing timing, stale completion rejection, bubble reversal, packaged assets, fallback, and placement. `scripts/test-ui-macos.sh` renders every bubble mode and checks text/control containment plus flipped and scaled placement. These checks do not validate the future server, camera, or daily reader. Rebuild with `scripts/build-macos.sh`, then reopen `build/sombrero.app`; primary-click the duck for its speech menu, or use the native control panel's Open Speech Menu / Preview Animation commands.
 
 ## Remaining decisions, with proposed defaults
 
