@@ -27,12 +27,15 @@
       "3c",
       "4a",
       "4b",
-      "4c"
+      "4c",
+      "7a",
+      "7b",
+      "7c"
     ],
-    "uniqueSampleCount": 47,
+    "uniqueSampleCount": 59,
     "graphPath": "docs/sombrero-v1-state-graph.json",
     "graphSHA256": "0a5aac90765ef6face80704283db5b52f283bbe51fa51f7c902c72e6151099a9",
-    "measurementDetails": "Geometry uses alpha \u226532. Head width/center use the upper 60% of the alpha silhouette, filtered for yellow watercolor pigment (R>130, G>100, R-B>35, G-B>15). All endpoint pair equations use equal weight; head width and silhouette height are normalized by 290 and 489 source pixels, with 1a scale fixed at 1.4. X/Y offsets fit endpoint head centers and baselines. Canvas expanded to include ALL nonzero alpha across every frame, including alpha 1\u20137 speckles in 4a.",
+    "measurementDetails": "Geometry uses alpha ≥32. Head width/center use the upper 60% of the alpha silhouette, filtered for yellow watercolor pigment (R>130, G>100, R-B>35, G-B>15). All endpoint pair equations use equal weight; head width and silhouette height are normalized by 290 and 489 source pixels, with 1a scale fixed at 1.4. X/Y offsets fit endpoint head centers and baselines. Canvas expanded to include ALL nonzero alpha across every frame, including alpha 1–7 speckles in 4a.",
     "limitations": [
       "Uniform clip-wide transforms reduce canvas/scale seams but cannot alter authored character proportions, eye/wing poses, or internal drawing drift.",
       "The 2b seated-to-standing drawings change head-to-body proportion; its transform is a best-fit compromise across both incoming and outgoing neighbors.",
@@ -72,6 +75,20 @@
         "checkedFrameCounts": {
           "4b": 23,
           "4c": 39
+        }
+      },
+      {
+        "reviewedAtUTC": "2026-11-21T15:19:19.744Z",
+        "animations": [
+          "7a",
+          "7b",
+          "7c"
+        ],
+        "method": "Endpoint contact sheets visually reviewed; uniform scale, head-center and baseline registration across 1a → 7a → 7b → 7c → 1a. All-frame alpha containment checked; source PNGs unchanged.",
+        "checkedFrameCounts": {
+          "7a": 17,
+          "7b": 12,
+          "7c": 11
         }
       }
     ]
@@ -373,7 +390,7 @@
         1071.592,
         1053.456
       ],
-      "notes": "Aligned across 1a\u21941b and 1b\u21921c/4a. Its standing silhouette is slightly narrower than 1a; a uniform fit preserves that source-model difference."
+      "notes": "Aligned across 1a↔1b and 1b→1c/4a. Its standing silhouette is slightly narrower than 1a; a uniform fit preserves that source-model difference."
     },
     "1c": {
       "status": "calibrated",
@@ -522,7 +539,7 @@
         1089.461,
         1053.522
       ],
-      "notes": "Aligned across 1a/1b\u21921c and 1c\u21921a. Waving/bouncing in the penultimate frame is authored motion and is not individually recentered."
+      "notes": "Aligned across 1a/1b→1c and 1c→1a. Waving/bouncing in the penultimate frame is authored motion and is not individually recentered."
     },
     "1d": {
       "status": "calibrated",
@@ -1268,7 +1285,7 @@
         1123.58,
         1057.024
       ],
-      "notes": "Aligned across 3a\u21943b and 3b\u21922b. The look/lean motion and its slight end-frame height variation are retained."
+      "notes": "Aligned across 3a↔3b and 3b→2b. The look/lean motion and its slight end-frame height variation are retained."
     },
     "3c": {
       "status": "calibrated",
@@ -1885,34 +1902,433 @@
       "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
     },
     "7a": {
-      "status": "missing",
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
-      "sourceFrameCount": 0,
-      "sourceFrameSize": null,
-      "sampleFrames": [],
-      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+      "status": "calibrated",
+      "scale": 1.684485,
+      "offsetX": 256.147995,
+      "offsetY": 278.505972,
+      "sourceFrameCount": 17,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sampleFrames": [
+        {
+          "file": "7a0000.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "1d2041456dfbe82d94188c30040a1d1569364ef711de1a9248108f69b49548c5",
+          "alphaBounds": [
+            226,
+            40,
+            474,
+            458
+          ],
+          "alpha32Bounds": [
+            226,
+            40,
+            474,
+            458
+          ],
+          "alignmentFeatures": {
+            "headWidth": 248,
+            "headCenterX": 350,
+            "silhouetteHeight": 418,
+            "baselineY": 458
+          },
+          "index": 0,
+          "role": "first"
+        },
+        {
+          "file": "7a0001.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "33f689dd146858b350e08c0059e31f488033610189914fe7d70bcc76e1bd5133",
+          "alphaBounds": [
+            225,
+            74,
+            475,
+            458
+          ],
+          "alpha32Bounds": [
+            225,
+            74,
+            475,
+            458
+          ],
+          "alignmentFeatures": {
+            "headWidth": 239,
+            "headCenterX": 355.5,
+            "silhouetteHeight": 384,
+            "baselineY": 458
+          },
+          "index": 1,
+          "role": "second"
+        },
+        {
+          "file": "7a0015.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "05ed6792a8b809ccd75b9aaf85905afa0b2d143200544a6524ac365b0092edbd",
+          "alphaBounds": [
+            215,
+            40,
+            485,
+            456
+          ],
+          "alpha32Bounds": [
+            215,
+            40,
+            485,
+            456
+          ],
+          "alignmentFeatures": {
+            "headWidth": 270,
+            "headCenterX": 350,
+            "silhouetteHeight": 416,
+            "baselineY": 456
+          },
+          "index": 15,
+          "role": "penultimate"
+        },
+        {
+          "file": "7a0016.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "064c1c60f8f5c8286190cff5d357e803a4b0bd80f53d1a8f5ffd0f3d62a8ce39",
+          "alphaBounds": [
+            230,
+            46,
+            472,
+            457
+          ],
+          "alpha32Bounds": [
+            230,
+            46,
+            472,
+            457
+          ],
+          "alignmentFeatures": {
+            "headWidth": 241,
+            "headCenterX": 350.5,
+            "silhouetteHeight": 411,
+            "baselineY": 457
+          },
+          "index": 16,
+          "role": "last"
+        }
+      ],
+      "sourceInventorySHA256": "6a863cd919db9ba3bbcdb58cb8a3321df83b622e97804256de2623d867cc7cd2",
+      "sourceAlphaBounds": [
+        124,
+        18,
+        601,
+        497
+      ],
+      "sourceVisibleBounds": [
+        157,
+        37,
+        567,
+        465
+      ],
+      "transformedAlphaBounds": [
+        465.024,
+        308.827,
+        1268.523,
+        1115.695
+      ],
+      "transformedVisibleBounds": [
+        520.612,
+        340.832,
+        1211.251,
+        1061.791
+      ],
+      "notes": "First two and last two drawings visually reviewed. 7a standing entry and 7c standing exit registered to 1a; 7b fitted between the two Bible-holding poses. One uniform transform per clip; authored motion and source PNGs retained."
     },
     "7b": {
-      "status": "missing",
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
-      "sourceFrameCount": 0,
-      "sourceFrameSize": null,
-      "sampleFrames": [],
-      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+      "status": "calibrated",
+      "scale": 1.520922,
+      "offsetX": 314.621226,
+      "offsetY": 301.500588,
+      "sourceFrameCount": 15,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sampleFrames": [
+        {
+          "file": "7b0000.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "d9991b77ba8ca352c62a694202411263fce6ec4dbe5967b3c6ac4a668f81291f",
+          "alphaBounds": [
+            213,
+            39,
+            490,
+            495
+          ],
+          "alpha32Bounds": [
+            214,
+            40,
+            490,
+            495
+          ],
+          "alignmentFeatures": {
+            "headWidth": 275,
+            "headCenterX": 351.5,
+            "silhouetteHeight": 455,
+            "baselineY": 495
+          },
+          "index": 0,
+          "role": "first"
+        },
+        {
+          "file": "7b0001.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "3a4e8eb48fe368b2bd9930e8b9ddd64ec3e35b47a946b6be8dd1fa6b5f0fcfb3",
+          "alphaBounds": [
+            211,
+            43,
+            495,
+            495
+          ],
+          "alpha32Bounds": [
+            211,
+            43,
+            495,
+            495
+          ],
+          "alignmentFeatures": {
+            "headWidth": 283,
+            "headCenterX": 352.5,
+            "silhouetteHeight": 452,
+            "baselineY": 495
+          },
+          "index": 1,
+          "role": "second"
+        },
+        {
+          "file": "7b0010.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "92f5d936c65aae77693b52d0e95cb3edc7df50e72e441f74db696d1d3a5b10bd",
+          "alphaBounds": [
+            210,
+            42,
+            490,
+            488
+          ],
+          "alpha32Bounds": [
+            210,
+            42,
+            490,
+            488
+          ],
+          "alignmentFeatures": {
+            "headWidth": 277,
+            "headCenterX": 348.5,
+            "silhouetteHeight": 446,
+            "baselineY": 488
+          },
+          "index": 13,
+          "role": "penultimate"
+        },
+        {
+          "file": "7b0011.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "b239d602c085d846515a367d6935ad436edc1d34ec6194cbf1147c283aba405b",
+          "alphaBounds": [
+            211,
+            34,
+            490,
+            484
+          ],
+          "alpha32Bounds": [
+            211,
+            35,
+            490,
+            484
+          ],
+          "alignmentFeatures": {
+            "headWidth": 278,
+            "headCenterX": 350,
+            "silhouetteHeight": 449,
+            "baselineY": 484
+          },
+          "index": 14,
+          "role": "last"
+        }
+      ],
+      "sourceInventorySHA256": "7242280ae5f6473e9cda6481251f2709e35be7ae2461a0ddd0a9b1ae4b1cc330",
+      "sourceAlphaBounds": [
+        199,
+        34,
+        535,
+        495
+      ],
+      "sourceVisibleBounds": [
+        199,
+        35,
+        535,
+        495
+      ],
+      "transformedAlphaBounds": [
+        617.285,
+        353.212,
+        1128.314,
+        1054.357
+      ],
+      "transformedVisibleBounds": [
+        617.285,
+        354.733,
+        1128.314,
+        1054.357
+      ],
+      "notes": "First two and last two drawings visually reviewed. 7a standing entry and 7c standing exit registered to 1a; 7b fitted between the two Bible-holding poses. One uniform transform per clip; authored motion and source PNGs retained."
     },
     "7c": {
-      "status": "missing",
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
-      "sourceFrameCount": 0,
-      "sourceFrameSize": null,
-      "sampleFrames": [],
-      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+      "status": "calibrated",
+      "scale": 1.631945,
+      "offsetX": 278.469314,
+      "offsetY": 282.169964,
+      "sourceFrameCount": 11,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sampleFrames": [
+        {
+          "file": "7c0000.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "a856b796a709f4c2cb2bf724a9a0db3b1bba75baa1019cdee93372c5457193c5",
+          "alphaBounds": [
+            217,
+            52,
+            484,
+            472
+          ],
+          "alpha32Bounds": [
+            221,
+            55,
+            482,
+            469
+          ],
+          "alignmentFeatures": {
+            "headWidth": 258,
+            "headCenterX": 350,
+            "silhouetteHeight": 414,
+            "baselineY": 469
+          },
+          "index": 0,
+          "role": "first"
+        },
+        {
+          "file": "7c0001.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "5487f782b23394b39d3d9563f02414a49b9449307242ed157367da545c14ab65",
+          "alphaBounds": [
+            221,
+            52,
+            480,
+            472
+          ],
+          "alpha32Bounds": [
+            225,
+            54,
+            477,
+            469
+          ],
+          "alignmentFeatures": {
+            "headWidth": 250,
+            "headCenterX": 350,
+            "silhouetteHeight": 415,
+            "baselineY": 469
+          },
+          "index": 1,
+          "role": "second"
+        },
+        {
+          "file": "7c0009.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "a6f4f865b3677cc5a9ea64d56e5772eb0b8ce9efde32a6fd7f240956f3370263",
+          "alphaBounds": [
+            218,
+            50,
+            474,
+            470
+          ],
+          "alpha32Bounds": [
+            218,
+            50,
+            474,
+            470
+          ],
+          "alignmentFeatures": {
+            "headWidth": 249,
+            "headCenterX": 349.5,
+            "silhouetteHeight": 420,
+            "baselineY": 470
+          },
+          "index": 9,
+          "role": "penultimate"
+        },
+        {
+          "file": "7c0010.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "0e96d099ccd3755657d77095a6627515f8c4dad4bd4296f5c6716acfba337127",
+          "alphaBounds": [
+            226,
+            53,
+            475,
+            471
+          ],
+          "alpha32Bounds": [
+            226,
+            53,
+            475,
+            471
+          ],
+          "alignmentFeatures": {
+            "headWidth": 249,
+            "headCenterX": 350.5,
+            "silhouetteHeight": 418,
+            "baselineY": 471
+          },
+          "index": 10,
+          "role": "last"
+        }
+      ],
+      "sourceInventorySHA256": "ed4f96f7600d3704e027b199b64e9b6f27c7b9ab4dfe3970c07461a1820e2c23",
+      "sourceAlphaBounds": [
+        178,
+        41,
+        511,
+        472
+      ],
+      "sourceVisibleBounds": [
+        178,
+        41,
+        511,
+        471
+      ],
+      "transformedAlphaBounds": [
+        568.956,
+        349.08,
+        1112.393,
+        1052.448
+      ],
+      "transformedVisibleBounds": [
+        568.956,
+        349.08,
+        1112.393,
+        1050.816
+      ],
+      "notes": "First two and last two drawings visually reviewed. 7a standing entry and 7c standing exit registered to 1a; 7b fitted between the two Bible-holding poses. One uniform transform per clip; authored motion and source PNGs retained."
     },
     "4c": {
       "status": "calibrated",
@@ -2275,6 +2691,34 @@
       "headCenterDeltaPixels": 0,
       "headWidthDeltaPercent": -0.93,
       "silhouetteHeightDeltaPercent": 1.178
+    },
+    {
+      "from": "1a",
+      "to": "7a",
+      "samplePolicy": "last two versus first two",
+      "baselineDeltaPixels": 0.00010200000008353527,
+      "headCenterDeltaPixels": 0.00007875000000012733
+    },
+    {
+      "from": "7a",
+      "to": "7b",
+      "samplePolicy": "last two versus first two",
+      "baselineDeltaPixels": 6.883603499999992,
+      "headCenterDeltaPixels": 3.846903749999967
+    },
+    {
+      "from": "7b",
+      "to": "7c",
+      "samplePolicy": "last two versus first two",
+      "baselineDeltaPixels": 6.883489000000054,
+      "headCenterDeltaPixels": 3.846829499999899
+    },
+    {
+      "from": "7c",
+      "to": "1a",
+      "samplePolicy": "last two versus first two",
+      "baselineDeltaPixels": -0.00008650000000898217,
+      "headCenterDeltaPixels": -0.00006400000000894579
     }
   ]
 }
