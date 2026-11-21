@@ -9,7 +9,7 @@ const calibration=JSON.parse(await fs.readFile(`${root}/animation-scales.json`,'
 const inventory={};
 const hash=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 const union=boxes=>boxes.reduce((a,b)=>a?[Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.max(a[2],b[2]),Math.max(a[3],b[3])]:[...b],null);
-for(const id of ['1a','6a','6b']) {
+for(const id of ['1a','6a','6b','6c']) {
   const files=(await fs.readdir(`${root}/${id}`)).filter(x=>x.endsWith('.png')).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
   const frames=[];
   for(const file of files) {
@@ -38,7 +38,7 @@ for(const id of ['1a','6a','6b']) {
 }
 await fs.writeFile(`${output}/measurements.json`,JSON.stringify(inventory,null,2)+'\n');
 const thumbs=[];
-for(const [row,id] of ['1a','6a','6b'].entries()) {
+for(const [row,id] of ['1a','6a','6b','6c'].entries()) {
   const samples=[...inventory[id].slice(0,2),...inventory[id].slice(-2)];
   for(const [col,frame] of samples.entries()) {
     const thumb=await sharp(`${root}/${id}/${frame.file}`).resize(280,200,{fit:'contain',background:'#eeeeee'}).flatten({background:'#eeeeee'}).png().toBuffer();
@@ -46,7 +46,7 @@ for(const [row,id] of ['1a','6a','6b'].entries()) {
     thumbs.push({input:Buffer.from(`<svg width="280" height="25"><text x="5" y="18" font-size="15">${id} ${frame.file}</text></svg>`),left:col*300,top:row*230});
   }
 }
-await sharp({create:{width:1200,height:690,channels:4,background:'#eeeeee'}}).composite(thumbs).png().toFile(`${output}/source-endpoints.png`);
+await sharp({create:{width:1200,height:920,channels:4,background:'#eeeeee'}}).composite(thumbs).png().toFile(`${output}/source-endpoints.png`);
 if(!process.argv.includes('--write')) { process.stdout.write(`${output}/source-endpoints.png\n`); process.exit(0); }
 const mean=(frames,key)=>frames.reduce((n,f)=>n+f.alignmentFeatures[key],0)/frames.length;
 function fit(source,target,transform) {
@@ -59,7 +59,23 @@ function fit(source,target,transform) {
 const transforms={};
 transforms['6a']=fit(inventory['6a'].slice(0,2),inventory['1a'].slice(-2),calibration.animations['1a']);
 transforms['6b']=fit([...inventory['6b'].slice(0,2),...inventory['6b'].slice(-2)],inventory['6a'].slice(-2),transforms['6a']);
-for(const id of ['6a','6b']) {
+// Fit both seams with one transform; retain all authored motion within 6c.
+const seams=[
+  // The second frame contains a flash; the penultimate pose still holds a prop.
+  {source:inventory['6c'].slice(0,1),target:inventory['6b'].slice(-2),transform:transforms['6b']},
+  {source:inventory['6c'].slice(-1),target:inventory['1a'].slice(0,2),transform:calibration.animations['1a']}
+];
+let numerator=0,denominator=0;
+for(const seam of seams) for(const [key,normalizer] of [['headWidth',406],['silhouetteHeight',685]]) {
+  const source=mean(seam.source,key),target=mean(seam.target,key)*seam.transform.scale;
+  numerator+=source*target/normalizer**2;
+  denominator+=source**2/normalizer**2;
+}
+const scale=numerator/denominator;
+transforms['6c']={scale,
+  offsetX:seams.reduce((sum,s)=>sum+mean(s.target,'headCenterX')*s.transform.scale+s.transform.offsetX-mean(s.source,'headCenterX')*scale,0)/seams.length,
+  offsetY:seams.reduce((sum,s)=>sum+mean(s.target,'baselineY')*s.transform.scale+s.transform.offsetY-mean(s.source,'baselineY')*scale,0)/seams.length};
+for(const id of ['6a','6b','6c']) {
   const frames=inventory[id],t=transforms[id];
   for(const key of Object.keys(t)) t[key]=Number(t[key].toFixed(6));
   const apply=b=>[b[0]*t.scale+t.offsetX,b[1]*t.scale+t.offsetY,b[2]*t.scale+t.offsetX,b[3]*t.scale+t.offsetY].map(x=>Math.round(x*1000)/1000);
@@ -71,17 +87,18 @@ for(const id of ['6a','6b']) {
       ...frames.slice(-2).map((f,i)=>({...f,index:frames.length-2+i,role:i?'last':'penultimate'}))],
     sourceInventorySHA256:hash(frames.map(f=>`${f.file}:${f.sha256}\n`).join('')),
     sourceAlphaBounds:alpha,sourceVisibleBounds:visible,transformedAlphaBounds:placed,transformedVisibleBounds:apply(visible),
-    notes:'Endpoint drawings reviewed. One uniform transform per clip: 6a entry registered to standing 1a, 6b registered to the camera-holding exit of 6a. Source PNGs unchanged; all-frame alpha containment checked.'};
+    notes:'Endpoint drawings reviewed. One uniform transform per clip: 6a entry registered to standing 1a, 6b registered to the camera-holding exit of 6a, 6c fitted across the camera-holding exit of 6b and standing entry of 1a. Source PNGs unchanged; all-frame alpha containment checked.'};
 }
-calibration.adjacencyChecks=calibration.adjacencyChecks.filter(e=>!(['1a','6a'].includes(e.from)&&['6a','6b'].includes(e.to)));
-for(const [from,to] of [['1a','6a'],['6a','6b']]) {
+const edges=[['1a','6a'],['6a','6b'],['6b','6c'],['6c','1a']];
+calibration.adjacencyChecks=calibration.adjacencyChecks.filter(e=>!edges.some(([from,to])=>e.from===from&&e.to===to));
+for(const [from,to] of edges) {
   const a=inventory[from].slice(-2),b=inventory[to].slice(0,2),ta=calibration.animations[from],tb=calibration.animations[to];
   calibration.adjacencyChecks.push({from,to,samplePolicy:'last two versus first two',
     baselineDeltaPixels:mean(b,'baselineY')*tb.scale+tb.offsetY-mean(a,'baselineY')*ta.scale-ta.offsetY,
     headCenterDeltaPixels:mean(b,'headCenterX')*tb.scale+tb.offsetX-mean(a,'headCenterX')*ta.scale-ta.offsetX});
 }
-calibration.review.availableAnimations=[...new Set([...calibration.review.availableAnimations,'6a','6b'])];
+calibration.review.availableAnimations=[...new Set([...calibration.review.availableAnimations,'6a','6b','6c'])];
 calibration.review.uniqueSampleCount=new Set(Object.entries(calibration.animations).flatMap(([id,v])=>(v.sampleFrames??[]).map(f=>`${id}/${f.file}`))).size;
-calibration.review.updates.push({reviewedAtUTC:new Date().toISOString(),animations:['6a','6b'],method:'Reviewed endpoint contact sheet, uniform head/baseline registration and all-frame containment; originals unchanged.',checkedFrameCounts:{'6a':inventory['6a'].length,'6b':inventory['6b'].length}});
+calibration.review.updates.push({reviewedAtUTC:new Date().toISOString(),animations:['6a','6b','6c'],method:'Reviewed endpoint contact sheet, uniform head/baseline registration and all-frame containment; 6c fitted across entry and exit seams; originals unchanged.',checkedFrameCounts:{'6a':inventory['6a'].length,'6b':inventory['6b'].length,'6c':inventory['6c'].length}});
 await fs.writeFile(`${root}/animation-scales.json`,JSON.stringify(calibration,null,2)+'\n');
-process.stdout.write('Calibrated 6a and 6b; source drawings unchanged\n');
+process.stdout.write('Calibrated 6a, 6b and 6c; source drawings unchanged\n');

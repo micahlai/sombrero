@@ -959,10 +959,80 @@
     },
     {
       "state": "6c",
-      "frames": [],
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0
+      "frames": [
+        {
+          "resource": "6c/6c0000.png"
+        },
+        {
+          "resource": "6c/6c0001.png"
+        },
+        {
+          "resource": "6c/6c0002.png"
+        },
+        {
+          "resource": "6c/6c0003.png"
+        },
+        {
+          "resource": "6c/6c0004.png"
+        },
+        {
+          "resource": "6c/6c0005.png"
+        },
+        {
+          "resource": "6c/6c0006.png"
+        },
+        {
+          "resource": "6c/6c0007.png"
+        },
+        {
+          "resource": "6c/6c0008.png"
+        },
+        {
+          "resource": "6c/6c0009.png"
+        },
+        {
+          "resource": "6c/6c0010.png"
+        },
+        {
+          "resource": "6c/6c0011.png"
+        },
+        {
+          "resource": "6c/6c0012.png"
+        },
+        {
+          "resource": "6c/6c0013.png"
+        },
+        {
+          "resource": "6c/6c0014.png"
+        },
+        {
+          "resource": "6c/6c0015.png"
+        },
+        {
+          "resource": "6c/6c0016.png"
+        },
+        {
+          "resource": "6c/6c0017.png"
+        },
+        {
+          "resource": "6c/6c0018.png"
+        },
+        {
+          "resource": "6c/6c0019.png"
+        },
+        {
+          "resource": "6c/6c0020.png"
+        },
+        {
+          "resource": "6c/6c0021.png"
+        },
+        {
+          "resource": "6c/6c0022.png"
+        }
+      ],
+      "scale": 1.501535,
+      "offsetX": 279.997068,
+      "offsetY": 344.87212
     },
     {
       "state": "7a",

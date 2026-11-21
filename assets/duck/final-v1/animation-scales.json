@@ -32,9 +32,10 @@
       "7b",
       "7c",
       "6a",
-      "6b"
+      "6b",
+      "6c"
     ],
-    "uniqueSampleCount": 67,
+    "uniqueSampleCount": 71,
     "graphPath": "docs/sombrero-v1-state-graph.json",
     "graphSHA256": "0a5aac90765ef6face80704283db5b52f283bbe51fa51f7c902c72e6151099a9",
     "measurementDetails": "Geometry uses alpha ≥32. Head width/center use the upper 60% of the alpha silhouette, filtered for yellow watercolor pigment (R>130, G>100, R-B>35, G-B>15). All endpoint pair equations use equal weight; head width and silhouette height are normalized by 290 and 489 source pixels, with 1a scale fixed at 1.4. X/Y offsets fit endpoint head centers and baselines. Canvas expanded to include ALL nonzero alpha across every frame, including alpha 1–7 speckles in 4a.",
@@ -103,6 +104,20 @@
         "checkedFrameCounts": {
           "6a": 14,
           "6b": 12
+        }
+      },
+      {
+        "reviewedAtUTC": "2026-11-21T19:57:21.158Z",
+        "animations": [
+          "6a",
+          "6b",
+          "6c"
+        ],
+        "method": "Reviewed endpoint contact sheet, uniform head/baseline registration and all-frame containment; 6c fitted across entry and exit seams; originals unchanged.",
+        "checkedFrameCounts": {
+          "6a": 14,
+          "6b": 12,
+          "6c": 23
         }
       }
     ]
@@ -2026,7 +2041,7 @@
         1129.912,
         1051.487
       ],
-      "notes": "Endpoint drawings reviewed. One uniform transform per clip: 6a entry registered to standing 1a, 6b registered to the camera-holding exit of 6a. Source PNGs unchanged; all-frame alpha containment checked."
+      "notes": "Endpoint drawings reviewed. One uniform transform per clip: 6a entry registered to standing 1a, 6b registered to the camera-holding exit of 6a, 6c fitted across the camera-holding exit of 6b and standing entry of 1a. Source PNGs unchanged; all-frame alpha containment checked."
     },
     "6b": {
       "status": "calibrated",
@@ -2169,17 +2184,150 @@
         1082.122,
         1042.919
       ],
-      "notes": "Endpoint drawings reviewed. One uniform transform per clip: 6a entry registered to standing 1a, 6b registered to the camera-holding exit of 6a. Source PNGs unchanged; all-frame alpha containment checked."
+      "notes": "Endpoint drawings reviewed. One uniform transform per clip: 6a entry registered to standing 1a, 6b registered to the camera-holding exit of 6a, 6c fitted across the camera-holding exit of 6b and standing entry of 1a. Source PNGs unchanged; all-frame alpha containment checked."
     },
     "6c": {
-      "status": "missing",
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
-      "sourceFrameCount": 0,
-      "sourceFrameSize": null,
-      "sampleFrames": [],
-      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+      "status": "calibrated",
+      "scale": 1.501535,
+      "offsetX": 279.997068,
+      "offsetY": 344.87212,
+      "sourceFrameCount": 23,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sampleFrames": [
+        {
+          "file": "6c0000.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "f73137f8bbf1b670d281d9afa0cd47ba49acccc7e527844466f86a3dae11902e",
+          "alphaBounds": [
+            219,
+            27,
+            535,
+            467
+          ],
+          "alpha32Bounds": [
+            219,
+            28,
+            535,
+            467
+          ],
+          "alignmentFeatures": {
+            "headWidth": 315,
+            "headCenterX": 376.5,
+            "silhouetteHeight": 439,
+            "baselineY": 467
+          },
+          "index": 0,
+          "role": "first"
+        },
+        {
+          "file": "6c0001.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "e26f4c1edd646c512fad0b22cfa142f03cca2d48681a6875ca0cdabd631ed400",
+          "alphaBounds": [
+            214,
+            36,
+            589,
+            467
+          ],
+          "alpha32Bounds": [
+            214,
+            36,
+            589,
+            467
+          ],
+          "alignmentFeatures": {
+            "headWidth": 375,
+            "headCenterX": 401.5,
+            "silhouetteHeight": 431,
+            "baselineY": 467
+          },
+          "index": 1,
+          "role": "second"
+        },
+        {
+          "file": "6c0021.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "540534728c2068af34b1f3466e5a861c5a2799bc1f25aa226687d7d4d17de658",
+          "alphaBounds": [
+            255,
+            30,
+            495,
+            467
+          ],
+          "alpha32Bounds": [
+            255,
+            31,
+            495,
+            467
+          ],
+          "alignmentFeatures": {
+            "headWidth": 240,
+            "headCenterX": 375,
+            "silhouetteHeight": 436,
+            "baselineY": 467
+          },
+          "index": 21,
+          "role": "penultimate"
+        },
+        {
+          "file": "6c0022.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "e8d7691aa48c485c7be4ee3d3297226163af02d847b1e5873350b386811d874a",
+          "alphaBounds": [
+            256,
+            36,
+            504,
+            467
+          ],
+          "alpha32Bounds": [
+            256,
+            36,
+            504,
+            467
+          ],
+          "alignmentFeatures": {
+            "headWidth": 248,
+            "headCenterX": 380,
+            "silhouetteHeight": 431,
+            "baselineY": 467
+          },
+          "index": 22,
+          "role": "last"
+        }
+      ],
+      "sourceInventorySHA256": "7dcf05dc14e42a5f482fd5a24f75dbd960b3e7caa8d1d2d669677e2f53482085",
+      "sourceAlphaBounds": [
+        163,
+        27,
+        589,
+        471
+      ],
+      "sourceVisibleBounds": [
+        165,
+        28,
+        589,
+        469
+      ],
+      "transformedAlphaBounds": [
+        524.747,
+        385.414,
+        1164.401,
+        1052.095
+      ],
+      "transformedVisibleBounds": [
+        527.75,
+        386.915,
+        1164.401,
+        1049.092
+      ],
+      "notes": "Endpoint drawings reviewed. One uniform transform per clip: 6a entry registered to standing 1a, 6b registered to the camera-holding exit of 6a, 6c fitted across the camera-holding exit of 6b and standing entry of 1a. Source PNGs unchanged; all-frame alpha containment checked."
     },
     "7a": {
       "status": "calibrated",
@@ -3013,6 +3161,20 @@
       "samplePolicy": "last two versus first two",
       "baselineDeltaPixels": -6.304932499999893,
       "headCenterDeltaPixels": -2.2253972500000714
+    },
+    {
+      "from": "6b",
+      "to": "6c",
+      "samplePolicy": "last two versus first two",
+      "baselineDeltaPixels": 3.9113294999999084,
+      "headCenterDeltaPixels": 17.839046000000053
+    },
+    {
+      "from": "6c",
+      "to": "1a",
+      "samplePolicy": "last two versus first two",
+      "baselineDeltaPixels": 3.91103499999997,
+      "headCenterDeltaPixels": 2.8234694999999874
     }
   ]
 }
