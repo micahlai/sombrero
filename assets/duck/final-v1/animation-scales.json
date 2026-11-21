@@ -30,9 +30,11 @@
       "4c",
       "7a",
       "7b",
-      "7c"
+      "7c",
+      "6a",
+      "6b"
     ],
-    "uniqueSampleCount": 59,
+    "uniqueSampleCount": 67,
     "graphPath": "docs/sombrero-v1-state-graph.json",
     "graphSHA256": "0a5aac90765ef6face80704283db5b52f283bbe51fa51f7c902c72e6151099a9",
     "measurementDetails": "Geometry uses alpha ≥32. Head width/center use the upper 60% of the alpha silhouette, filtered for yellow watercolor pigment (R>130, G>100, R-B>35, G-B>15). All endpoint pair equations use equal weight; head width and silhouette height are normalized by 290 and 489 source pixels, with 1a scale fixed at 1.4. X/Y offsets fit endpoint head centers and baselines. Canvas expanded to include ALL nonzero alpha across every frame, including alpha 1–7 speckles in 4a.",
@@ -89,6 +91,18 @@
           "7a": 17,
           "7b": 12,
           "7c": 11
+        }
+      },
+      {
+        "reviewedAtUTC": "2026-11-21T19:04:27.686Z",
+        "animations": [
+          "6a",
+          "6b"
+        ],
+        "method": "Reviewed endpoint contact sheet, uniform head/baseline registration and all-frame containment; originals unchanged.",
+        "checkedFrameCounts": {
+          "6a": 14,
+          "6b": 12
         }
       }
     ]
@@ -1872,24 +1886,290 @@
       "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
     },
     "6a": {
-      "status": "missing",
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
-      "sourceFrameCount": 0,
-      "sourceFrameSize": null,
-      "sampleFrames": [],
-      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+      "status": "calibrated",
+      "scale": 1.487031,
+      "offsetX": 319.480032,
+      "offsetY": 345.147437,
+      "sourceFrameCount": 14,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sampleFrames": [
+        {
+          "file": "6a0000.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "36b0d35d59a0be5d47a58cbd415838c31c50ccd7a8aa8ea0cef8b3f16406fdb5",
+          "alphaBounds": [
+            222,
+            44,
+            486,
+            474
+          ],
+          "alpha32Bounds": [
+            222,
+            44,
+            486,
+            474
+          ],
+          "alignmentFeatures": {
+            "headWidth": 264,
+            "headCenterX": 354,
+            "silhouetteHeight": 430,
+            "baselineY": 474
+          },
+          "index": 0,
+          "role": "first"
+        },
+        {
+          "file": "6a0001.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "52d099f1aa037efc9bfe9db067a7cd8d9b1b74f2b304173191dde75ccf79e38f",
+          "alphaBounds": [
+            204,
+            43,
+            538,
+            474
+          ],
+          "alpha32Bounds": [
+            204,
+            43,
+            538,
+            474
+          ],
+          "alignmentFeatures": {
+            "headWidth": 312,
+            "headCenterX": 360,
+            "silhouetteHeight": 431,
+            "baselineY": 474
+          },
+          "index": 1,
+          "role": "second"
+        },
+        {
+          "file": "6a0012.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "a88c491e36219882cd78977a2e983e9ea6cef7df54a8511e62a6fa0b07b12256",
+          "alphaBounds": [
+            204,
+            35,
+            498,
+            466
+          ],
+          "alpha32Bounds": [
+            204,
+            35,
+            498,
+            466
+          ],
+          "alignmentFeatures": {
+            "headWidth": 294,
+            "headCenterX": 351,
+            "silhouetteHeight": 431,
+            "baselineY": 466
+          },
+          "index": 12,
+          "role": "penultimate"
+        },
+        {
+          "file": "6a0013.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "d58cddaabfb49f9178af998df251d7434da60090b38769b5469fbc0313170f83",
+          "alphaBounds": [
+            207,
+            33,
+            502,
+            463
+          ],
+          "alpha32Bounds": [
+            207,
+            33,
+            502,
+            463
+          ],
+          "alignmentFeatures": {
+            "headWidth": 295,
+            "headCenterX": 354.5,
+            "silhouetteHeight": 430,
+            "baselineY": 463
+          },
+          "index": 13,
+          "role": "last"
+        }
+      ],
+      "sourceInventorySHA256": "9c1bee8648201aae915d173392848d6a4e9effffb4fafa50a13b0162aa1bfa05",
+      "sourceAlphaBounds": [
+        178,
+        31,
+        545,
+        475
+      ],
+      "sourceVisibleBounds": [
+        178,
+        31,
+        545,
+        475
+      ],
+      "transformedAlphaBounds": [
+        584.172,
+        391.245,
+        1129.912,
+        1051.487
+      ],
+      "transformedVisibleBounds": [
+        584.172,
+        391.245,
+        1129.912,
+        1051.487
+      ],
+      "notes": "Endpoint drawings reviewed. One uniform transform per clip: 6a entry registered to standing 1a, 6b registered to the camera-holding exit of 6a. Source PNGs unchanged; all-frame alpha containment checked."
     },
     "6b": {
-      "status": "missing",
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
-      "sourceFrameCount": 0,
-      "sourceFrameSize": null,
-      "sampleFrames": [],
-      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+      "status": "calibrated",
+      "scale": 1.483439,
+      "offsetX": 324.084609,
+      "offsetY": 342.736147,
+      "sourceFrameCount": 12,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sampleFrames": [
+        {
+          "file": "6b0000.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "4214a679b62433ce54629135b3f0930f0062fc6160361c54025e30fe0068d3c3",
+          "alphaBounds": [
+            201,
+            36,
+            492,
+            462
+          ],
+          "alpha32Bounds": [
+            201,
+            36,
+            492,
+            462
+          ],
+          "alignmentFeatures": {
+            "headWidth": 291,
+            "headCenterX": 346.5,
+            "silhouetteHeight": 426,
+            "baselineY": 462
+          },
+          "index": 0,
+          "role": "first"
+        },
+        {
+          "file": "6b0001.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "993950924a208eaae00e7de1bcbe682e7af8ec27deecb3037236ec7ddd08225b",
+          "alphaBounds": [
+            200,
+            33,
+            503,
+            464
+          ],
+          "alpha32Bounds": [
+            200,
+            34,
+            503,
+            464
+          ],
+          "alignmentFeatures": {
+            "headWidth": 303,
+            "headCenterX": 351.5,
+            "silhouetteHeight": 430,
+            "baselineY": 464
+          },
+          "index": 1,
+          "role": "second"
+        },
+        {
+          "file": "6b0010.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "427d517c78e42abf4633709988471afb99f5c2764dfc5054456f58dc0ae329e5",
+          "alphaBounds": [
+            204,
+            40,
+            498,
+            472
+          ],
+          "alpha32Bounds": [
+            204,
+            40,
+            498,
+            472
+          ],
+          "alignmentFeatures": {
+            "headWidth": 294,
+            "headCenterX": 351,
+            "silhouetteHeight": 432,
+            "baselineY": 472
+          },
+          "index": 10,
+          "role": "penultimate"
+        },
+        {
+          "file": "6b0011.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "05aa07ae1b033ed5458432cd3736dee4a117e0c11598cd91cb17da5f05aafb2f",
+          "alphaBounds": [
+            205,
+            39,
+            501,
+            471
+          ],
+          "alpha32Bounds": [
+            205,
+            39,
+            501,
+            471
+          ],
+          "alignmentFeatures": {
+            "headWidth": 296,
+            "headCenterX": 353,
+            "silhouetteHeight": 432,
+            "baselineY": 471
+          },
+          "index": 11,
+          "role": "last"
+        }
+      ],
+      "sourceInventorySHA256": "f2b181865c3239d8f560dcccf82ea7ad24c2b4534c9245f2d0ea8cc531d86dce",
+      "sourceAlphaBounds": [
+        191,
+        33,
+        511,
+        472
+      ],
+      "sourceVisibleBounds": [
+        191,
+        34,
+        511,
+        472
+      ],
+      "transformedAlphaBounds": [
+        607.421,
+        391.69,
+        1082.122,
+        1042.919
+      ],
+      "transformedVisibleBounds": [
+        607.421,
+        393.173,
+        1082.122,
+        1042.919
+      ],
+      "notes": "Endpoint drawings reviewed. One uniform transform per clip: 6a entry registered to standing 1a, 6b registered to the camera-holding exit of 6a. Source PNGs unchanged; all-frame alpha containment checked."
     },
     "6c": {
       "status": "missing",
@@ -2719,6 +2999,20 @@
       "samplePolicy": "last two versus first two",
       "baselineDeltaPixels": -0.00008650000000898217,
       "headCenterDeltaPixels": -0.00006400000000894579
+    },
+    {
+      "from": "1a",
+      "to": "6a",
+      "samplePolicy": "last two versus first two",
+      "baselineDeltaPixels": 0.00013100000012400415,
+      "headCenterDeltaPixels": 0.00009900000003426612
+    },
+    {
+      "from": "6a",
+      "to": "6b",
+      "samplePolicy": "last two versus first two",
+      "baselineDeltaPixels": -6.304932499999893,
+      "headCenterDeltaPixels": -2.2253972500000714
     }
   ]
 }
