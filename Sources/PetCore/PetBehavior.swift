@@ -16,7 +16,7 @@ public struct PetBehavior {
     public mutating func resetToIdle() { activity = .idle; elapsed = 0; petTimeRemaining = 0 }
     public mutating func pet() {
         guard isVisible else { return }
-        activity = .petting; elapsed = 0; petTimeRemaining = 2
+        activity = .petting; elapsed = 0; petTimeRemaining = PetConstants.Animation.legacyPetDuration
     }
     public mutating func advance(by delta: Double) {
         guard isVisible, !isPaused, delta.isFinite, delta > 0 else { return }
@@ -35,13 +35,13 @@ public struct PetPreferences: Codable, Equatable {
     public var allSpaces = true
     public var clickThrough = false
     public var isPaused = false
-    public var size: Double = 112
+    public var size: Double = PetConstants.Size.defaultPet
     public var placement: SavedPlacement?
     public init() {}
     public func validated() -> PetPreferences {
         var copy = self
         copy.schemaVersion = 1
-        copy.size = size.isFinite ? min(200, max(64, size)) : 112
+        copy.size = size.isFinite ? min(PetConstants.Size.maximumPet, max(PetConstants.Size.minimumPet, size)) : PetConstants.Size.defaultPet
         return copy
     }
 }

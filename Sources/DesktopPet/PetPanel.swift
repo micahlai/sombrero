@@ -5,6 +5,7 @@ import PetAssets
 final class PetPanel: NSPanel {
     override var canBecomeKey: Bool { false }
     override var canBecomeMain: Bool { false }
+    override func constrainFrameRect(_ frameRect: NSRect, to screen: NSScreen?) -> NSRect { frameRect }
     init(size: CGFloat) {
         super.init(contentRect: NSRect(x: 0, y: 0, width: size, height: size),
                    styleMask: [.borderless, .nonactivatingPanel], backing: .buffered, defer: false)
@@ -21,14 +22,19 @@ final class SpriteView: NSView {
     weak var coordinator: PetCoordinator?
     var sprite: SpriteLibrary.Frame?
     var state: DuckState = .look
+    var flipsHorizontally = false
     private var pointerOrigin: NSPoint?
     private var windowOrigin: NSPoint?
     private var didDrag = false
     var interactiveRect: NSRect {
-        NSRect(x: bounds.width * 0.4, y: bounds.height * 0.26, width: bounds.width * 0.2, height: bounds.height * 0.2)
+        let rect = PetConstants.Geometry.placeholderBounds
+        return NSRect(x: bounds.width * rect.x, y: bounds.height * rect.y, width: bounds.width * rect.width, height: bounds.height * rect.height)
     }
     func containsInteractivePoint(_ point: NSPoint) -> Bool {
-        if let sprite { return sprite.contains(x: point.x / bounds.width, y: point.y / bounds.height) }
+        if let sprite {
+            let x = point.x / bounds.width
+            return sprite.contains(x: flipsHorizontally ? 1-x : x, y: point.y / bounds.height)
+        }
         return interactiveRect.contains(point)
     }
     override var acceptsFirstResponder: Bool { false }
@@ -39,14 +45,17 @@ final class SpriteView: NSView {
         super.draw(dirtyRect)
         if let sprite, let context = NSGraphicsContext.current?.cgContext {
             context.interpolationQuality = .high
+            context.saveGState()
+            if flipsHorizontally { context.translateBy(x: bounds.width, y: 0); context.scaleBy(x: -1, y: 1) }
             let rect = sprite.placement
             context.draw(sprite.image, in: NSRect(x: rect.minX * bounds.width, y: rect.minY * bounds.height,
                 width: rect.width * bounds.width, height: rect.height * bounds.height))
+            context.restoreGState()
         } else {
             NSColor.systemPink.setFill()
             NSBezierPath(rect: interactiveRect).fill()
             let text = state.rawValue.uppercased() as NSString
-            let attributes: [NSAttributedString.Key: Any] = [.font: NSFont.systemFont(ofSize: 12, weight: .semibold), .foregroundColor: NSColor.white]
+            let attributes: [NSAttributedString.Key: Any] = [.font: NSFont.systemFont(ofSize: PetConstants.Appearance.placeholderLabelSize, weight: .semibold), .foregroundColor: NSColor.white]
             let size = text.size(withAttributes: attributes)
             text.draw(at: NSPoint(x: interactiveRect.midX - size.width / 2, y: interactiveRect.midY - size.height / 2), withAttributes: attributes)
         }
@@ -62,7 +71,7 @@ final class SpriteView: NSView {
         guard let start = pointerOrigin, let origin = windowOrigin else { return }
         let point = NSEvent.mouseLocation
         let dx = point.x - start.x, dy = point.y - start.y
-        if hypot(dx, dy) > 5 { didDrag = true }
+        if hypot(dx, dy) > PetConstants.Interaction.dragThreshold { didDrag = true }
         if didDrag { coordinator?.drag(to: NSPoint(x: origin.x + dx, y: origin.y + dy)) }
     }
     override func mouseUp(with event: NSEvent) {

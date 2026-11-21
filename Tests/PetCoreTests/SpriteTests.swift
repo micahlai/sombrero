@@ -24,9 +24,10 @@ final class SpriteTests: XCTestCase {
     func testRequestSurvivesSittingPetAndSkipsGatewaysWithoutRandomRolls() {
         var controller = DuckController(); controller.reset(to: .sitting)
         controller.setPet(true); XCTAssertEqual(controller.state, .sittingPet)
-        controller.request(.photoShow); XCTAssertEqual(controller.state, .standUp)
+        controller.request(.photoShow); XCTAssertEqual(controller.state, .sittingPet)
         XCTAssertEqual(controller.pending, [.photoShow])
         let noRandom = { XCTFail("Conditional or deterministic transition consumed randomness"); return 0.0 }
+        controller.complete(sample: noRandom); XCTAssertEqual(controller.state, .standUp)
         controller.complete(sample: noRandom); XCTAssertEqual(controller.state, .grabPhoto)
         XCTAssertEqual(controller.active, .photoShow); XCTAssertTrue(controller.pending.isEmpty)
         controller.complete(sample: noRandom); XCTAssertEqual(controller.state, .showPhoto)
@@ -42,7 +43,8 @@ final class SpriteTests: XCTestCase {
             var controller = DuckController(); controller.reset(to: origin)
             controller.setPet(true); XCTAssertEqual(controller.state, .standingPet)
             let stale = controller.generation
-            controller.setPet(false); XCTAssertEqual(controller.state, .wave)
+            controller.setPet(false); XCTAssertEqual(controller.state, .standingPet)
+            controller.complete(sample: noRandom); XCTAssertEqual(controller.state, .wave)
             controller.complete(token: stale, sample: noRandom); XCTAssertEqual(controller.state, .wave)
         }
         for origin in [DuckState.sitting, .sittingLook] {
@@ -90,11 +92,12 @@ final class SpriteTests: XCTestCase {
         let window = PetRect(x: -1300, y: 120, width: 800, height: 500)
         let point = WindowPeekPlacement.origin(window: window, workArea: area, viewportSize: 300)
         XCTAssertNotNil(point)
-        XCTAssertEqual(point!.y + 300 * 0.26, 628, accuracy: 0.001)
+        XCTAssertEqual(point!.y + 300 * 0.26, 620, accuracy: 0.001)
         XCTAssertNil(WindowPeekPlacement.origin(window: window, workArea: area, viewportSize: 300, isFullScreen: true))
         XCTAssertNil(WindowPeekPlacement.origin(window: PetRect(x: -1440, y: 40, width: 1440, height: 860), workArea: area, viewportSize: 300))
         let closeTop = PetRect(x: -1300, y: 120, width: 800, height: 700)
-        XCTAssertNotNil(WindowPeekPlacement.origin(window: closeTop, workArea: area, viewportSize: 100))
+        XCTAssertNil(WindowPeekPlacement.origin(window: closeTop, workArea: area, viewportSize: 100))
+        XCTAssertNotNil(WindowPeekPlacement.origin(window: closeTop, workArea: area, viewportSize: 100, minimumClearance: 0))
         XCTAssertNil(WindowPeekPlacement.origin(window: closeTop, workArea: area, viewportSize: 300))
         XCTAssertNil(WindowPeekPlacement.origin(window: PetRect(x: 100, y: 100, width: 600, height: 400), workArea: area, viewportSize: 300))
         XCTAssertNil(WindowPeekPlacement.origin(window: window, workArea: area, viewportSize: .nan))
@@ -129,6 +132,53 @@ final class SpriteTests: XCTestCase {
         XCTAssertEqual(player.state, .standingPet); XCTAssertEqual(player.frameIndex, 0)
         player.advance(by: .nan, controller: &controller) { 0 }; XCTAssertEqual(player.frameIndex, 0)
     }
+    func testEveryPetSessionFinishesFirstCycleThenReleasesImmediately() {
+        for (idle, petState, released) in [(DuckState.look, DuckState.standingPet, DuckState.wave), (.sitting, .sittingPet, .sitting)] {
+            var controller = DuckController(); controller.reset(to: idle)
+            for _ in 0..<2 {
+                controller.setPet(true); XCTAssertEqual(controller.state, petState)
+                XCTAssertFalse(controller.petCycleCompleted)
+                let token = controller.generation
+                controller.setPet(false); XCTAssertEqual(controller.state, petState)
+                controller.setPet(true); XCTAssertEqual(controller.generation, token)
+                controller.complete { XCTFail("Pet cycle consumed randomness"); return 0 }
+                XCTAssertEqual(controller.state, petState); XCTAssertTrue(controller.petCycleCompleted)
+                controller.complete { XCTFail("Pet loop consumed randomness"); return 0 }
+                XCTAssertTrue(controller.petCycleCompleted)
+                let stale = controller.generation
+                controller.setPet(false); XCTAssertEqual(controller.state, released)
+                controller.complete(token: stale) { XCTFail("Stale completion used randomness"); return 0 }
+                XCTAssertEqual(controller.state, released)
+            }
+        }
+    }
+    func testShortHoverHoldsActualFramesUntilFirstCycleCompletes() {
+        let counts = Dictionary(uniqueKeysWithValues: DuckState.allCases.filter { $0 != .timeout }.map { ($0, 6) })
+        for (idle, petState, released) in [(DuckState.look, DuckState.standingPet, DuckState.wave), (.sitting, .sittingPet, .sitting)] {
+            var controller = DuckController(); controller.reset(to: idle); controller.setPet(true)
+            var player = SpritePlayback(frameCounts: counts); player.synchronize(with: controller)
+            controller.setPet(false)
+            player.advance(by: 0.999, controller: &controller) { XCTFail("Pet exit used randomness"); return 0 }
+            XCTAssertEqual(player.state, petState); XCTAssertEqual(player.frameIndex, 5)
+            player.advance(by: 0.001, controller: &controller) { XCTFail("Pet exit used randomness"); return 0 }
+            XCTAssertEqual(player.state, released); XCTAssertEqual(player.frameIndex, 0)
+        }
+    }
+    func testDialogueForcesPetFalseDuringFirstCycleAndSubsequentHover() {
+        for (idle, petState, released) in [(DuckState.look, DuckState.standingPet, DuckState.wave), (.sitting, .sittingPet, .sitting)] {
+            var controller = DuckController(); controller.reset(to: idle); controller.setPet(true)
+            controller.setDialogueOpen(true)
+            XCTAssertFalse(controller.pet); XCTAssertEqual(controller.state, petState)
+            controller.setPet(true); XCTAssertFalse(controller.pet)
+            controller.complete { XCTFail("Dialogue pet exit used randomness"); return 0 }
+            XCTAssertEqual(controller.state, released)
+            controller.setPet(true); XCTAssertFalse(controller.pet); XCTAssertEqual(controller.state, released)
+            controller.setDialogueOpen(false); XCTAssertFalse(controller.pet)
+            controller.setPet(true); XCTAssertEqual(controller.state, petState); XCTAssertFalse(controller.petCycleCompleted)
+            controller.complete { XCTFail("Pet cycle used randomness"); return 0 }
+            controller.setDialogueOpen(true); XCTAssertFalse(controller.pet); XCTAssertEqual(controller.state, released)
+        }
+    }
     func testBubbleUsesAllFiveFramesHoldsLastAndCollapsesInReverse() {
         var bubble = SpeechBubblePlayback(); bubble.open()
         XCTAssertEqual(bubble.frameIndex, 0)
@@ -157,8 +207,8 @@ final class SpriteTests: XCTestCase {
         let assets = SpriteLibrary()
         XCTAssertNil(assets.failure)
         let expected: [DuckState: Int] = [.look:14, .alternateLook:24, .wave:21, .standingPet:18, .sitDown:20,
-            .standUp:23, .sitting:3, .sittingLook:18, .sittingPet:9, .goodbye:27]
-        XCTAssertEqual(assets.frames.count, 10); XCTAssertEqual(assets.missingStates.count, 12)
+            .standUp:23, .sitting:3, .sittingLook:18, .sittingPet:9, .goodbye:27, .peek:23, .windowPeek:39]
+        XCTAssertEqual(assets.frames.count, 12); XCTAssertEqual(assets.missingStates.count, 10)
         XCTAssertEqual(assets.speechFrames.count, 5)
         for (state, count) in expected {
             XCTAssertEqual(assets.frameCounts[state], count)

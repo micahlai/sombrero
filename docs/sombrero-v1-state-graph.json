@@ -379,13 +379,13 @@
       "from": "1d",
       "to": "1a",
       "kind": "interrupt",
-      "guard": "event"
+      "guard": "petCycleCompleted && (event)"
     },
     {
       "from": "1d",
       "to": "1c",
       "kind": "interrupt",
-      "guard": "!pet"
+      "guard": "petCycleCompleted && (!pet)"
     },
     {
       "from": "3c",
@@ -397,7 +397,7 @@
       "from": "3c",
       "to": "3a",
       "kind": "interrupt",
-      "guard": "!pet || event"
+      "guard": "petCycleCompleted && (!pet || event)"
     },
     {
       "from": "5c",
@@ -440,11 +440,19 @@
       "to": "4b",
       "kind": "recall",
       "guard": "manualRecall || timedAwayExpired",
-      "weight": 0.2,
-      "weightByFlag": {
-        "flag": "window_available",
-        "true": 0.2,
-        "false": 1
+      "weight": 1,
+      "entry": "screen-edge",
+      "weightByFlags": {
+        "flags": [
+          "window_available",
+          "window_side_available"
+        ],
+        "values": {
+          "00": 1,
+          "10": 0.2,
+          "01": 0.5,
+          "11": 0.4
+        }
       }
     },
     {
@@ -452,11 +460,19 @@
       "to": "4c",
       "kind": "recall",
       "guard": "manualRecall || timedAwayExpired",
-      "weight": 0.8,
-      "weightByFlag": {
-        "flag": "window_available",
-        "true": 0.8,
-        "false": 0
+      "weight": 0,
+      "entry": "window-top",
+      "weightByFlags": {
+        "flags": [
+          "window_available",
+          "window_side_available"
+        ],
+        "values": {
+          "00": 0,
+          "10": 0.8,
+          "01": 0,
+          "11": 0.4
+        }
       }
     },
     {
@@ -464,6 +480,26 @@
       "to": "3a",
       "kind": "default",
       "weight": 1
+    },
+    {
+      "from": "timeout",
+      "to": "4b",
+      "kind": "recall",
+      "guard": "manualRecall || timedAwayExpired",
+      "entry": "window-side",
+      "weight": 0,
+      "weightByFlags": {
+        "flags": [
+          "window_available",
+          "window_side_available"
+        ],
+        "values": {
+          "00": 0,
+          "10": 0,
+          "01": 0.5,
+          "11": 0.2
+        }
+      }
     }
   ],
   "eventTargets": {
@@ -484,7 +520,13 @@
     "Check red guards on entry before issuing play; skipped gateway clips render no frame.",
     "No implicit event-interrupt edges are added to other states.",
     "Camera captured clears takingPhoto immediately; purple exit waits for the current 6b clip.",
-    "Pet release/event exits are immediate; pet self-loops still wait for clip completion.",
-    "Recall chooses 4c:0.8 / 4b:0.2 when window_available is true, otherwise 4b deterministically. 4c continues to 3a."
-  ]
+    "Pet release/event exits are immediate after the first full pet cycle; self-loops retain completion eligibility. Dialogue forces pet false, including while the bubble is growing/collapsing.",
+    "Recall weights (4c top, 4b screen, 4b window side): neither clearance 0/1/0; top only .8/.2/0; side only 0/.5/.5; both .4/.4/.2. Window-side 4b detaches at clip end; 4c stays attached until drag or the target disappears."
+  ],
+  "petPolicy": {
+    "minimumCyclesPerSession": 1,
+    "dialogueForcesPetFalse": true,
+    "releaseAfterFirstCycle": "interrupt-immediately",
+    "petCycleCompleted": "derived from a valid completion of 1d or 3c; preserved across self-loops and reset on state changes"
+  }
 }

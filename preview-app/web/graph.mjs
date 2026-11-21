@@ -155,7 +155,7 @@ export class GraphView {
     }
     if (edge.kind==='recall') {
       const weight = this.controller?.edgeWeight(edge) ?? edge.weight;
-      condition = `${edge.guard}\nCurrent weight ${weight}; window_available: true → ${edge.weightByFlag.true}, false → ${edge.weightByFlag.false}`;
+      condition = `${edge.guard}\n${edge.entry} · current weight ${weight}\nTop and side clearance select the recall weights.`;
     }
     return `${edge.from.toUpperCase()} → ${edge.to.toUpperCase()}\n${type}\n${condition}`;
   }
@@ -181,7 +181,7 @@ export class GraphView {
     }
     if (Math.abs(ac.x-bc.x)>Math.abs(ac.y-bc.y)) {
       const direction=bc.x>ac.x?1:-1, sx=direction>0?a.x+a.width:a.x, ex=direction>0?b.x:b.x+b.width;
-      const bend=ac.y===bc.y?(direction>0?-22:22):0;
+      const bend=edge.entry==='window-side'?52:ac.y===bc.y?(direction>0?-22:22):0;
       return {d:`M ${sx} ${ac.y} C ${sx+direction*70} ${ac.y+bend}, ${ex-direction*70} ${bc.y+bend}, ${ex} ${bc.y}`,x:(sx+ex)/2,y:(ac.y+bc.y)/2+bend-5};
     }
     const direction=bc.y>ac.y?1:-1, sy=direction>0?a.y+76:a.y, ey=direction>0?b.y:b.y+76;
@@ -225,7 +225,7 @@ export class GraphView {
         const label=forced?String(controller.defaultWeight(edge)):edge.weight===1?'':String(edge.weight);
         if(caption.textContent!==label)caption.textContent=label;
       }
-      if(edge.kind==='recall') caption.textContent=`Recall · ${controller.edgeWeight(edge)}`;
+      if(edge.kind==='recall') caption.textContent=`Recall · ${controller.edgeWeight(edge)}${edge.entry==='window-side'?' side':''}`;
       path.classList.toggle('outgoing',outgoing); path.classList.toggle('eligible',eligible);
       path.classList.toggle('taken',taken.has(edge.id)); path.classList.toggle('hidden-edge',hidden);
       path.setAttribute('marker-end',`url(#arrow-${taken.has(edge.id)?'active':edge.kind})`);

@@ -1,5 +1,5 @@
 // Pure graph controller. No DOM, timers, rendering, native shell, or services.
-export const FLAG_NAMES = ['pet', 'goodbye', 'showPhoto', 'takingPhoto', 'reading', 'window_available'];
+export const FLAG_NAMES = ['pet', 'goodbye', 'showPhoto', 'takingPhoto', 'reading', 'window_available', 'window_side_available', 'dialogue_open'];
 
 export function evaluateGuard(expression, flags) {
   if (!expression) return true;
@@ -41,13 +41,15 @@ export class GraphController {
     this.edges = graph.transitions.map((e, i) => ({...e, id: `edge-${i}`}));
     const guardFlags = {...Object.fromEntries(FLAG_NAMES.map(n => [n, false])), event: false,
       photoShowRequested: false, photoTakeRequested: false, bibleReadRequested: false,
-      manualRecall: false, timedAwayExpired: false};
+      manualRecall: false, timedAwayExpired: false, petCycleCompleted: false};
     for (const edge of this.edges) {
       if (!this.states.has(edge.from) || !this.states.has(edge.to)) throw new Error('Unknown transition state');
       if (!['default', 'interrupt', 'afterClip', 'recall'].includes(edge.kind)) throw new Error('Unknown transition kind');
       if (edge.kind === 'default' && (!Number.isFinite(edge.weight) || edge.weight <= 0)) throw new Error('Invalid transition weight');
       if (edge.weightByFlag && (!FLAG_NAMES.includes(edge.weightByFlag.flag) ||
           ![edge.weightByFlag.true, edge.weightByFlag.false].every(n => Number.isFinite(n) && n >= 0))) throw new Error('Invalid conditional weight');
+      if (edge.weightByFlags && (!edge.weightByFlags.flags.every(f => FLAG_NAMES.includes(f)) ||
+          !Object.values(edge.weightByFlags.values).every(n => Number.isFinite(n) && n >= 0))) throw new Error('Invalid clearance weights');
       evaluateGuard(edge.guard, guardFlags);
     }
     for (const target of Object.values(graph.eventTargets)) if (!this.states.has(target)) throw new Error('Unknown event target');
@@ -65,6 +67,8 @@ export class GraphController {
     this.serial = 0;
     this.generation = (this.generation ?? 0) + 1;
     this.state = this.graph.initialState;
+    this.petCycleCompleted = false;
+    this.recallEntry = null;
     this.note('reset', `Start at ${this.state.toUpperCase()}`);
   }
 
@@ -78,7 +82,8 @@ export class GraphController {
   get hidden() { return this.states.get(this.state).kind === 'hidden'; }
   get signals() {
     const pending = this.queue[0];
-    return {...this.flags, event: this.flags.goodbye || Boolean(pending),
+    return {...this.flags, pet: this.flags.pet && !this.flags.dialogue_open, petCycleCompleted: this.petCycleCompleted,
+      event: this.flags.goodbye || Boolean(pending),
       photoShowRequested: pending === 'photoShow', photoTakeRequested: pending === 'photoTake',
       bibleReadRequested: pending === 'bibleRead', manualRecall: false, timedAwayExpired: false};
   }
@@ -110,6 +115,7 @@ export class GraphController {
     return this.edgeWeight(edge);
   }
   edgeWeight(edge) {
+    if(edge.weightByFlags) { const key=edge.weightByFlags.flags.map(f=>this.flags[f]?'1':'0').join('');return edge.weightByFlags.values[key]; }
     return edge.weightByFlag ? edge.weightByFlag[String(Boolean(this.flags[edge.weightByFlag.flag]))] : edge.weight;
   }
   chooseWeighted(edges) {
@@ -136,6 +142,7 @@ export class GraphController {
   setFlag(name, value) {
     if (!FLAG_NAMES.includes(name)) throw new Error(`Unknown boolean: ${name}`);
     this.flags[name] = Boolean(value);
+    if (this.flags.dialogue_open) this.flags.pet = false;
     this.note('input', `${name} = ${this.flags[name]}`);
     if (this.followGraph) this.resolveImmediate(false);
   }
@@ -170,7 +177,9 @@ export class GraphController {
       this.note('override', edge.kind === 'default' ? 'Used one-time default override; original weights restored' : 'Conditional transition won; default override cleared');
       this.defaultOverride = null;
     }
+    if (from !== edge.to) this.petCycleCompleted = false;
     this.state = edge.to;
+    if(edge.kind==='recall')this.recallEntry=edge.entry;
     this.generation++;
     if (from === '1a' && edge.kind === 'interrupt' && this.queue.length &&
         this.graph.eventTargets[this.queue[0]] === edge.to) {
@@ -205,6 +214,7 @@ export class GraphController {
 
   complete(token = this.generation) {
     if (token !== this.generation || this.hidden) return false;
+    if (['1d','3c'].includes(this.state)) this.petCycleCompleted = true;
     if (!this.followGraph) { this.generation++; this.note('loop', `Repeat ${this.state.toUpperCase()} (solo)`); return true; }
     // A boolean can have changed since the final rendered drawing.
     if (this.immediate()) { this.resolveImmediate(false); return true; }
@@ -233,6 +243,8 @@ export class GraphController {
   jump(id) {
     if (!this.states.has(id)) throw new Error(`Unknown state: ${id}`);
     this.state = id;
+    this.recallEntry = null;
+    this.petCycleCompleted = false;
     this.queue = [];
     this.active = null;
     this.defaultOverride = null;

@@ -1,16 +1,17 @@
 import AppKit
 import CoreText
+import PetCore
 
 /// Project typography for speech-bubble text. Native menus use macOS defaults.
 /// Font registration is process-scoped, so the bundled face needs no system installation.
 public enum AppTypography {
-    public static let bodySize: CGFloat = 18
+    public static let bodySize: CGFloat = PetConstants.Speech.defaultFontSize
 
     public static let postScriptName: String? = {
         let bases = [Bundle.main.resourceURL, Bundle.main.bundleURL,
                      Bundle.main.executableURL?.deletingLastPathComponent()].compactMap { $0 }
         let candidates = bases.flatMap { base in
-            ["sombrero_PetAssets.bundle/Fonts/MatchaStyle.otf", "sombrero_PetAssets.bundle/Contents/Resources/Fonts/MatchaStyle.otf"].map { base.appendingPathComponent($0) }
+            ["\(PetConstants.Assets.resourceBundle)/Fonts/MatchaStyle.otf", "\(PetConstants.Assets.resourceBundle)/Contents/Resources/Fonts/MatchaStyle.otf"].map { base.appendingPathComponent($0) }
         }
         guard let url = candidates.first(where: { FileManager.default.fileExists(atPath: $0.path) }),
               let provider = CGDataProvider(url: url as CFURL),

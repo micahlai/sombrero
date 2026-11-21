@@ -617,17 +617,205 @@
     },
     {
       "state": "4b",
-      "frames": [],
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0
+      "frames": [
+        {
+          "resource": "4b/4b0000.png"
+        },
+        {
+          "resource": "4b/4b0001.png"
+        },
+        {
+          "resource": "4b/4b0002.png"
+        },
+        {
+          "resource": "4b/4b0003.png"
+        },
+        {
+          "resource": "4b/4b0004.png"
+        },
+        {
+          "resource": "4b/4b0005.png"
+        },
+        {
+          "resource": "4b/4b0006.png"
+        },
+        {
+          "resource": "4b/4b0007.png"
+        },
+        {
+          "resource": "4b/4b0008.png"
+        },
+        {
+          "resource": "4b/4b0009.png"
+        },
+        {
+          "resource": "4b/4b0010.png"
+        },
+        {
+          "resource": "4b/4b0011.png"
+        },
+        {
+          "resource": "4b/4b0012.png"
+        },
+        {
+          "resource": "4b/4b0013.png"
+        },
+        {
+          "resource": "4b/4b0014.png"
+        },
+        {
+          "resource": "4b/4b0015.png"
+        },
+        {
+          "resource": "4b/4b0016.png"
+        },
+        {
+          "resource": "4b/4b0017.png"
+        },
+        {
+          "resource": "4b/4b0018.png"
+        },
+        {
+          "resource": "4b/4b0019.png"
+        },
+        {
+          "resource": "4b/4b0020.png"
+        },
+        {
+          "resource": "4b/4b0021.png"
+        },
+        {
+          "resource": "4b/4b0022.png"
+        }
+      ],
+      "scale": 1.625287,
+      "offsetX": 286.10978,
+      "offsetY": 284.27613
     },
     {
       "state": "4c",
-      "frames": [],
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0
+      "frames": [
+        {
+          "resource": "4c/4c0000.png"
+        },
+        {
+          "resource": "4c/4c0001.png"
+        },
+        {
+          "resource": "4c/4c0002.png"
+        },
+        {
+          "resource": "4c/4c0003.png"
+        },
+        {
+          "resource": "4c/4c0004.png"
+        },
+        {
+          "resource": "4c/4c0005.png"
+        },
+        {
+          "resource": "4c/4c0006.png"
+        },
+        {
+          "resource": "4c/4c0007.png"
+        },
+        {
+          "resource": "4c/4c0008.png"
+        },
+        {
+          "resource": "4c/4c0009.png"
+        },
+        {
+          "resource": "4c/4c0010.png"
+        },
+        {
+          "resource": "4c/4c0011.png"
+        },
+        {
+          "resource": "4c/4c0012.png"
+        },
+        {
+          "resource": "4c/4c0013.png"
+        },
+        {
+          "resource": "4c/4c0014.png"
+        },
+        {
+          "resource": "4c/4c0015.png"
+        },
+        {
+          "resource": "4c/4c0016.png"
+        },
+        {
+          "resource": "4c/4c0017.png"
+        },
+        {
+          "resource": "4c/4c0018.png"
+        },
+        {
+          "resource": "4c/4c0019.png"
+        },
+        {
+          "resource": "4c/4c0020.png"
+        },
+        {
+          "resource": "4c/4c0021.png"
+        },
+        {
+          "resource": "4c/4c0022.png"
+        },
+        {
+          "resource": "4c/4c0023.png"
+        },
+        {
+          "resource": "4c/4c0024.png"
+        },
+        {
+          "resource": "4c/4c0025.png"
+        },
+        {
+          "resource": "4c/4c0026.png"
+        },
+        {
+          "resource": "4c/4c0027.png"
+        },
+        {
+          "resource": "4c/4c0028.png"
+        },
+        {
+          "resource": "4c/4c0029.png"
+        },
+        {
+          "resource": "4c/4c0030.png"
+        },
+        {
+          "resource": "4c/4c0031.png"
+        },
+        {
+          "resource": "4c/4c0032.png"
+        },
+        {
+          "resource": "4c/4c0033.png"
+        },
+        {
+          "resource": "4c/4c0034.png"
+        },
+        {
+          "resource": "4c/4c0035.png"
+        },
+        {
+          "resource": "4c/4c0036.png"
+        },
+        {
+          "resource": "4c/4c0037.png"
+        },
+        {
+          "resource": "4c/4c0038.png"
+        }
+      ],
+      "scale": 1.972527,
+      "offsetX": 201.961057,
+      "offsetY": 331.923022
     },
     {
       "state": "5a",

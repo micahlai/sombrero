@@ -97,7 +97,11 @@ function sync() {
     playGeneration=controller.generation;
     void loadCurrent();
   }
-  for (const input of document.querySelectorAll('[data-flag]')) input.checked=controller.flags[input.dataset.flag];
+  for (const input of document.querySelectorAll('[data-flag]')) {
+    input.checked=controller.flags[input.dataset.flag];
+    if(input.dataset.flag==='pet')input.disabled=controller.flags.dialogue_open;
+  }
+  $('#derived-pet-cycle').checked=controller.petCycleCompleted;
   $('#derived-event').checked=controller.signals.event;
   $('#mode').value=controller.followGraph?'graph':'solo';
   render();
@@ -174,10 +178,10 @@ function renderInspector() {
   for(const edge of controller.outgoing(selected)) {
     const row=document.createElement('div');row.className='transition-row';
     if(edge.kind!=='default'&&evaluateGuard(edge.guard,controller.signals))row.classList.add('eligible');
-    const destination=document.createElement('span');destination.className='route-id';destination.textContent=edge.to.toUpperCase();
+    const destination=document.createElement('span');destination.className='route-id';destination.textContent=edge.to.toUpperCase()+(edge.entry==='window-side'?' · window side':edge.entry==='screen-edge'?' · screen':'');
     const condition=document.createElement('span');condition.className='route-condition';
     const weight=controller.defaultWeight(edge);
-    condition.textContent=edge.kind==='recall'?`weight ${weight} · ${(weight*100).toFixed(0)}% · window_available ${controller.flags.window_available}`:edge.kind==='default'?`weight ${weight} · ${(weight/total*100).toFixed(2)}%${weight!==edge.weight?' · preview override':''}`:edge.guard;
+    condition.textContent=edge.kind==='recall'?`weight ${weight} · ${(weight*100).toFixed(0)}% · ${edge.entry}`:edge.kind==='default'?`weight ${weight} · ${(weight/total*100).toFixed(2)}%${weight!==edge.weight?' · preview override':''}`:edge.guard;
     const kind=document.createElement('span');kind.className=`route-kind ${edge.kind}`;
     kind.textContent={default:'clip end',interrupt:'immediate',afterClip:'after clip',recall:'recall'}[edge.kind];
     row.append(destination,condition,kind);list.append(row);

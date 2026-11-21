@@ -15,6 +15,6 @@ else
 fi
 swiftc -I "$module_path" Tests/DesktopPetSmoke/main.swift \
     Sources/DesktopPet/PetCoordinator.swift Sources/DesktopPet/PetPanel.swift \
-    Sources/DesktopPet/PreferenceStore.swift Sources/DesktopPet/SpeechBubble.swift Sources/DesktopPet/FocusedWindowTracker.swift \
+    Sources/DesktopPet/PreferenceStore.swift Sources/DesktopPet/SpeechBubble.swift Sources/DesktopPet/WindowTracker.swift \
     "${objects[@]}" -o "$bin_dir/ui-smoke"
 "$bin_dir/ui-smoke"

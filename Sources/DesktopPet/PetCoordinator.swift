@@ -10,8 +10,13 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     private let petView: SpriteView
     private let sprites: SpriteLibrary
     private let bubble: SpeechBubble
-    private let focusedWindow = FocusedWindowTracker()
-    private var windowAnchored = false
+    private let windowTracker = WindowTracker()
+    private var attachment = PetAttachment()
+    private var sideAttachment: WindowSideAttachment? { attachment.side }
+    private var configuredEntryGeneration = -1
+    private var entryFlip = false
+    private var preparedTop: WindowTracker.Target?
+    private var preparedSide: WindowTracker.SideTarget?
     private var uiClock = DrawingClock()
     private var outsideMonitor: Any?
     private var awayMinutes: Int?
@@ -98,17 +103,19 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     private func startTimerIfNeeded() {
         guard behavior.isVisible, !suspended, timer == nil else { scheduleRecall(); return }
         rebaseClock()
-        let timer = Timer(timeInterval: 1.0 / 30, repeats: true) { [weak self] _ in self?.tick() }
-        timer.tolerance = 0.008
+        let timer = Timer(timeInterval: 1.0 / PetConstants.Animation.updateFPS, repeats: true) { [weak self] _ in self?.tick() }
+        timer.tolerance = PetConstants.Animation.timerTolerance
         RunLoop.main.add(timer, forMode: .common); self.timer = timer
     }
 
     private func tick() {
         if let deadline = returnDeadline, Date() >= deadline, controller.state == .timeout { recallPet() }
+        updateWindowAttachment()
         let now = ProcessInfo.processInfo.systemUptime
         let uiDelta = uiClock.sample(at: now, running: !suspended)
         let delta = clock.sample(at: now, running: behavior.isVisible && !behavior.isPaused && !suspended)
         let oldState = playback.state, oldFrame = playback.frameIndex, oldGeneration = controller.generation
+        controller.setDialogueOpen(bubble.isVisible || menuTracking)
         if behavior.isVisible && !pointerCaptured && !menuTracking {
             let point = NSEvent.mouseLocation
             let local = NSPoint(x: point.x - panel.frame.minX, y: point.y - panel.frame.minY)
@@ -118,10 +125,11 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         }
         playback.advance(by: delta, controller: &controller) { Double.random(in: 0..<1) }
         bubble.advance(by: uiDelta)
+        controller.setDialogueOpen(bubble.isVisible || menuTracking)
         if oldState != playback.state || oldFrame != playback.frameIndex || oldGeneration != controller.generation { renderFrame() }
         if controller.state == .timeout && behavior.isVisible {
             behavior.hide(); panel.orderOut(nil); bubble.close(immediately: true)
-            if let minutes = awayMinutes { returnDeadline = Date().addingTimeInterval(Double(minutes) * 60) }
+            if let minutes = awayMinutes { returnDeadline = Date().addingTimeInterval(Double(minutes) * PetConstants.Interaction.secondsPerMinute) }
             awayMinutes = nil; persist()
             timer?.invalidate(); timer = nil; scheduleRecall()
         }
@@ -133,6 +141,10 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     }
 
     private func renderFrame() {
+        configureEntryIfNeeded()
+        attachment.didEnterState(controller.state)
+        if attachment.window != nil { updateWindowAttachment() }
+        petView.flipsHorizontally = controller.state == .peek && entryFlip
         playback.synchronize(with: controller)
         petView.state = playback.state
         petView.sprite = sprites.frame(state: playback.state, index: playback.frameIndex)
@@ -150,7 +162,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     func beginPointerGesture() { pointerCaptured = true; panel.ignoresMouseEvents = false }
     func endPointerGesture() { pointerCaptured = false; savePlacement(); persist(); updateMouseRouting() }
     func drag(to origin: NSPoint) {
-        windowAnchored = false
+        attachment.drag()
         panel.setFrameOrigin(origin)
         updateBubblePlacement()
         // Allow crossing displays during drag; recover/clamp on release.
@@ -158,7 +170,12 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
 
     func toggleBubble() {
         if bubble.wantsOpen { closeBubble() }
-        else { bubble.show(); updateBubblePlacement() }
+        else { showBubble() }
+    }
+
+    private func showBubble() {
+        controller.setDialogueOpen(true)
+        renderFrame(); bubble.show(); updateBubblePlacement()
     }
 
     private func closeBubble() {
@@ -166,8 +183,9 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     }
 
     private func updateBubblePlacement() {
-        guard bubble.isVisible, let screen = panel.screen ?? NSScreen.main else { return }
-        let bounds = sprites.occupiedBounds(state: controller.state)
+        guard bubble.isVisible, let screen = placementScreen() else { return }
+        var bounds = sprites.occupiedBounds(state: controller.state)
+        if petView.flipsHorizontally, let rect = bounds { bounds = CGRect(x: 1-rect.maxX, y: rect.minY, width: rect.width, height: rect.height) }
         let local = bounds.map { NSRect(x: $0.minX * panel.frame.width, y: $0.minY * panel.frame.height,
             width: $0.width * panel.frame.width, height: $0.height * panel.frame.height) } ?? petView.interactiveRect
         let occupied = local.offsetBy(dx: panel.frame.minX, dy: panel.frame.minY)
@@ -198,19 +216,17 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         bubble.close(immediately: true)
         returnDeadline = nil; awayMinutes = nil
         if controller.state == .timeout {
-            let origin = focusedWindow.peekOrigin(viewportSize: panel.frame.width)
-            controller.recall(windowAvailable: origin != nil)
-            windowAnchored = controller.state == .windowPeek
-            if windowAnchored, let origin { panel.setFrameOrigin(origin) }
-            else { restorePlacement() }
-        } else { controller.reset(); windowAnchored = false }
+            preparedTop = windowTracker.targets(viewportSize: panel.frame.width, visibleBounds: anchoringBounds, baselineY: windowPeekBaselineY, force: true).randomElement()
+            preparedSide = windowTracker.sideTargets(visibleBounds: referenceBounds, artwork: peekArtwork).randomElement()
+            controller.recall(windowAvailable: preparedTop != nil, sideAvailable: preparedSide != nil)
+        } else { controller.reset() }
         behavior.show(); renderFrame(); panel.orderFrontRegardless(); startTimerIfNeeded(); persist()
     }
 
     private func scheduleRecall() {
         recallTimer?.invalidate(); recallTimer = nil
         guard !suspended, controller.state == .timeout, let deadline = returnDeadline else { return }
-        let timer = Timer(timeInterval: max(0.01, deadline.timeIntervalSinceNow), repeats: false) { [weak self] _ in
+        let timer = Timer(timeInterval: max(PetConstants.Interaction.recallTimerMinimumDelay, deadline.timeIntervalSinceNow), repeats: false) { [weak self] _ in
             guard let self, self.controller.state == .timeout, self.returnDeadline == deadline else { return }
             self.recallPet()
         }
@@ -226,13 +242,10 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         menu.addItem(item(behavior.isVisible ? "Hide Pet" : "Show Pet", #selector(toggleVisibility)))
         menu.addItem(item("Bring Back to This Screen", #selector(bringBack)))
         menu.addItem(item("Open Speech Menu", #selector(openSpeechMenu)))
-        if !focusedWindow.hasPermission {
-            menu.addItem(item("Enable Window Peek…", #selector(enableWindowPeek)))
-        } else {
-            let available = focusedWindow.peekOrigin(viewportSize: panel.frame.width) != nil
-            let status = NSMenuItem(title: "Window Peek: \(available ? "Available" : "No clearance / no focused window")", action: nil, keyEquivalent: "")
-            status.isEnabled = false; menu.addItem(status)
-        }
+        let topAvailable = !windowTracker.targets(viewportSize: panel.frame.width, visibleBounds: anchoringBounds, baselineY: windowPeekBaselineY).isEmpty
+        let sideAvailable = !windowTracker.sideTargets(visibleBounds: referenceBounds, artwork: peekArtwork).isEmpty
+        let status = NSMenuItem(title: "Window peek: top \(topAvailable ? "available" : "unavailable"), side \(sideAvailable ? "available" : "unavailable")", action: nil, keyEquivalent: "")
+        status.isEnabled = false; menu.addItem(status)
         let animations = NSMenuItem(title: "Preview Animation", action: nil, keyEquivalent: "")
         let animationMenu = NSMenu()
         for state in DuckState.allCases where state != .timeout {
@@ -241,6 +254,8 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
             option.representedObject = state.rawValue; animationMenu.addItem(option)
         }
         animations.submenu = animationMenu; menu.addItem(animations)
+        let sidePreview=item("Preview 4B from Window Side", #selector(previewWindowSide))
+        sidePreview.isEnabled=sideAvailable; menu.addItem(sidePreview)
         if [.grabPhoto, .showPhoto, .showingPhoto, .grabCamera, .cameraIdle, .grabBible, .bibleIdle].contains(controller.state) {
             menu.addItem(item("Finish Current Preview", #selector(finishPreview)))
         }
@@ -251,7 +266,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         menu.addItem(item("Pause Motion", #selector(togglePause), checked: behavior.isPaused))
         let sizes = NSMenuItem(title: "Size", action: nil, keyEquivalent: "")
         let submenu = NSMenu()
-        for (title, size) in [("Small", 88), ("Medium", 112), ("Large", 152)] {
+        for (title, size) in PetConstants.Size.options {
             let option = item(title, #selector(changeSize(_:)), checked: preferences.size == Double(size))
             option.tag = size; submenu.addItem(option)
         }
@@ -268,30 +283,36 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
 
     func menuWillOpen(_ menu: NSMenu) {
         menuTracking = true; panel.ignoresMouseEvents = false
+        controller.setDialogueOpen(true); renderFrame()
         // Rebuild the status menu before display so labels/checkmarks reflect pet actions.
         let fresh = makeMenu()
         menu.removeAllItems()
         for item in fresh.items { fresh.removeItem(item); menu.addItem(item) }
     }
 
-    func menuDidClose(_ menu: NSMenu) { menuTracking = false; updateMouseRouting() }
+    func menuDidClose(_ menu: NSMenu) {
+        menuTracking = false; controller.setDialogueOpen(bubble.isVisible); updateMouseRouting()
+    }
 
     func recoverCompanion() { bringBack() }
 
     @objc private func openSpeechMenu() {
         if !behavior.isVisible { recallPet() }
-        bubble.show(); updateBubblePlacement()
+        showBubble()
     }
-    @objc private func enableWindowPeek() { focusedWindow.requestPermission() }
     @objc private func previewAnimation(_ sender: NSMenuItem) {
         guard let id = sender.representedObject as? String, let state = DuckState(rawValue: id) else { return }
         closeBubble(); returnDeadline = nil; awayMinutes = nil
-        controller.reset(to: state); windowAnchored = false
-        if state == .windowPeek, let origin = focusedWindow.peekOrigin(viewportSize: panel.frame.width) {
-            panel.setFrameOrigin(origin); windowAnchored = true
-        }
+        preparedTop = nil; preparedSide = nil
+        controller.reset(to: state)
         behavior.show(); renderFrame()
         panel.orderFrontRegardless(); startTimerIfNeeded(); persist()
+    }
+    @objc private func previewWindowSide() {
+        guard let candidate=windowTracker.sideTargets(visibleBounds:referenceBounds,artwork:peekArtwork,force:true).randomElement() else { return }
+        closeBubble(); preparedSide=candidate; preparedTop=nil; returnDeadline=nil; awayMinutes=nil
+        controller.reset(to:.timeout); controller.recall(sideAvailable:true) { 0.75 }
+        behavior.show(); renderFrame(); panel.orderFrontRegardless(); startTimerIfNeeded(); persist()
     }
     @objc private func finishPreview() { closeBubble() }
     @objc private func toggleVisibility() {
@@ -305,9 +326,13 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     }
     @objc private func bringBack() {
         guard let screen = screenAtPointer() ?? NSScreen.main ?? NSScreen.screens.first else { return }
+        let wasHidden = !behavior.isVisible
         recallPet(); preferences.clickThrough = false
-        let area = screen.visibleFrame
-        if !windowAnchored { panel.setFrameOrigin(NSPoint(x: area.midX - panel.frame.width / 2, y: area.midY - panel.frame.height / 2)) }
+        if !wasHidden {
+            attachment.detach()
+            let area = screen.visibleFrame
+            panel.setFrameOrigin(NSPoint(x: area.midX-panel.frame.width/2, y: area.midY-panel.frame.height/2))
+        }
         panel.ignoresMouseEvents = false; panel.orderFrontRegardless()
         startTimerIfNeeded(); savePlacement(); persist()
     }
@@ -320,43 +345,118 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         rebaseClock(); persist()
     }
     @objc private func changeSize(_ sender: NSMenuItem) {
-        windowAnchored = false
         savePlacement(); preferences.size = Double(sender.tag)
-        let side = Double(sender.tag) * SpriteLibrary.viewportScale
-        panel.setContentSize(NSSize(width: side, height: side))
-        restorePlacement(); savePlacement(); persist()
+        let side = Double(sender.tag)*PetConstants.Geometry.viewportScale
+        panel.setContentSize(NSSize(width:side,height:side))
+        if attachment.window != nil || sideAttachment != nil { updateWindowAttachment(force:true) }
+        else { restorePlacement() }
+        savePlacement(); persist()
     }
     @objc private func quit() { NSApp.terminate(nil) }
 
     private var displays: [PetDisplay] { NSScreen.screens.map { screen in
-        let area = screen.visibleFrame
+        let area = freeArea(screen)
         return PetDisplay(id: screenID(screen), workArea: PetRect(x: area.minX, y: area.minY, width: area.width, height: area.height))
     } }
     private func screenID(_ screen: NSScreen) -> String { String(describing: screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] ?? "unknown") }
     private func screenAtPointer() -> NSScreen? { NSScreen.screens.first { $0.frame.contains(NSEvent.mouseLocation) } }
+    private func freeArea(_ screen: NSScreen) -> NSRect {
+        PetConstants.Geometry.freePlacementUsesWorkArea ? screen.visibleFrame : screen.frame
+    }
+    private var visibleBounds: PetRect {
+        let normal = petView.sprite?.occupiedBounds ?? sprites.occupiedBounds(state: controller.state)
+        guard let normal, !normal.isNull else { return PetConstants.Geometry.placeholderBounds.scaled(by: panel.frame.width) }
+        let x = petView.flipsHorizontally ? 1-normal.maxX : normal.minX
+        return PetRect(x:x,y:normal.minY,width:normal.width,height:normal.height).scaled(by:panel.frame.width)
+    }
+    private var peekArtwork: PeekArtwork {
+        guard let first = sprites.frame(state: .peek, index: 0) else {
+            return PeekArtwork(viewportSize: panel.frame.width, cutX: panel.frame.width/2)
+        }
+        let cut = first.placement.minX + first.placement.width*PetConstants.ScreenEntry.sourceCutX/Double(first.image.width)
+        return PeekArtwork(viewportSize: panel.frame.width, cutX: cut*panel.frame.width)
+    }
+    private var windowPeekBaselineY: Double {
+        guard let first = sprites.frame(state: .windowPeek, index: 0) else {
+            return panel.frame.width*PetConstants.Geometry.groundAnchor.y
+        }
+        let ledge = first.placement.maxY-first.placement.height*PetConstants.WindowEntry.sourceLedgeY/Double(first.image.height)
+        return ledge*panel.frame.width
+    }
+    private var referenceBounds: PetRect {
+        let normal = sprites.occupiedBounds(state:.look)
+        return normal.map { PetRect(x:$0.minX,y:$0.minY,width:$0.width,height:$0.height).scaled(by:panel.frame.width) }
+            ?? PetConstants.Geometry.placeholderBounds.scaled(by:panel.frame.width)
+    }
+    private var anchoringBounds: PetRect {
+        let states: [DuckState] = [.look,.alternateLook,.wave,.standingPet,.sitDown,.standUp,.sitting,.sittingLook,.sittingPet]
+        let combined = states.compactMap { sprites.occupiedBounds(state:$0) }.reduce(CGRect.null) { $0.union($1) }
+        return combined.isNull ? referenceBounds : PetRect(x:combined.minX,y:combined.minY,width:combined.width,height:combined.height).scaled(by:panel.frame.width)
+    }
+    private func configureEntryIfNeeded() {
+        guard [.peek,.windowPeek].contains(controller.state), configuredEntryGeneration != controller.generation else { return }
+        attachment.detach(); entryFlip=false
+        if controller.state == .windowPeek {
+            if let target = preparedTop ?? windowTracker.targets(viewportSize:panel.frame.width,visibleBounds:anchoringBounds,baselineY:windowPeekBaselineY,force:true).randomElement() {
+                attachment.enterWindow(target.attachment); panel.setFrameOrigin(target.origin)
+                configuredEntryGeneration = controller.generation; preparedTop=nil; preparedSide=nil; return
+            }
+            controller.fallbackToScreenEntry()
+        } else if controller.recallEntry == .windowSide {
+            if let target = preparedSide ?? windowTracker.sideTargets(visibleBounds:referenceBounds,artwork:peekArtwork,force:true).randomElement() {
+                attachment.enterSide(target.attachment); entryFlip=target.attachment.flipsAnimation; panel.setFrameOrigin(target.origin)
+                configuredEntryGeneration = controller.generation; preparedTop=nil; preparedSide=nil; return
+            }
+            controller.fallbackToScreenEntry()
+        }
+        if let screen = screenAtPointer() ?? NSScreen.main ?? NSScreen.screens.first {
+            let rect=screen.frame
+            let placement=ScreenEntryPlacement.choose(screen:PetRect(x:rect.minX,y:rect.minY,width:rect.width,height:rect.height),
+                referenceBounds:referenceBounds,artwork:peekArtwork,sideSample:Double.random(in:0..<1),heightSample:Double.random(in:0..<1))
+            attachment.enterScreen(placement.edge); entryFlip=placement.flipsAnimation; panel.setFrameOrigin(NSPoint(x:placement.origin.x,y:placement.origin.y))
+        }
+        configuredEntryGeneration=controller.generation; preparedTop=nil; preparedSide=nil
+    }
+    private func updateWindowAttachment(force: Bool = false) {
+        guard !pointerCaptured else { return }
+        let origin: NSPoint?
+        if let target=attachment.window {
+            origin=windowTracker.origin(for:target,viewportSize:panel.frame.width,visibleBounds:anchoringBounds,
+                baselineY:controller.state == .windowPeek ? windowPeekBaselineY : nil,force:force)
+        } else if let target=sideAttachment, controller.state == .peek {
+            origin=windowTracker.origin(for:target,visibleBounds:referenceBounds,artwork:peekArtwork,force:force)
+        } else { return }
+        if let origin { panel.setFrameOrigin(origin) }
+        else { attachment.detach(); savePlacement() }
+    }
+    private func placementScreen() -> NSScreen? {
+        let b=visibleBounds
+        let center=NSPoint(x:panel.frame.minX+b.center.x,y:panel.frame.minY+b.center.y)
+        return NSScreen.screens.first { $0.frame.contains(center) } ?? panel.screen ?? screenAtPointer() ?? NSScreen.main
+    }
     private func restorePlacement() {
-        guard let point = Placement.restore(preferences.placement, size: panel.frame.width, displays: displays,
-            fallbackID: (screenAtPointer() ?? NSScreen.main).map(screenID)) else { return }
-        panel.setFrameOrigin(NSPoint(x: point.x, y: point.y))
+        guard let point=Placement.restore(preferences.placement,viewportSize:panel.frame.width,visibleBounds:visibleBounds,displays:displays,
+            fallbackID:(screenAtPointer() ?? NSScreen.main).map(screenID)) else { return }
+        panel.setFrameOrigin(NSPoint(x:point.x,y:point.y))
     }
     private func savePlacement() {
-        guard !windowAnchored else { return }
-        guard let screen = panel.screen ?? screenAtPointer() ?? NSScreen.main else { return }
-        let area = screen.visibleFrame
-        let display = PetDisplay(id: screenID(screen), workArea: PetRect(x: area.minX, y: area.minY, width: area.width, height: area.height))
-        let point = Placement.clamp(PetPoint(x: panel.frame.minX, y: panel.frame.minY), size: panel.frame.width, to: display.workArea)
-        panel.setFrameOrigin(NSPoint(x: point.x, y: point.y))
-        preferences.placement = Placement.save(origin: point, size: panel.frame.width, display: display)
+        guard attachment.window == nil, sideAttachment == nil, let screen=placementScreen() else { return }
+        let area=freeArea(screen)
+        let display=PetDisplay(id:screenID(screen),workArea:PetRect(x:area.minX,y:area.minY,width:area.width,height:area.height))
+        let point=Placement.clamp(PetPoint(x:panel.frame.minX,y:panel.frame.minY),visibleBounds:visibleBounds,to:display.workArea)
+        panel.setFrameOrigin(NSPoint(x:point.x,y:point.y))
+        preferences.placement=Placement.save(origin:point,visibleBounds:visibleBounds,display:display)
     }
     private func persist() {
         preferences.isVisible = behavior.isVisible; preferences.isPaused = behavior.isPaused; store.save(preferences)
         if let deadline = returnDeadline { UserDefaults.standard.set(deadline, forKey: "sombrero.returnDeadline") }
         else { UserDefaults.standard.removeObject(forKey: "sombrero.returnDeadline") }
     }
-    private func recoverAfterDisplayChange() { pointerCaptured = false; windowAnchored = false; restorePlacement(); savePlacement(); persist() }
+    private func recoverAfterDisplayChange() { pointerCaptured = false; attachment.detach(); restorePlacement(); savePlacement(); persist() }
     private func suspend() { bubble.close(immediately: true); controller.finishRoutine(); uiClock = DrawingClock(); suspended = true; rebaseClock(); pointerCaptured = false; timer?.invalidate(); timer = nil; recallTimer?.invalidate(); recallTimer = nil; panel.orderOut(nil) }
     private func resume() {
-        suspended = false; rebaseClock(); restorePlacement()
+        suspended = false; rebaseClock();
+        if attachment.window != nil || sideAttachment != nil { updateWindowAttachment(force:true) } else { restorePlacement() }
         if behavior.isVisible { panel.orderFrontRegardless() }; startTimerIfNeeded()
     }
 }

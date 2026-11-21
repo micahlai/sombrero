@@ -1,6 +1,6 @@
 # sombrero — first release plan
 
-Updated November 19, 2026 (America/New_York). The native app now runs the full local animation graph at 6 fps, loads the ten available `assets/duck/final-v1` clips with their shared scale/position calibration, and uses labeled pink squares for the twelve missing clips. The speech menu uses the five `speech_small` drawings, holds the last drawing for controls, and reverses them on close. Hover petting, click-versus-drag, timed/manual goodbye, recall, and a native animation-preview submenu are implemented. Message/photo, camera, and Bible menu actions exercise their full animation routes with local placeholder content; networking, capture, and the daily reader below remain future work.
+Updated November 21, 2026 (America/New_York). The native app now runs the full local animation graph at 6 fps, loads the twelve available `assets/duck/final-v1` clips with their shared scale/position calibration, and uses labeled pink squares for the ten missing clips. The speech menu uses the five `speech_small` drawings, holds the last drawing for controls, and reverses them on close. Hover petting, click-versus-drag, timed/manual goodbye, recall, and a native animation-preview submenu are implemented. Message/photo, camera, and Bible menu actions exercise their full animation routes with local placeholder content; networking, capture, and the daily reader below remain future work.
 
 ## Authority and release scope
 
@@ -31,16 +31,16 @@ Black arrows run only at clip completion when no permitted red/purple condition 
 | 1a | Standing idle | 1a .975; 1b .02; 1c .02; 2a .005 |
 | 1b | Standing look | 1a .8; 1c .2 |
 | 1c | Standing wave | 1a 1 |
-| 1d | Standing pet | Red release/event exits; purple self-loop |
+| 1d | Standing pet | Red release/event exits after first full cycle; purple self-loop |
 | 2a | Sit down | 3a 1 |
 | 2b | Stand up | 1a 1 |
 | 3a | Sitting idle | 3a .985; 3b .01; 2b .005 |
 | 3b | Sitting look | 3b .1; 3a .9 |
-| 3c | Sitting pet | Red release/event exits; purple self-loop |
+| 3c | Sitting pet | Red release/event exits after first full cycle; purple self-loop |
 | 4a | Goodbye standing | timeout 1 |
 | 4b | Peek in | 1b 1 |
 | 4c | Window peek in | 3a 1 |
-| timeout | Hidden/static | No automatic animation; recall/away timer chooses 4c .8 / 4b .2 when window_available; otherwise 4b 1 |
+| timeout | Hidden/static | No automatic animation; recall/away timer uses the top/side clearance weights below |
 | 5a | Grab photo | 5b 1 |
 | 5b | Show photo | 5c 1 |
 | 5c | Showing photo idle | Conditional purple arrows only |
@@ -56,7 +56,7 @@ There are 22 animation states plus one hidden timeout state. The black weights f
 
 ## Red and purple arrows
 
-Red means interrupt the current animation immediately, including before the first drawing when entering a state. Purple means retain the current clip until its final drawing hold completes, then take the arrow. Guard evaluation must also happen on state entry so gateways can be traversed without drawing them. Use a bounded transition resolver with cycle detection rather than scheduling a zero-duration rendering loop.
+Red means interrupt the current animation immediately, including before the first drawing when entering a state. Purple means retain the current clip until its final drawing hold completes, then take the arrow. Guard evaluation must also happen on state entry so gateways can be traversed without drawing them. Use a bounded transition resolver with cycle detection rather than scheduling a zero-duration rendering loop. Pet states 1d and 3c have one exception: each newly entered pet session must finish its first full clip before a normal release/event exit becomes eligible. The derived `petCycleCompleted` flag stays true across self-loops, so leaving during any later loop interrupts immediately; it resets when leaving/re-entering the pet state. Stale clip callbacks cannot unlock a new session.
 
 | Current state(s) | Condition | Color / behavior | Destination |
 | --- | --- | --- | --- |
@@ -64,12 +64,12 @@ Red means interrupt the current animation immediately, including before the firs
 | 1a, 1b | goodbye | Red, immediate | 4a |
 | 1b | event | Purple, finish clip | 1a |
 | 1d | pet and not event | Purple, repeat at end | 1d |
-| 1d | event | Red, immediate | 1a |
-| 1d | not pet | Red, immediate | 1c |
+| 1d | event and petCycleCompleted | Red, immediate | 1a |
+| 1d | not pet and petCycleCompleted | Red, immediate | 1c |
 | 3a, 3b | pet | Red, immediate | 3c |
 | 3a, 3b | event | Red, immediate | 2b |
 | 3c | pet and not event | Purple, repeat at end | 3c |
-| 3c | not pet or event | Red, immediate | 3a |
+| 3c | (not pet or event) and petCycleCompleted | Red, immediate | 3a |
 | 1a | photo-show request | Red, immediate | 5a |
 | 1a | photo-take request | Red, immediate | 6a |
 | 1a | Bible-read request | Red, immediate | 7a |
@@ -89,7 +89,7 @@ The user's required example is an acceptance test:
 
 | Step | Expected behavior |
 | --- | --- |
-| Photo-show selected during 3c | Retain photoShow request and set event true; interrupt 3c immediately |
+| Photo-show selected during 3c | Retain photoShow request and set event true; finish the first pet cycle if still pending, otherwise interrupt 3c immediately |
 | Enter 3a | Its red event edge is already true; skip rendering 3a and start 2b |
 | Finish 2b | Reach 1a |
 | Enter 1a | Dispatch the retained photoShow request immediately; skip rendering 1a and start 5a |
@@ -111,13 +111,28 @@ The user clarified two away modes:
 | Until I say so | No automatic return, including after incoming messages or a verse becoming ready | Explicit control-panel recall → weighted 4b / 4c |
 | For N minutes | Persist an absolute return deadline | Deadline → weighted 4b / 4c; manual recall may return earlier |
 
-4b continues to 1b (standing look); 4c continues to 3a (sitting idle). On each manual or timed recall, sample `window_available`: choose 4c with weight 0.8 and 4b with weight 0.2 when true; otherwise choose 4b deterministically without consuming randomness. The native app reads the external focused window through Accessibility, rejects minimized/full-screen windows, and reserves a clearance of 0.46 times the duck viewport height plus 8 points above the window. Missing permission, unavailable geometry, or insufficient clearance means false. The native menu offers Enable Window Peek to request Accessibility permission; it never prompts on startup. The preview exposes a manual `window_available` checkbox. 4c positions the duck above the focused window; its authored artwork is still missing, so it uses the pink placeholder. The previous desktop placement is preserved for 4b and normal recovery. Start the away duration when 4a completes and timeout is entered. Validate positive finite minutes. A sleeping/offline app returns at the next opportunity after an expired deadline; do not replay missed time. Persist hidden mode/deadline across relaunch, and preserve unread notifications while away. Clear transient pet/goodbye state on entering timeout. Timed wake never overrides a later manual-until-recall choice.
+4b continues to 1b (standing look); 4c continues to 3a (sitting idle). Both clips now use their supplied artwork: 23 frames for 4b and 39 for 4c. Each recall evaluates top and side clearance separately:
+
+| Top clearance | Side clearance | 4c window top | 4b screen edge | 4b window side |
+| --- | --- | --- | --- | --- |
+| False | False | 0 | 1 | 0 |
+| True | False | 0.8 | 0.2 | 0 |
+| False | True | 0 | 0.5 | 0.5 |
+| True | True | 0.4 | 0.4 | 0.2 |
+
+The native app reads WindowServer geometry for visible external windows, without Accessibility permission, window titles, or screen capture. It checks foreground document-window occlusion and the duck's painted footprint. Non-document floating overlays are excluded from obstruction checks because transparent overlays can report full-screen bounds with alpha 1. Top clearance requires at least 160 points above a candidate window and enough room for the normal animation bounds; side clearance requires room beside a visible window edge for the standing footprint and offset. The preview has separate `window_available` (top) and `window_side_available` checkboxes and reports the selected entry variant.
+
+Screen-edge 4b chooses left/right with equal probability and samples the vertical position uniformly over the usable physical screen height. The calibrated vertical cut in 4b (205 source pixels from the left) is aligned to the physical screen edge, with a configurable inset defaulting to zero. This accounts for transparent source padding at every duck size. Right screen entry mirrors 4b; window-side entry mirrors the left window edge so the duck emerges outward. Window-side 4b aligns the same cut to its window border, follows that window while 4b plays, and detaches at completion. 4c aligns its authored ledge (source row 354) to the window top with zero gap, using the clip calibration and current pet size. Following clips align their shared ground to the same edge. 4c establishes a persistent attachment to one eligible visible window, follows its movement/resizing across subsequent animations, and detaches when the user drags the duck. Losing the window or sufficient clearance also detaches; geometry updates never select a replacement. A new 4c entry can establish another attachment. Native preview controls can force 4c or window-side 4b for testing.
+
+`Sources/PetCore/PetConstants.swift` centralizes runtime settings, including entry offsets, required clearance, polling interval, sizes, timing, interaction thresholds, and bubble geometry/colors. Per-animation transforms remain in `animation-scales.json`. Free placement clamps painted bounds rather than transparent canvas padding, allowing the duck to reach physical screen corners and edges. Existing stored placement migrates on save.
+
+Start the away duration when 4a completes and timeout is entered. Validate positive finite minutes. A sleeping/offline app returns at the next opportunity after an expired deadline; do not replay missed time. Persist hidden mode/deadline across relaunch, and preserve unread notifications while away. Clear transient pet/goodbye state on entering timeout. Timed wake never overrides a later manual-until-recall choice.
 
 The diagram places goodbye on 1a/1b only. Proposed menu recovery from sitting or an active routine: enqueue a pending goodbye, suppress new petting, use the existing return-to-standing path, and start 4a at the next supported gateway. Sitting recovery can reuse event-style routing to 2b, but this is a proposed extension because goodbye is not a page-two event. The native control panel must retain an immediate hide/quit path even if an asset or routine fails.
 
 ## Hover, bubble menu, and notification badge
 
-Interpret “icon” as the on-screen duck sprite. Hovering its padded alpha hit area sets pet true; leaving sets false. Re-evaluate when the animation moves beneath a stationary pointer. Moving from the duck to its active speech-bubble menu should keep that interaction stable; proposed behavior holds the last pet signal while interacting with the bubble, clearing it on dismissal/leave. Do not toggle on every sparse watercolor hole. Hovering a macOS menu-bar item should not trigger petting unless separately requested.
+Interpret “icon” as the on-screen duck sprite. Hovering its padded alpha hit area sets pet true; leaving sets false. Re-evaluate when the animation moves beneath a stationary pointer. Opening dialogue immediately sets pet false. Speech-bubble growth, open content, and collapse all suppress hover petting; native menu tracking does too. Closing dialogue leaves pet false until a fresh hover sample resumes petting. A pet animation already in its first cycle completes that cycle, then exits; a later loop exits immediately. The preview simulates this with `dialogue_open`, which clears and disables the Pet checkbox while enabled. Do not toggle on every sparse watercolor hole. Hovering a macOS menu-bar item should not trigger petting unless separately requested.
 
 A primary click after the existing drag threshold opens a compact drawn speech bubble, approximately 118 × 133 points (one-third the previous dimensions), anchored outside the current clip’s combined painted bounds with an 8-point gap. Prefer above, then either side, then below if near the screen edge. The menu has no product-name heading; labels and buttons use fixed dark-brown ink in light and dark appearance. Use accessible native controls inside the bubble; the original duck panel stays non-key, while text-editing windows may become key only after explicit interaction. Retain drag and context-menu recovery. Bubble geometry counts as interactive; empty pixels outside the duck/bubble pass through.
 

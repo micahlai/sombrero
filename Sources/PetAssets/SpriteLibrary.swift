@@ -13,7 +13,8 @@ public final class SpriteLibrary {
         public func contains(x: Double, y: Double) -> Bool {
             guard x >= 0, x < 1, y >= 0, y < 1 else { return false }
             // Bitmap rows run downward; the native view's coordinates run upward.
-            return hitMask[(79 - Int(y * 80)) * 80 + Int(x * 80)] > 0
+            let size=PetConstants.Assets.maskSize
+            return hitMask[(size-1-Int(y*Double(size)))*size+Int(x*Double(size))] > 0
         }
     }
     public private(set) var frames: [DuckState: [Frame]] = [:]
@@ -21,15 +22,15 @@ public final class SpriteLibrary {
     public private(set) var failure: String?
     public private(set) var missingStates = Set<DuckState>()
     public let frameCounts: [DuckState: Int]
-    public static let viewportScale = 2.6
+    public static let viewportScale = PetConstants.Geometry.viewportScale
 
     public init(directory: URL? = nil) {
         let bases = [Bundle.main.resourceURL, Bundle.main.bundleURL, Bundle.main.executableURL?.deletingLastPathComponent()].compactMap { $0 }
         let candidates = bases.flatMap { base in
-            ["sombrero_PetAssets.bundle/FinalDuck", "sombrero_PetAssets.bundle/Contents/Resources/FinalDuck"].map { base.appendingPathComponent($0) }
+            ["\(PetConstants.Assets.resourceBundle)/FinalDuck", "\(PetConstants.Assets.resourceBundle)/Contents/Resources/FinalDuck"].map { base.appendingPathComponent($0) }
         }
         let root = directory ?? candidates.first { FileManager.default.fileExists(atPath: $0.path) } ?? bases[0].appendingPathComponent("missing-duck-resources")
-        var counts = Dictionary(uniqueKeysWithValues: DuckState.allCases.filter { $0 != .timeout }.map { ($0, 10) })
+        var counts = Dictionary(uniqueKeysWithValues: DuckState.allCases.filter { $0 != .timeout }.map { ($0, PetConstants.Animation.placeholderFrames) })
         do {
             let manifest = try JSONDecoder().decode(SpriteManifest.self, from: Data(contentsOf: root.appendingPathComponent("manifest.json")))
             guard manifest.isValid else { throw AssetError.invalidManifest }
@@ -37,7 +38,7 @@ public final class SpriteLibrary {
             let insetX = (side - Double(manifest.canvasWidth)) / 2
             let insetY = (side - Double(manifest.canvasHeight)) / 2
             for clip in manifest.clips {
-                counts[clip.state] = max(10 * (clip.frames.isEmpty ? 1 : 0), clip.frames.count)
+                counts[clip.state] = max(PetConstants.Animation.placeholderFrames * (clip.frames.isEmpty ? 1 : 0), clip.frames.count)
                 if clip.frames.isEmpty { missingStates.insert(clip.state); continue }
                 var loaded: [Frame] = []
                 for frame in clip.frames {
@@ -47,26 +48,26 @@ public final class SpriteLibrary {
                     let placement = CGRect(x: (insetX + clip.offsetX) / side,
                         y: (insetY + Double(manifest.canvasHeight) - clip.offsetY - height) / side,
                         width: width / side, height: height / side)
-                    var pixels = [UInt8](repeating: 0, count: 80 * 80 * 4)
-                    let rendered = pixels.withUnsafeMutableBytes { bytes -> Bool in
-                        guard let context = CGContext(data: bytes.baseAddress, width: 80, height: 80,
-                            bitsPerComponent: 8, bytesPerRow: 320, space: CGColorSpaceCreateDeviceRGB(),
-                            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return false }
-                        context.draw(image, in: CGRect(x: placement.minX * 80, y: placement.minY * 80,
-                            width: placement.width * 80, height: placement.height * 80))
+                    let n=PetConstants.Assets.maskSize, channels=PetConstants.Assets.rgbaChannels
+                    let cutoff=PetConstants.Assets.alphaThreshold, pad=PetConstants.Assets.hitPaddingPixels
+                    var pixels=[UInt8](repeating:0,count:n*n*channels)
+                    let rendered=pixels.withUnsafeMutableBytes { bytes -> Bool in
+                        guard let context=CGContext(data:bytes.baseAddress,width:n,height:n,bitsPerComponent:PetConstants.Assets.bitsPerChannel,
+                            bytesPerRow:n*channels,space:CGColorSpaceCreateDeviceRGB(),bitmapInfo:CGImageAlphaInfo.premultipliedLast.rawValue) else { return false }
+                        context.draw(image,in:CGRect(x:placement.minX*Double(n),y:placement.minY*Double(n),width:placement.width*Double(n),height:placement.height*Double(n)))
                         return true
                     }
                     guard rendered else { throw AssetError.invalidFrame(frame.resource) }
-                    let alpha = stride(from: 3, to: pixels.count, by: 4).map { pixels[$0] }
-                    var mask = alpha.map { $0 > 20 ? UInt8(255) : 0 }
-                    for y in 0..<80 { for x in 0..<80 where alpha[y * 80 + x] > 20 {
-                        for yy in max(0, y-2)...min(79, y+2) { for xx in max(0, x-2)...min(79, x+2) { mask[yy*80+xx] = 255 } }
+                    let alpha=stride(from:channels-1,to:pixels.count,by:channels).map { pixels[$0] }
+                    var mask=alpha.map { $0 > cutoff ? UInt8(255) : 0 }
+                    for y in 0..<n { for x in 0..<n where alpha[y*n+x] > cutoff {
+                        for yy in max(0,y-pad)...min(n-1,y+pad) { for xx in max(0,x-pad)...min(n-1,x+pad) { mask[yy*n+xx]=255 } }
                     } }
-                    let occupied = mask.indices.filter { mask[$0] > 0 }
-                    let minX = occupied.map { $0 % 80 }.min() ?? 0, maxX = occupied.map { $0 % 80 }.max() ?? 0
-                    let minY = occupied.map { $0 / 80 }.min() ?? 0, maxY = occupied.map { $0 / 80 }.max() ?? 0
-                    let bounds = occupied.isEmpty ? CGRect.null : CGRect(x: Double(minX)/80, y: Double(79-maxY)/80,
-                        width: Double(maxX-minX+1)/80, height: Double(maxY-minY+1)/80)
+                    // Geometry uses paint, not the deliberately padded input hit area.
+                    let occupied=alpha.indices.filter { alpha[$0] > cutoff }
+                    let minX=occupied.map { $0 % n }.min() ?? 0, maxX=occupied.map { $0 % n }.max() ?? 0
+                    let minY=occupied.map { $0 / n }.min() ?? 0, maxY=occupied.map { $0 / n }.max() ?? 0
+                    let bounds=occupied.isEmpty ? CGRect.null : CGRect(x:Double(minX)/Double(n),y:Double(n-1-maxY)/Double(n),width:Double(maxX-minX+1)/Double(n),height:Double(maxY-minY+1)/Double(n))
                     loaded.append(Frame(image: image, placement: placement, hitMask: mask, occupiedBounds: bounds))
                 }
                 frames[clip.state] = loaded

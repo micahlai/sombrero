@@ -11,15 +11,16 @@ test('guard parser handles precedence without executing arbitrary code', () => {
   assert.throws(() => evaluateGuard('pet;alert(1)', {pet: true}));
   assert.throws(() => evaluateGuard('missing', {}));
 });
-test('standing pet interrupts and release exits immediately', () => {
+test('short standing pet hover finishes first cycle before release', () => {
   const c = make(); c.setFlag('pet', true); assert.equal(c.state, '1d');
-  c.setFlag('pet', false); assert.equal(c.state, '1c');
-  c.complete(); assert.equal(c.state, '1a');
+  c.setFlag('pet', false); assert.equal(c.state, '1d');
+  c.complete(); assert.equal(c.state, '1c'); c.complete(); assert.equal(c.state, '1a');
 });
 test('required sitting-pet photo route skips gateways without losing request', () => {
   const c = make(() => { throw Error('No RNG expected'); });
   c.jump('3a'); c.setFlag('pet', true); c.setFlag('showPhoto', true);
-  c.trigger('photoShow'); assert.equal(c.state, '2b'); assert.equal(c.signals.event, true);
+  c.trigger('photoShow'); assert.equal(c.state, '3c');
+  c.complete(); assert.equal(c.state, '2b'); assert.equal(c.signals.event, true);
   assert.deepEqual(c.history.slice(-2).map(h => [h.to, h.skipped]), [['3a', false], ['2b', true]]);
   c.complete(); assert.equal(c.state, '5a'); assert.equal(c.signals.event, false);
   assert.equal(c.active, 'photoShow');
@@ -31,7 +32,7 @@ test('required sitting-pet photo route skips gateways without losing request', (
 });
 test('page-two requests outrank pet and stay FIFO during active routines', () => {
   const c = make(); c.setFlag('pet', true); c.trigger('photoShow'); c.trigger('bibleRead');
-  assert.equal(c.state, '5a');
+  assert.equal(c.state, '1d'); c.complete(); assert.equal(c.state, '5a');
   assert.equal(c.active, 'photoShow'); assert.deepEqual(c.queue, ['bibleRead']);
   c.complete(); c.complete(); c.complete(); assert.equal(c.state, '5d');
   c.complete(); assert.equal(c.state, '7a'); assert.equal(c.active, 'bibleRead');
@@ -66,7 +67,7 @@ test('event includes goodbye and remains true while either goodbye or requests a
 test('goodbye exits sitting pet even while pet stays held and clears on timeout', () => {
   const c = make(); c.jump('3a'); c.setFlag('pet', true); c.setFlag('goodbye', true);
   assert.equal(c.signals.event, true);
-  assert.equal(c.state, '2b');
+  assert.equal(c.state, '3c'); c.complete(); assert.equal(c.state, '2b');
   c.complete(); assert.equal(c.state, '4a');
   c.complete(); assert.equal(c.state, 'timeout'); assert.equal(c.signals.event, false);
 });
@@ -97,7 +98,7 @@ test('debug jumps start a new path while retaining the transition log', () => {
   const c = make(); c.complete(); assert.equal(c.history.length, 1);
   c.setMode(false); c.jump('3c'); assert.equal(c.history.length, 0);
   assert.ok(c.log.some(entry => entry.kind === 'default'));
-  c.setMode(true); assert.equal(c.history[0].from, '3c');
+  c.setMode(true); assert.equal(c.state,'3c'); c.complete(); assert.equal(c.history[0].from, '3c');
 });
 test('click override only arms directly connected weighted options, without jumping', () => {
   const c=make();
@@ -129,8 +130,8 @@ test('override can be canceled and cannot survive reset, jump, or solo mode', ()
 });
 test('all authored edges are reachable with suitable flags and RNG', () => {
   const visited = new Set();
-  const flagNames = ['pet','goodbye','showPhoto','takingPhoto','reading','window_available'];
-  for (const state of graph.states) for (let bits = 0; bits < 64; bits++) {
+  const flagNames = ['pet','goodbye','showPhoto','takingPhoto','reading','window_available','window_side_available','dialogue_open'];
+  for (const state of graph.states) for (let bits = 0; bits < 256; bits++) {
     for (const event of [null, 'photoShow','photoTake','bibleRead']) for (const sample of [0,.1,.8,.956,.98,.99,.9999]) {
       const c = make(() => sample); c.state = state.id;
       c.flags = Object.fromEntries(flagNames.map((n,i) => [n, Boolean(bits & (1 << i))]));
@@ -163,5 +164,44 @@ test('manual and timed recall use 20/80 weights only when a window is available'
     const c=make(()=>{throw Error('Unavailable window must not consume RNG');});
     c.jump('timeout');c.trigger(event);assert.equal(c.state,'4b');
     assert.equal(c.outgoing('timeout').filter(e=>e.to==='4c').map(e=>c.edgeWeight(e))[0],0);
+  }
+});
+
+test('every new petting session gets a full cycle and self-loops do not rearm protection', () => {
+  for (const [idle,petState,released] of [['1a','1d','1c'],['3a','3c','3a']]) {
+    const c=make(()=>{throw Error('No random roll expected');});c.jump(idle);
+    for (let session=0;session<2;session++) {
+      c.setFlag('pet',true);assert.equal(c.state,petState);assert.equal(c.petCycleCompleted,false);
+      const token=c.generation;c.setFlag('pet',false);assert.equal(c.state,petState);
+      c.setFlag('pet',true);assert.equal(c.generation,token);
+      c.complete();c.complete();assert.equal(c.petCycleCompleted,true);
+      c.setFlag('pet',false);assert.equal(c.state,released);
+      assert.equal(c.complete(token),false);
+    }
+  }
+});
+test('dialogue forces pet false and blocks reentry while open without cutting the first cycle', () => {
+  for (const [idle,petState,released] of [['1a','1d','1c'],['3a','3c','3a']]) {
+    const c=make(()=>{throw Error('No random roll expected');});c.jump(idle);c.setFlag('pet',true);
+    c.setFlag('dialogue_open',true);assert.equal(c.flags.pet,false);assert.equal(c.state,petState);
+    c.setFlag('pet',true);assert.equal(c.flags.pet,false);
+    c.complete();assert.equal(c.state,released);
+    c.setFlag('pet',true);assert.equal(c.state,released);
+    c.setFlag('dialogue_open',false);assert.equal(c.flags.pet,false);
+    c.setFlag('pet',true);assert.equal(c.state,petState);assert.equal(c.petCycleCompleted,false);
+    c.complete();c.setFlag('dialogue_open',true);assert.equal(c.state,released);
+  }
+});
+
+test('recall selects the exact top/side clearance matrix and records the 4b variant', () => {
+  const cases=[
+    [false,false,[[0,1,'screen-edge']]],
+    [true,false,[[0,.2,'screen-edge'],[.2,1,'window-top']]],
+    [false,true,[[0,.5,'screen-edge'],[.5,1,'window-side']]],
+    [true,true,[[0,.4,'screen-edge'],[.4,.8,'window-top'],[.8,1,'window-side']]],
+  ];
+  for(const event of ['manualRecall','timedAwayExpired'])for(const [top,side,ranges]of cases)for(const [lo,hi,entry]of ranges){
+    const c=make(()=>(lo+hi)/2);c.jump('timeout');c.setFlag('window_available',top);c.setFlag('window_side_available',side);c.trigger(event);
+    assert.equal(c.recallEntry,entry);assert.equal(c.state,entry==='window-top'?'4c':'4b');
   }
 });

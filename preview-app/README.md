@@ -64,7 +64,7 @@ shows the entire shared canvas, including smoke; 1.5×/2× zoom enlarges the cha
 around the common ground anchor. PNG originals are never changed.
 
 The initial calibration visually reviewed the first two and last two frames of
-all eight available clips and checked the bounds of all 150 frames. It includes
+the initial eight available clips. Later reviews add 1D, 3C, 4B (23 frames), and 4C (39 frames), bringing the calibrated set to twelve clips. It includes
 sample hashes, measurements, adjacent-state seam checks, and missing/hidden state
 entries. Re-review this file after changing artwork; it is a calibration snapshot,
 not an automatic character detector. A single transform preserves each clip's
@@ -132,7 +132,7 @@ The raw `1a` total is 1.02 and is intentionally preserved.
   state**. Skipped gateways appear dashed in the recent-path display/log.
 - Purple edges wait for the last drawing's hold to finish. Defaults are sampled
   only at clip completion, with one normalized weighted choice. Deterministic
-  and conditional routes consume no randomness. Pet release/event exits are red; held pet self-loops remain purple. Manual/timed recall uses the `window_available` checkbox: checked means 80% 4C / 20% 4B; unchecked means 100% 4B without a random roll.
+  and conditional routes consume no randomness. Pet release/event exits are red but require the first full pet cycle to finish. Each new pet-state entry resets that protection; self-loops keep exits immediately eligible after the first cycle. `dialogue_open` clears Pet and blocks re-enabling it until dialogue closes. Held pet self-loops remain purple. Manual/timed recall uses separate top and side clearance checkboxes. With neither: 100% screen-edge 4B, without a random roll. With top only: 80% 4C / 20% screen-edge 4B. With side only: 50% screen-edge 4B / 50% window-side 4B. With both: 40% 4C / 40% screen-edge 4B / 20% window-side 4B. The inspector records the chosen variant. In the native app, window-side 4B detaches when its clip finishes; 4C stays attached until dragged or its window/clearance becomes unavailable.
 - The plan's proposed tie-break is explicit here: goodbye, pending page-two
   request, pet, then default, only where the graph provides a route.
 - The required `3c → 3a (skip) → 2b → 1a (skip) → 5a` path retains the photo-show
