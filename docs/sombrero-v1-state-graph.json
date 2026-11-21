@@ -99,18 +99,12 @@
     },
     {
       "id": "5b",
-      "name": "Show photo",
-      "kind": "clip",
-      "asset": null
-    },
-    {
-      "id": "5c",
       "name": "Showing photo idle",
       "kind": "clip",
       "asset": null
     },
     {
-      "id": "5d",
+      "id": "5c",
       "name": "Put photo away",
       "kind": "clip",
       "asset": null
@@ -256,13 +250,7 @@
       "weight": 1
     },
     {
-      "from": "5b",
-      "to": "5c",
-      "kind": "default",
-      "weight": 1
-    },
-    {
-      "from": "5d",
+      "from": "5c",
       "to": "1a",
       "kind": "default",
       "weight": 1
@@ -400,14 +388,14 @@
       "guard": "petCycleCompleted && (!pet || event)"
     },
     {
-      "from": "5c",
-      "to": "5c",
+      "from": "5b",
+      "to": "5b",
       "kind": "afterClip",
       "guard": "showPhoto"
     },
     {
-      "from": "5c",
-      "to": "5d",
+      "from": "5b",
+      "to": "5c",
       "kind": "afterClip",
       "guard": "!showPhoto"
     },
@@ -528,5 +516,6 @@
     "dialogueForcesPetFalse": true,
     "releaseAfterFirstCycle": "interrupt-immediately",
     "petCycleCompleted": "derived from a valid completion of 1d or 3c; preserved across self-loops and reset on state changes"
-  }
+  },
+  "photoArtworkUpdate": "November 21, 2026: supplied three-clip artwork supersedes the original PDF four-step photo numbering: 5a pull out, 5b held loop, 5c put away. Preserve the purple held-loop exit timing."
 }

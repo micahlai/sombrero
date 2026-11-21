@@ -30,7 +30,6 @@ final class SpriteTests: XCTestCase {
         controller.complete(sample: noRandom); XCTAssertEqual(controller.state, .standUp)
         controller.complete(sample: noRandom); XCTAssertEqual(controller.state, .grabPhoto)
         XCTAssertEqual(controller.active, .photoShow); XCTAssertTrue(controller.pending.isEmpty)
-        controller.complete(sample: noRandom); XCTAssertEqual(controller.state, .showPhoto)
         controller.complete(sample: noRandom); XCTAssertEqual(controller.state, .showingPhoto)
         controller.complete(sample: noRandom); XCTAssertEqual(controller.state, .showingPhoto)
         controller.finishRoutine(); controller.setPet(false)
@@ -208,8 +207,9 @@ final class SpriteTests: XCTestCase {
         XCTAssertNil(assets.failure)
         let expected: [DuckState: Int] = [.look:14, .alternateLook:24, .wave:21, .standingPet:18, .sitDown:20,
             .standUp:23, .sitting:9, .sittingLook:18, .sittingPet:9, .goodbye:27, .peek:23, .windowPeek:39,
+            .grabPhoto:5, .showingPhoto:7, .putPhotoAway:5,
             .grabCamera:14, .cameraIdle:12, .deliverPhoto:23, .grabBible:17, .bibleIdle:14, .stowBible:11]
-        XCTAssertEqual(assets.frames.count, 18); XCTAssertEqual(assets.missingStates.count, 4)
+        XCTAssertEqual(assets.frames.count, 21); XCTAssertEqual(assets.missingStates.count, 0)
         XCTAssertEqual(assets.speechFrames.count, 5)
         for (state, count) in expected {
             XCTAssertEqual(assets.frameCounts[state], count)
@@ -232,7 +232,7 @@ final class SpriteTests: XCTestCase {
     func testMissingAndCorruptResourcesUseRecoverablePinkFallback() throws {
         let missing = SpriteLibrary(directory: URL(fileURLWithPath: "/nonexistent-duck-sprites"))
         XCTAssertNotNil(missing.failure); XCTAssertNil(missing.frame(state: .look, index: 0))
-        XCTAssertEqual(missing.missingStates.count, 22)
+        XCTAssertEqual(missing.missingStates.count, 21)
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: directory) }

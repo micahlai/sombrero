@@ -25,16 +25,16 @@ test('required sitting-pet photo route skips gateways without losing request', (
   c.complete(); assert.equal(c.state, '5a'); assert.equal(c.signals.event, false);
   assert.equal(c.active, 'photoShow');
   assert.deepEqual(c.history.slice(-2).map(h => [h.to, h.skipped]), [['1a', false], ['5a', true]]);
-  c.complete(); c.complete(); assert.equal(c.state, '5c');
+  c.complete(); assert.equal(c.state, '5b');
+  c.complete(); assert.equal(c.state, '5b');
+  c.setFlag('showPhoto', false); assert.equal(c.state, '5b');
   c.complete(); assert.equal(c.state, '5c');
-  c.setFlag('showPhoto', false); assert.equal(c.state, '5c');
-  c.complete(); assert.equal(c.state, '5d');
 });
 test('page-two requests outrank pet and stay FIFO during active routines', () => {
   const c = make(); c.setFlag('pet', true); c.trigger('photoShow'); c.trigger('bibleRead');
   assert.equal(c.state, '1d'); c.complete(); assert.equal(c.state, '5a');
   assert.equal(c.active, 'photoShow'); assert.deepEqual(c.queue, ['bibleRead']);
-  c.complete(); c.complete(); c.complete(); assert.equal(c.state, '5d');
+  c.complete(); c.complete(); assert.equal(c.state, '5c');
   c.complete(); assert.equal(c.state, '7a'); assert.equal(c.active, 'bibleRead');
 });
 test('1b finishes before event; 3b interrupts immediately; 1c has no event interrupt', () => {

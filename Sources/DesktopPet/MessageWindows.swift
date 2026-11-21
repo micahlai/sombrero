@@ -2,6 +2,7 @@ import AppKit
 import AVKit
 import UniformTypeIdentifiers
 import PetCore
+import PetAssets
 
 /// The wire format contains plain text and these three styles only. Native text
 /// attachments, links, font names, and pasted object archives never leave the app.
@@ -11,9 +12,11 @@ enum MessageRichText {
         value.enumerateAttributes(in: NSRange(location: 0, length: value.length)) { attributes, range, _ in
             let text = (value.string as NSString).substring(with: range).replacingOccurrences(of: "\u{fffc}", with: "")
             guard !text.isEmpty else { return }
-            let font = attributes[.font] as? NSFont ?? NSFont.systemFont(ofSize: 14)
+            let font = attributes[.font] as? NSFont ?? AppTypography.font(size: 18)
             let traits = NSFontManager.shared.traits(of: font)
-            let run = RichTextRun(text: text, bold: traits.contains(.boldFontMask), italic: traits.contains(.italicFontMask),
+            let run = RichTextRun(text: text,
+                                  bold: traits.contains(.boldFontMask) || ((attributes[.strokeWidth] as? NSNumber)?.doubleValue ?? 0) < 0,
+                                  italic: traits.contains(.italicFontMask) || ((attributes[.obliqueness] as? NSNumber)?.doubleValue ?? 0) != 0,
                                   underline: ((attributes[.underlineStyle] as? NSNumber)?.intValue ?? 0) != 0)
             if let previous = runs.last, previous.bold == run.bold, previous.italic == run.italic, previous.underline == run.underline {
                 runs[runs.count-1] = RichTextRun(text: previous.text+run.text, bold: run.bold, italic: run.italic, underline: run.underline)
@@ -25,10 +28,11 @@ enum MessageRichText {
     static func attributed(from body: RichMessageBody) -> NSAttributedString {
         let result = NSMutableAttributedString()
         for run in body.runs {
-            var font = NSFont.systemFont(ofSize: 14)
-            if run.bold { font = NSFontManager.shared.convert(font, toHaveTrait: .boldFontMask) }
-            if run.italic { font = NSFontManager.shared.convert(font, toHaveTrait: .italicFontMask) }
-            var attributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: NSColor.labelColor]
+            var attributes: [NSAttributedString.Key: Any] = [.font: AppTypography.font(size: 18), .foregroundColor: PolaroidStyle.ink]
+            // Matcha Style has one face. AppKit's synthetic stroke and slant keep
+            // its lettering while preserving the wire format's explicit styles.
+            if run.bold { attributes[.strokeWidth] = -2.5 }
+            if run.italic { attributes[.obliqueness] = 0.18 }
             if run.underline { attributes[.underlineStyle] = NSUnderlineStyle.single.rawValue }
             result.append(NSAttributedString(string: run.text, attributes: attributes))
         }
@@ -38,8 +42,7 @@ enum MessageRichText {
 
 /// A regular key-capable window: editing never changes the duck panel's focus policy.
 final class MessageComposerWindow: NSObject, NSWindowDelegate, NSTextViewDelegate {
-    let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 520, height: 680),
-                          styleMask: [.titled, .closable, .miniaturizable, .resizable], backing: .buffered, defer: false)
+    let window = PolaroidWindow(title: "Send a photo")
     let cameraPreviewHost = NSView()
     var onSend: ((NSAttributedString, URL?) -> Void)?
     var onCamera: (() -> Void)?
@@ -49,16 +52,22 @@ final class MessageComposerWindow: NSObject, NSWindowDelegate, NSTextViewDelegat
     var onClose: (() -> Void)?
     var onDraftChanged: ((NSAttributedString, URL?) -> Void)?
 
-    private let editor = NSTextView()
+    private let editor = PolaroidTextView()
     private let media = MessageMediaView()
-    private let attachmentName = NSTextField(labelWithString: "No attachment")
-    private let status = NSTextField(wrappingLabelWithString: "")
-    private let sendButton = NSButton(title: "Send", target: nil, action: nil)
-    private let removeButton = NSButton(title: "Remove", target: nil, action: nil)
-    private let cameraButton = NSButton(title: "Take Photo", target: nil, action: nil)
-    private let captureButton = NSButton(title: "Capture", target: nil, action: nil)
-    private let devicePicker = NSPopUpButton()
-    private let cameraControls = NSStackView()
+    private let paper = PolaroidCanvas()
+    private let status = PolaroidStyle.label(size: 11)
+    private let date = PolaroidStyle.label(size: 12)
+    private let sendButton = PolaroidButton("Send", drawing: .send, target: nil, action: nil)
+    private let removeButton = PolaroidButton("Remove attachment", drawing: .remove, target: nil, action: nil)
+    private let cameraButton = PolaroidButton("Camera", target: nil, action: nil)
+    private let captureButton = PolaroidButton("Capture", drawing: .shutter, target: nil, action: nil)
+    private let devicePicker = PolaroidCameraPicker()
+    private let cameraControls = NSView()
+    private let topControls = NSView()
+    private let attachButton = PolaroidButton("Attach photo or video", drawing: .attachment, target: nil, action: nil)
+    private let closeButton = PolaroidButton("Close", drawing: .close, target: nil, action: nil)
+    private var formatButtons: [PolaroidButton] = []
+    private var scroll: NSScrollView!
     private var attachmentURL: URL?
     private var cameraActive = false
     private var cameraReady = false
@@ -71,78 +80,81 @@ final class MessageComposerWindow: NSObject, NSWindowDelegate, NSTextViewDelegat
 
     override init() {
         super.init()
-        window.title = "Send a message"
-        window.minSize = NSSize(width: 480, height: 660)
-        window.isReleasedWhenClosed = false; window.delegate = self
-        let root = NSStackView(); root.orientation = .vertical; root.spacing = 10; root.alignment = .leading
-        install(root, in: window.contentView!, inset: 20)
-        let heading = NSTextField(labelWithString: "A little something for your person")
-        heading.font = .systemFont(ofSize: 18, weight: .semibold)
-        root.addArrangedSubview(heading)
-
-        media.translatesAutoresizingMaskIntoConstraints = false
+        window.delegate = self
+        paper.frame = window.contentView!.bounds; paper.autoresizingMask = [.width, .height]
+        window.contentView = paper
+        media.translatesAutoresizingMaskIntoConstraints = true
         media.onDrop = { [weak self] url in self?.chooseAttachment(url) }
-        root.addArrangedSubview(media)
-        let preferredMediaHeight = media.heightAnchor.constraint(equalToConstant: 240)
-        preferredMediaHeight.priority = .defaultHigh
-        NSLayoutConstraint.activate([media.widthAnchor.constraint(equalTo: root.widthAnchor), media.heightAnchor.constraint(greaterThanOrEqualToConstant: 160),
-                                     media.heightAnchor.constraint(lessThanOrEqualToConstant: 270), preferredMediaHeight])
-        cameraPreviewHost.translatesAutoresizingMaskIntoConstraints = false
-        media.addSubview(cameraPreviewHost)
-        NSLayoutConstraint.activate([cameraPreviewHost.leadingAnchor.constraint(equalTo: media.leadingAnchor), cameraPreviewHost.trailingAnchor.constraint(equalTo: media.trailingAnchor),
-                                     cameraPreviewHost.topAnchor.constraint(equalTo: media.topAnchor), cameraPreviewHost.bottomAnchor.constraint(equalTo: media.bottomAnchor)])
+        paper.addSubview(media)
+        cameraPreviewHost.autoresizingMask = [.width, .height]; media.addSubview(cameraPreviewHost)
         cameraPreviewHost.isHidden = true
-
-        let attachmentRow = NSStackView(views: [attachmentName, removeButton]); attachmentRow.spacing = 8
-        attachmentName.lineBreakMode = .byTruncatingMiddle; attachmentName.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        paper.addSubview(topControls)
+        [closeButton, cameraButton, attachButton, removeButton, cameraControls].forEach { topControls.addSubview($0) }
+        closeButton.target = self; closeButton.action = #selector(closeWindow)
+        attachButton.target = self; attachButton.action = #selector(pickAttachment)
         removeButton.target = self; removeButton.action = #selector(removeAttachment)
-        root.addArrangedSubview(attachmentRow)
-        attachmentRow.widthAnchor.constraint(equalTo: root.widthAnchor).isActive = true
-
         devicePicker.target = self; devicePicker.action = #selector(changeCameraDevice)
-        devicePicker.setAccessibilityLabel("Camera")
+        devicePicker.isBordered = false; devicePicker.font = AppTypography.font(size: 12)
+        devicePicker.menu?.font = AppTypography.font(size: 13)
+        devicePicker.setAccessibilityLabel("Choose camera")
         captureButton.target = self; captureButton.action = #selector(capturePhoto)
-        let stop = NSButton(title: "Cancel camera", target: self, action: #selector(stopCamera))
-        cameraControls.orientation = .horizontal; cameraControls.spacing = 8
-        [devicePicker, captureButton, stop].forEach { cameraControls.addArrangedSubview($0) }
-        root.addArrangedSubview(cameraControls); cameraControls.isHidden = true
-
-        let formatRow = NSStackView(); formatRow.spacing = 6
-        for (title, selector) in [("Bold", #selector(toggleBold)), ("Italic", #selector(toggleItalic)), ("Underline", #selector(toggleUnderline))] {
-            let button = NSButton(title: title, target: self, action: selector)
-            button.bezelStyle = .rounded; formatRow.addArrangedSubview(button)
+        [devicePicker, captureButton].forEach { cameraControls.addSubview($0) }
+        for (title, label, selector) in [("B", "Bold", #selector(toggleBold)), ("I", "Italic", #selector(toggleItalic)), ("U", "Underline", #selector(toggleUnderline))] {
+            let button = PolaroidButton(title, target: self, action: selector)
+            button.setAccessibilityLabel(label); button.toolTip = label
+            button.keyEquivalent=title.lowercased(); button.keyEquivalentModifierMask = [.command]
+            formatButtons.append(button); paper.addSubview(button)
         }
-        root.addArrangedSubview(formatRow)
         editor.isRichText = true; editor.importsGraphics = false; editor.allowsUndo = true
-        editor.font = .systemFont(ofSize: 14); editor.textColor = .labelColor; editor.delegate = self
-        editor.textContainerInset = NSSize(width: 8, height: 8)
+        editor.delegate = self
         editor.setAccessibilityLabel("Message text")
-        let scroll = NSScrollView(); scroll.hasVerticalScroller = true; scroll.borderType = .bezelBorder; scroll.documentView = editor
-        editor.isVerticallyResizable = true; editor.isHorizontallyResizable = false
-        editor.autoresizingMask = [.width]; editor.textContainer?.widthTracksTextView = true
-        root.addArrangedSubview(scroll)
-        NSLayoutConstraint.activate([scroll.widthAnchor.constraint(equalTo: root.widthAnchor), scroll.heightAnchor.constraint(greaterThanOrEqualToConstant: 110)])
-        scroll.setContentHuggingPriority(.defaultLow, for: .vertical)
-        status.textColor = .secondaryLabelColor; status.font = .systemFont(ofSize: 12)
-        root.addArrangedSubview(status); status.widthAnchor.constraint(equalTo: root.widthAnchor).isActive = true
-
-        let attach = NSButton(title: "Attach Photo or Video…", target: self, action: #selector(pickAttachment))
+        scroll = PolaroidStyle.scroll(for: editor); paper.addSubview(scroll)
+        paper.addSubview(status); paper.addSubview(date)
         cameraButton.target = self; cameraButton.action = #selector(requestCamera)
         sendButton.target = self; sendButton.action = #selector(send)
-        sendButton.bezelStyle = .rounded; sendButton.keyEquivalent = "\r"; sendButton.keyEquivalentModifierMask = [.command]
-        let actions = NSStackView(views: [attach, cameraButton, sendButton]); actions.spacing = 8
-        root.addArrangedSubview(actions)
+        sendButton.keyEquivalent = "\r"; sendButton.keyEquivalentModifierMask = [.command]
+        paper.addSubview(sendButton)
+        paper.onLayout = { [weak self] in self?.layoutPaper() }
+        media.clear(message: "Camera preview")
+        layoutPaper()
         updateAvailability()
+    }
+
+    private func layoutPaper() {
+        media.frame = paper.mediaRect; cameraPreviewHost.frame = media.bounds
+        topControls.frame = paper.controlsRect
+        let height = topControls.bounds.height
+        closeButton.frame = NSRect(x: 0, y: 0, width: 22, height: height)
+        cameraButton.frame = NSRect(x: 29, y: 0, width: 57, height: height)
+        attachButton.frame = NSRect(x: 92, y: 0, width: 27, height: height)
+        removeButton.frame = NSRect(x: 121, y: 0, width: 25, height: height)
+        let cameraX: CGFloat = attachmentURL == nil ? 128 : 152
+        cameraControls.frame = NSRect(x: cameraX, y: 0, width: topControls.bounds.width-cameraX, height: height)
+        devicePicker.frame = NSRect(x: 0, y: 0, width: max(50,cameraControls.bounds.width-37), height: height)
+        captureButton.frame = NSRect(x: cameraControls.bounds.width-31, y: -3, width: 31, height: height+6)
+        scroll.frame = paper.writingRect
+        editor.setFrameSize(NSSize(width: scroll.contentSize.width, height: max(scroll.contentSize.height,editor.frame.height)))
+        let footer = paper.footerRect
+        date.frame = NSRect(x: footer.minX, y: footer.minY+5, width: footer.width*0.44, height: 18)
+        for (index,button) in formatButtons.enumerated() {
+            button.frame = NSRect(x: footer.minX+footer.width*0.48+CGFloat(index)*24, y: footer.minY, width: 23, height: footer.height)
+        }
+        sendButton.frame = NSRect(x: footer.maxX-62, y: footer.minY-1, width: 64, height: footer.height+2)
+        status.frame = paper.statusRect
     }
 
     func show() {
         if !hasShown { window.center(); hasShown = true }
+        date.stringValue = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .none)
         window.makeKeyAndOrderFront(nil); NSApp.activate(ignoringOtherApps: true)
         window.makeFirstResponder(editor)
     }
 
     func setDraft(text: NSAttributedString, attachmentURL: URL?) {
         editor.textStorage?.setAttributedString(MessageRichText.attributed(from: MessageRichText.body(from: text)))
+        if text.length == 0 {
+            editor.typingAttributes = [.font: AppTypography.font(size:18), .foregroundColor: PolaroidStyle.ink]
+        }
         setAttachment(attachmentURL); updateAvailability()
     }
 
@@ -151,24 +163,28 @@ final class MessageComposerWindow: NSObject, NSWindowDelegate, NSTextViewDelegat
         let wasUsingCamera = cameraActive
         setCameraPreviewActive(false, ready: false)
         if wasUsingCamera { onStopCamera?() }
-        attachmentName.stringValue = url?.lastPathComponent ?? "No attachment"
+        removeButton.isHidden = url == nil
         if let url {
             media.load(url: url) { [weak self] error in
                 if let error { self?.status.stringValue = error.localizedDescription }
             }
-        } else { media.clear(message: "Choose a photo or video, or drop one here.") }
-        updateAvailability(); notifyDraftChanged()
+        } else { media.clear(message: "Camera preview") }
+        layoutPaper(); updateAvailability(); notifyDraftChanged()
     }
 
     func setStatus(_ value: String, isBusy: Bool = false) {
-        status.stringValue = value; busy = isBusy
+        // Routine connection chatter does not belong on the handwritten card.
+        let routine = ["Connected", "Connected.", "Ready", "Not connected", "Not connected."]
+        status.stringValue = routine.contains(value) ? "" : value
+        status.toolTip = value; busy = isBusy
         editor.isEditable = !isBusy; updateAvailability()
     }
 
     /// Call only after the service has durably accepted the user's explicit Send.
     func resetAfterSend() {
         editor.string = ""; setAttachment(nil)
-        setStatus("Message queued. It will send when connected.")
+        editor.typingAttributes = [.font: AppTypography.font(size:18), .foregroundColor: PolaroidStyle.ink]
+        setStatus("Saved to outbox")
         notifyDraftChanged()
     }
 
@@ -179,12 +195,14 @@ final class MessageComposerWindow: NSObject, NSWindowDelegate, NSTextViewDelegat
             devicePicker.lastItem?.representedObject = device.id
             if device.id == selectedID { devicePicker.select(devicePicker.lastItem) }
         }
-        devicePicker.isEnabled = devices.count > 1
+        updateAvailability()
     }
 
     func setCameraPreviewActive(_ active: Bool, ready: Bool = false) {
         cameraActive = active; cameraReady = ready
-        cameraPreviewHost.isHidden = !active; cameraControls.isHidden = !active
+        cameraPreviewHost.isHidden = !active
+        cameraButton.title = active ? "Stop" : (attachmentURL == nil ? "Camera" : "Retake")
+        cameraButton.setAccessibilityLabel(active ? "Stop camera" : "Start camera")
         if active { media.pause() }
         updateAvailability()
     }
@@ -192,13 +210,34 @@ final class MessageComposerWindow: NSObject, NSWindowDelegate, NSTextViewDelegat
     func windowWillClose(_ notification: Notification) {
         media.pause(); onStopCamera?(); notifyDraftChanged(); onClose?()
     }
-    func textDidChange(_ notification: Notification) { updateAvailability(); notifyDraftChanged() }
+    func textDidChange(_ notification: Notification) {
+        // Rich paste may bring another font or color; retain its three supported
+        // styles while keeping all visible writing in the project face.
+        var needsNormalization = false
+        let font=AppTypography.font(size:18)
+        editor.attributedString().enumerateAttributes(in:NSRange(location:0,length:editor.string.utf16.count)) { attributes,_,_ in
+            let supplied=attributes[.font] as? NSFont
+            if supplied?.fontName != font.fontName || supplied?.pointSize != font.pointSize ||
+                (attributes[.foregroundColor] as? NSColor) != PolaroidStyle.ink || attributes[.link] != nil {
+                needsNormalization = true
+            }
+        }
+        if needsNormalization {
+            let selection=editor.selectedRange()
+            editor.textStorage?.setAttributedString(MessageRichText.attributed(from:MessageRichText.body(from:editor.attributedString())))
+            editor.setSelectedRange(selection)
+        }
+        editor.needsDisplay=true; updateAvailability(); notifyDraftChanged()
+    }
     private func notifyDraftChanged() { onDraftChanged?(draftText, attachmentURL) }
     private func updateAvailability() {
         sendButton.isEnabled = hasDraft && !busy && !cameraActive
         removeButton.isEnabled = attachmentURL != nil && !busy
-        cameraButton.isEnabled = !busy && !cameraActive
+        cameraButton.isEnabled = !busy
         captureButton.isEnabled = cameraActive && cameraReady && !busy
+        attachButton.isEnabled = !busy
+        devicePicker.isEnabled = cameraActive && cameraReady && !busy && devicePicker.numberOfItems > 1
+        formatButtons.forEach { $0.isEnabled = !busy }
     }
     @objc private func send() {
         guard sendButton.isEnabled else { return }
@@ -221,7 +260,11 @@ final class MessageComposerWindow: NSObject, NSWindowDelegate, NSTextViewDelegat
         onStopCamera?(); setAttachment(url); setStatus("")
     }
     @objc private func removeAttachment() { setAttachment(nil) }
-    @objc private func requestCamera() { guard !busy else { return }; onCamera?() }
+    @objc private func requestCamera() {
+        guard !busy else { return }
+        if cameraActive { stopCamera() } else { onCamera?() }
+    }
+    @objc private func closeWindow() { window.close() }
     @objc private func capturePhoto() { guard captureButton.isEnabled else { return }; onCapture?() }
     @objc private func stopCamera() { onStopCamera?(); setCameraPreviewActive(false) }
     @objc private func changeCameraDevice() {
@@ -230,22 +273,20 @@ final class MessageComposerWindow: NSObject, NSWindowDelegate, NSTextViewDelegat
     @objc private func toggleBold() { toggleStyle(.boldFontMask) }
     @objc private func toggleItalic() { toggleStyle(.italicFontMask) }
     private func toggleStyle(_ trait: NSFontTraitMask) {
+        let key: NSAttributedString.Key = trait == .boldFontMask ? .strokeWidth : .obliqueness
+        let enabledValue: Double = trait == .boldFontMask ? -2.5 : 0.18
         let range = editor.selectedRange()
         if range.length == 0 {
             var attributes = editor.typingAttributes
-            let font = attributes[.font] as? NSFont ?? NSFont.systemFont(ofSize: 14)
-            attributes[.font] = NSFontManager.shared.traits(of: font).contains(trait)
-                ? NSFontManager.shared.convert(font, toNotHaveTrait: trait) : NSFontManager.shared.convert(font, toHaveTrait: trait)
+            attributes[.font] = AppTypography.font(size:18)
+            attributes[key] = ((attributes[key] as? NSNumber)?.doubleValue ?? 0) == 0 ? enabledValue : 0
             editor.typingAttributes = attributes
         } else if let storage = editor.textStorage {
-            storage.beginEditing()
-            storage.enumerateAttribute(.font, in: range) { value, subrange, _ in
-                let font = value as? NSFont ?? NSFont.systemFont(ofSize: 14)
-                let replacement = NSFontManager.shared.traits(of: font).contains(trait)
-                    ? NSFontManager.shared.convert(font, toNotHaveTrait: trait) : NSFontManager.shared.convert(font, toHaveTrait: trait)
-                storage.addAttribute(.font, value: replacement, range: subrange)
-            }
-            storage.endEditing(); notifyDraftChanged()
+            guard editor.shouldChangeText(in:range,replacementString:nil) else { return }
+            let active = ((storage.attribute(key,at:range.location,effectiveRange:nil) as? NSNumber)?.doubleValue ?? 0) != 0
+            storage.beginEditing(); storage.addAttribute(key,value:active ? 0 : enabledValue,range:range)
+            storage.addAttribute(.font,value:AppTypography.font(size:18),range:range)
+            storage.endEditing(); editor.didChangeText()
         }
         window.makeFirstResponder(editor)
     }
@@ -257,9 +298,10 @@ final class MessageComposerWindow: NSObject, NSWindowDelegate, NSTextViewDelegat
             attributes[.underlineStyle] = old == 0 ? NSUnderlineStyle.single.rawValue : 0
             editor.typingAttributes = attributes
         } else if let storage = editor.textStorage {
+            guard editor.shouldChangeText(in:range,replacementString:nil) else { return }
             let old = (storage.attribute(.underlineStyle, at: range.location, effectiveRange: nil) as? NSNumber)?.intValue ?? 0
             storage.addAttribute(.underlineStyle, value: old == 0 ? NSUnderlineStyle.single.rawValue : 0, range: range)
-            notifyDraftChanged()
+            editor.didChangeText()
         }
         window.makeFirstResponder(editor)
     }
@@ -269,20 +311,27 @@ final class MessageComposerWindow: NSObject, NSWindowDelegate, NSTextViewDelegat
 /// loaded and this window is visible. Failed/stale downloads never mark it read.
 final class MessageInboxWindow: NSObject, NSWindowDelegate {
     private(set) var lastMediaError: Error?
-    let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 520, height: 610),
-                          styleMask: [.titled, .closable, .miniaturizable, .resizable], backing: .buffered, defer: false)
+    let identifier = UUID().uuidString
+    private(set) var isKept = false
+    let window = PolaroidWindow(title: "A photo for you")
     var onAttachmentNeeded: ((ChatMessage) -> Void)?
     var onPresented: ((ChatMessage) -> Void)?
     var onClose: (() -> Void)?
+    var onKeep: (() -> Void)?
     private let currentDeviceID: String
     private let media = MessageMediaView()
     private let text = NSTextView()
-    private let heading = NSTextField(labelWithString: "Messages")
-    private let count = NSTextField(labelWithString: "")
-    private let status = NSTextField(wrappingLabelWithString: "")
-    private let previous = NSButton(title: "Previous", target: nil, action: nil)
-    private let next = NSButton(title: "Next", target: nil, action: nil)
-    private let retry = NSButton(title: "Try Again", target: nil, action: nil)
+    private let paper = PolaroidCanvas()
+    private let heading = PolaroidStyle.label(size: 11)
+    private let count = PolaroidStyle.label(size: 12)
+    private let status = PolaroidStyle.label(size: 11)
+    private let previous = PolaroidButton("Previous", drawing: .previous, target: nil, action: nil)
+    private let next = PolaroidButton("Next", drawing: .next, target: nil, action: nil)
+    private let retry = PolaroidButton("Retry", target: nil, action: nil)
+    private let keep = PolaroidButton("Keep", drawing: .send, target: nil, action: nil)
+    private let close = PolaroidButton("Close", target: nil, action: nil)
+    private let topClose = PolaroidButton("Close", drawing: .close, target: nil, action: nil)
+    private var scroll: NSScrollView!
     private var messages: [ChatMessage] = []
     private var selection = 0
     private var active = false
@@ -295,32 +344,40 @@ final class MessageInboxWindow: NSObject, NSWindowDelegate {
     init(currentDeviceID: String) {
         self.currentDeviceID = currentDeviceID
         super.init()
-        window.title = "Messages"; window.minSize = NSSize(width: 440, height: 500)
-        window.isReleasedWhenClosed = false; window.delegate = self
-        let root = NSStackView(); root.orientation = .vertical; root.alignment = .leading; root.spacing = 12
-        install(root, in: window.contentView!, inset: 20)
-        heading.font = .systemFont(ofSize: 17, weight: .semibold); root.addArrangedSubview(heading)
-        root.addArrangedSubview(media)
-        let preferredMediaHeight = media.heightAnchor.constraint(equalToConstant: 270)
-        preferredMediaHeight.priority = .defaultHigh
-        NSLayoutConstraint.activate([media.widthAnchor.constraint(equalTo: root.widthAnchor), media.heightAnchor.constraint(greaterThanOrEqualToConstant: 140),
-                                     media.heightAnchor.constraint(lessThanOrEqualToConstant: 300), preferredMediaHeight])
+        window.delegate = self
+        paper.frame = window.contentView!.bounds; paper.autoresizingMask = [.width, .height]
+        window.contentView = paper
+        media.translatesAutoresizingMaskIntoConstraints = true; paper.addSubview(media)
         text.isEditable = false; text.isSelectable = true; text.isRichText = true; text.importsGraphics = false
-        text.font = .systemFont(ofSize: 14); text.textContainerInset = NSSize(width: 8, height: 8)
-        text.isVerticallyResizable = true; text.isHorizontallyResizable = false; text.autoresizingMask = [.width]
-        text.textContainer?.widthTracksTextView = true; text.setAccessibilityLabel("Message")
-        let scroll = NSScrollView(); scroll.hasVerticalScroller = true; scroll.documentView = text; scroll.drawsBackground = false
-        root.addArrangedSubview(scroll)
-        NSLayoutConstraint.activate([scroll.widthAnchor.constraint(equalTo: root.widthAnchor), scroll.heightAnchor.constraint(greaterThanOrEqualToConstant: 110)])
-        scroll.setContentHuggingPriority(.defaultLow, for: .vertical)
-        status.textColor = .secondaryLabelColor; status.font = .systemFont(ofSize: 12)
-        root.addArrangedSubview(status); status.widthAnchor.constraint(equalTo: root.widthAnchor).isActive = true
+        text.setAccessibilityLabel("Message")
+        scroll = PolaroidStyle.scroll(for: text); paper.addSubview(scroll)
+        [heading,count,status,previous,next,retry,keep,close,topClose].forEach { paper.addSubview($0) }
+        count.alignment = .center
         previous.target = self; previous.action = #selector(previousMessage)
         next.target = self; next.action = #selector(nextMessage)
         retry.target = self; retry.action = #selector(retryAttachment); retry.isHidden = true
-        let navigation = NSStackView(views: [previous, count, next, retry]); navigation.spacing = 14
-        root.addArrangedSubview(navigation)
+        keep.target = self; keep.action = #selector(keepPhoto)
+        keep.toolTip = "Keep this Polaroid on screen and let the duck put its photo away"
+        [close,topClose].forEach { $0.target = self; $0.action = #selector(closeWindow) }
+        paper.onLayout = { [weak self] in self?.layoutPaper() }
+        layoutPaper()
         updateNavigation()
+    }
+
+    private func layoutPaper() {
+        media.frame = paper.mediaRect; scroll.frame = paper.writingRect
+        text.setFrameSize(NSSize(width: scroll.contentSize.width, height: max(scroll.contentSize.height,text.frame.height)))
+        let top = paper.controlsRect
+        topClose.frame = NSRect(x:top.minX,y:top.minY,width:22,height:top.height)
+        previous.frame = NSRect(x:top.midX-75,y:top.minY,width:24,height:top.height)
+        count.frame = NSRect(x:top.midX-45,y:top.minY+4,width:90,height:top.height)
+        next.frame = NSRect(x:top.midX+51,y:top.minY,width:24,height:top.height)
+        retry.frame = NSRect(x:top.maxX-50,y:top.minY,width:50,height:top.height)
+        let footer=paper.footerRect
+        heading.frame = NSRect(x:footer.minX,y:footer.minY+5,width:footer.width-130,height:18)
+        close.frame = NSRect(x:footer.maxX-62,y:footer.minY,width:64,height:footer.height)
+        keep.frame = NSRect(x:footer.maxX-125,y:footer.minY,width:60,height:footer.height)
+        status.frame=paper.statusRect
     }
 
     func show(messages: [ChatMessage], selectedID: String? = nil) {
@@ -343,7 +400,7 @@ final class MessageInboxWindow: NSObject, NSWindowDelegate {
         }
         renderSelection()
     }
-    func setStatus(_ value: String) { status.stringValue = value }
+    func setStatus(_ value: String) { status.stringValue = value; status.toolTip=value }
     func setAttachment(_ url: URL, for messageID: String) {
         guard active, selectedMessage?.id == messageID else { return }
         lastMediaError=nil
@@ -351,14 +408,14 @@ final class MessageInboxWindow: NSObject, NSWindowDelegate {
         media.load(url: url, mediaType: selectedMessage?.attachment?.mediaType) { [weak self] error in
             guard let self, self.active, self.generation == token, self.selectedMessage?.id == messageID else { return }
             if let error { self.lastMediaError=error; self.showAttachmentError(error.localizedDescription, for: messageID) }
-            else { self.loaded = true; self.status.stringValue = ""; self.retry.isHidden = true; self.notifyPresentedIfReady() }
+            else { self.loaded = true; self.status.stringValue = ""; self.retry.isHidden = true; self.updateNavigation(); self.notifyPresentedIfReady() }
         }
     }
     func showAttachmentError(_ message: String, for messageID: String) {
         guard active, selectedMessage?.id == messageID else { return }
         loaded = false; selectedAttachmentURL = nil
         media.clear(message: "Attachment unavailable")
-        status.stringValue = message; retry.isHidden = false
+        setStatus(message); retry.isHidden = false; updateNavigation()
     }
     func windowWillClose(_ notification: Notification) {
         active = false; generation += 1; loaded = false; media.clear(message: ""); onClose?()
@@ -366,16 +423,17 @@ final class MessageInboxWindow: NSObject, NSWindowDelegate {
     func windowDidBecomeKey(_ notification: Notification) { notifyPresentedIfReady() }
     private var selectedMessage: ChatMessage? { messages.indices.contains(selection) ? messages[selection] : nil }
     private func updateHeading() {
-        guard let message = selectedMessage else { heading.stringValue = "No messages yet"; return }
-        let sender = message.senderID == currentDeviceID ? "You" : "Your person"
+        guard let message = selectedMessage else { heading.stringValue = ""; return }
         let receipt=message.senderID == currentDeviceID ? (message.readAt == nil ? " · Sent" : " · Read") : ""
-        heading.stringValue = "\(sender) · \(DateFormatter.localizedString(from: message.createdAt, dateStyle: .medium, timeStyle: .short))\(receipt)"
+        heading.stringValue = DateFormatter.localizedString(from:message.createdAt,dateStyle:.medium,timeStyle:.none)+receipt
+        heading.toolTip = "\(message.senderID == currentDeviceID ? "You" : "Your person") · \(DateFormatter.localizedString(from:message.createdAt,dateStyle:.medium,timeStyle:.short))\(receipt)"
     }
     private func updateNavigation() {
         previous.isEnabled = selection > 0
         next.isEnabled = selection+1 < messages.count
-        let unread = messages.filter { $0.recipientID == currentDeviceID && $0.readAt == nil }.count
-        count.stringValue = messages.isEmpty ? "" : "\(selection+1) of \(messages.count) · \(unread) unread"
+        count.stringValue = messages.isEmpty ? "" : "\(selection+1) / \(messages.count)"
+        [previous,count,next].forEach { $0.isHidden = isKept || messages.count < 2 }
+        keep.isEnabled = loaded && selectedMessage != nil; keep.isHidden = isKept
     }
     private func renderSelection() {
         lastMediaError=nil
@@ -389,7 +447,7 @@ final class MessageInboxWindow: NSObject, NSWindowDelegate {
         if message.attachment != nil {
             media.clear(message: "Loading attachment…"); onAttachmentNeeded?(message)
         } else {
-            media.clear(message: ""); loaded = true; notifyPresentedIfReady()
+            media.clear(message: ""); loaded = true; updateNavigation(); notifyPresentedIfReady()
         }
     }
     private func notifyPresentedIfReady() {
@@ -407,18 +465,15 @@ final class MessageInboxWindow: NSObject, NSWindowDelegate {
     }
     @objc private func previousMessage() { guard selection > 0 else { return }; selection -= 1; renderSelection() }
     @objc private func nextMessage() { guard selection+1 < messages.count else { return }; selection += 1; renderSelection() }
+    @objc private func closeWindow() { window.close() }
+    @objc private func keepPhoto() {
+        guard active, loaded, !isKept, selectedMessage != nil else { return }
+        isKept=true; updateNavigation(); onKeep?()
+    }
     @objc private func retryAttachment() {
         guard let message = selectedMessage, message.attachment != nil else { return }
         retry.isHidden = true; media.clear(message: "Loading attachment…"); onAttachmentNeeded?(message)
     }
-}
-
-private func install(_ stack: NSStackView, in view: NSView, inset: CGFloat) {
-    stack.translatesAutoresizingMaskIntoConstraints = false; view.addSubview(stack)
-    NSLayoutConstraint.activate([stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: inset),
-                                 stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -inset),
-                                 stack.topAnchor.constraint(equalTo: view.topAnchor, constant: inset),
-                                 stack.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -inset)])
 }
 
 private final class MessageMediaView: NSView {
@@ -432,10 +487,11 @@ private final class MessageMediaView: NSView {
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         translatesAutoresizingMaskIntoConstraints = false
-        wantsLayer = true; layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor; layer?.cornerRadius = 8
+        wantsLayer = true; layer?.backgroundColor = NSColor.clear.cgColor
+        layer?.cornerRadius = 3; layer?.masksToBounds = true
         image.imageScaling = .scaleProportionallyUpOrDown
         video.controlsStyle = .inline
-        label.alignment = .center; label.textColor = .secondaryLabelColor
+        label.alignment = .center; label.textColor = PolaroidStyle.mutedInk; label.font = AppTypography.font(size:16)
         for view in [image, video, label] { view.translatesAutoresizingMaskIntoConstraints = false; addSubview(view) }
         NSLayoutConstraint.activate([image.leadingAnchor.constraint(equalTo: leadingAnchor), image.trailingAnchor.constraint(equalTo: trailingAnchor),
                                      image.topAnchor.constraint(equalTo: topAnchor), image.bottomAnchor.constraint(equalTo: bottomAnchor),

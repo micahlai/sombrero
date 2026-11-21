@@ -4,7 +4,7 @@ public enum DuckState: String, Codable, CaseIterable {
     case look = "1a", alternateLook = "1b", wave = "1c", standingPet = "1d"
     case sitDown = "2a", standUp = "2b", sitting = "3a", sittingLook = "3b", sittingPet = "3c"
     case goodbye = "4a", peek = "4b", windowPeek = "4c", timeout
-    case grabPhoto = "5a", showPhoto = "5b", showingPhoto = "5c", putPhotoAway = "5d"
+    case grabPhoto = "5a", showingPhoto = "5b", putPhotoAway = "5c"
     case grabCamera = "6a", cameraIdle = "6b", deliverPhoto = "6c"
     case grabBible = "7a", bibleIdle = "7b", stowBible = "7c"
 
@@ -24,7 +24,6 @@ public enum DuckState: String, Codable, CaseIterable {
         case .windowPeek: return "Window peek in"
         case .timeout: return "Hidden timeout"
         case .grabPhoto: return "Grab photo"
-        case .showPhoto: return "Show photo"
         case .showingPhoto: return "Showing photo"
         case .putPhotoAway: return "Put photo away"
         case .grabCamera: return "Grab camera"
@@ -68,7 +67,7 @@ public struct DuckController {
         if request == .photoTake { cameraCanceled=false }
         if active == request {
             if request == .bibleRead, [.grabBible,.bibleIdle].contains(state) { reading=true; return }
-            if request == .photoShow, [.grabPhoto,.showPhoto,.showingPhoto].contains(state) { showPhoto=true; return }
+            if request == .photoShow, [.grabPhoto,.showingPhoto].contains(state) { showPhoto=true; return }
             if request == .photoTake, [.grabCamera,.cameraIdle].contains(state) { takingPhoto=true; return }
         }
         let reopening=active == request && ((request == .bibleRead && state == .stowBible) ||
@@ -121,7 +120,7 @@ public struct DuckController {
     public mutating func reset(to state: DuckState = .look) {
         let previous = generation
         self = DuckController(); generation = previous; enter(state)
-        showPhoto = [.grabPhoto, .showPhoto, .showingPhoto].contains(state)
+        showPhoto = [.grabPhoto, .showingPhoto].contains(state)
         takingPhoto = [.grabCamera, .cameraIdle].contains(state)
         reading = [.grabBible, .bibleIdle].contains(state)
     }

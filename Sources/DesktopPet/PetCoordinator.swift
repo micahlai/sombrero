@@ -75,7 +75,8 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         configureMessaging()
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "square.fill", accessibilityDescription: "sombrero controls")
+            button.image = AppArtwork.controlBarIcon
+                ?? NSImage(systemSymbolName: "square.fill", accessibilityDescription: "sombrero controls")
             button.image?.isTemplate = true
             button.toolTip = "sombrero — show, hide, or recover your companion"
         }
@@ -309,6 +310,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     @objc private func showMessages() { messaging?.showInbox() }
     @objc private func composeMessage() { messaging?.showComposer() }
     @objc private func showMessageOutbox() { messaging?.showOutbox() }
+    @objc private func receiveTestPhoto() { messaging?.receiveTestPhoto() }
     private func updateNotificationStatus() {
         petView.needsDisplay=true
         let unread=messaging?.unreadCount ?? 0
@@ -389,7 +391,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         panel.orderFrontRegardless(); startTimerIfNeeded(); updateBubblePlacement()
     }
     private func leaveAnimationPreviewForRoutine() {
-        let routineStates: [DuckState]=[.grabPhoto,.showPhoto,.showingPhoto,.putPhotoAway,.grabCamera,.cameraIdle,.deliverPhoto,.grabBible,.bibleIdle,.stowBible]
+        let routineStates: [DuckState]=[.grabPhoto,.showingPhoto,.putPhotoAway,.grabCamera,.cameraIdle,.deliverPhoto,.grabBible,.bibleIdle,.stowBible]
         if controller.active == nil, routineStates.contains(controller.state) { controller.reset() }
     }
     private func presentBibleReaderIfReady() {
@@ -443,6 +445,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         if activeDailyVerse() != nil { menu.addItem(item("Read Today's Bible Verse",#selector(readDailyBible))) }
         let debug = NSMenuItem(title:"Debug",action:nil,keyEquivalent:"")
         let debugMenu = NSMenu(); debugMenu.autoenablesItems = false
+        debugMenu.addItem(item("Receive Test Photo",#selector(receiveTestPhoto)))
         let bibleOverride = item("Bible Verse Always Available",#selector(toggleBibleAvailabilityOverride),checked:debugBibleAvailable)
         bibleOverride.isEnabled = bibleLibrary.catalog != nil
         debugMenu.addItem(bibleOverride)
@@ -463,7 +466,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         animations.submenu = animationMenu; debugMenu.addItem(animations)
         let sidePreview=item("Preview 4B from Window Side", #selector(previewWindowSide))
         sidePreview.isEnabled=sideAvailable; debugMenu.addItem(sidePreview)
-        if [.grabPhoto, .showPhoto, .showingPhoto, .grabCamera, .cameraIdle, .grabBible, .bibleIdle].contains(controller.state) {
+        if [.grabPhoto, .showingPhoto, .grabCamera, .cameraIdle, .grabBible, .bibleIdle].contains(controller.state) {
             debugMenu.addItem(item("Finish Current Preview", #selector(finishPreview)))
         }
         debug.submenu = debugMenu; menu.addItem(debug)

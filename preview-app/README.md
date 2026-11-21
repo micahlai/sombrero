@@ -65,8 +65,9 @@ around the common ground anchor. PNG originals are never changed.
 
 The initial calibration visually reviewed the first two and last two frames of
 the initial eight available clips. Later reviews add 1D, 3C, 4B (23 frames), 4C (39 frames), and the 7A/7B/7C Bible route (17/14/11 frames),
-followed by the 6A/6B camera route (14/12 frames), bringing the calibrated set to
-seventeen clips. It includes
+followed by the 6A/6B/6C camera route (14/12/23 frames) and 5A/5B/5C photo route
+(5/7/5 frames), bringing the calibrated set to twenty-one clips. The photo artwork
+uses 5A for pull-out, 5B for the held loop, and 5C for put-away. It includes
 sample hashes, measurements, adjacent-state seam checks, and missing/hidden state
 entries. Re-review this file after changing artwork; it is a calibration snapshot,
 not an automatic character detector. A single transform preserves each clip's

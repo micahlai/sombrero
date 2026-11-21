@@ -30,7 +30,7 @@ public enum PetConstants {
             .sitting: [(.sitting, 0.985), (.sittingLook, 0.01), (.standUp, 0.005)],
             .sittingLook: [(.sittingLook, 0.1), (.sitting, 0.9)],
             .goodbye: [(.timeout, 1)], .peek: [(.alternateLook, 1)], .windowPeek: [(.sitting, 1)],
-            .grabPhoto: [(.showPhoto, 1)], .showPhoto: [(.showingPhoto, 1)], .putPhotoAway: [(.look, 1)],
+            .grabPhoto: [(.showingPhoto, 1)], .putPhotoAway: [(.look, 1)],
             .grabCamera: [(.cameraIdle, 1)], .deliverPhoto: [(.look, 1)],
             .grabBible: [(.bibleIdle, 1)], .stowBible: [(.look, 1)]
         ]

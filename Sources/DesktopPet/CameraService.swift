@@ -2,7 +2,7 @@ import AppKit
 import AVFoundation
 
 /// Owns only still-photo capture. Construction and authorization never start a
-/// capture session; preview starts only from the composer's Camera action.
+/// capture session; preview starts only while the photo composer is open.
 @MainActor
 final class CameraService {
     struct Device: Equatable {
@@ -138,7 +138,7 @@ private final class CameraPreviewView: NSView {
         previewLayer = AVCaptureVideoPreviewLayer(session: session)
         super.init(frame: .zero)
         wantsLayer = true
-        previewLayer.videoGravity = .resizeAspect
+        previewLayer.videoGravity = .resizeAspectFill
         layer?.backgroundColor = NSColor.black.cgColor
         layer?.addSublayer(previewLayer)
         setAccessibilityLabel("Live camera preview")

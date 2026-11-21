@@ -490,5 +490,68 @@ precondition(launchStore.load().isPaused)
 pausedReader.stop()
 print("PASS paused interaction: explicit reader can enter/exit, while its held pose remains still")
 
+// A kept card belongs to its native window, not to the duck's active routine.
+final class NoNetworkCredentials: MessageCredentialStorage {
+    func read(account:String) throws -> String? { nil }
+    func write(_ token:String,account:String) throws {}
+    func remove(account:String) throws {}
+}
+let messageRoot=output.appendingPathComponent("kept-polaroid-\(UUID().uuidString)")
+defer { try? FileManager.default.removeItem(at:messageRoot) }
+let messageStore=MessageStore(root:messageRoot)
+let identity=ChatIdentity(deviceID:UUID().uuidString,peerID:UUID().uuidString,pairID:UUID().uuidString)
+let messageConfiguration=MessageConfiguration(serverURL:URL(string:"https://fixture.invalid")!,identity:identity,credentialAccount:"fixture")
+try messageStore.saveConfiguration(messageConfiguration)
+var messageReplica=MessageReplica()
+messageReplica.upsert(ChatMessage(id:UUID().uuidString,pairID:identity.pairID,senderID:identity.peerID,recipientID:identity.deviceID,
+    clientRequestID:UUID().uuidString,body:RichMessageBody(text:"A little note to keep"),attachment:nil,createdAt:Date(),readAt:Date()))
+try messageStore.save(messageReplica,configuration:messageConfiguration)
+let messageService=MessageService(store:messageStore,credentials:NoNetworkCredentials())
+let messagesCoordinator=MessageCoordinator(service:messageService)
+var requestedMessages:[DuckRequest]=[], finishedMessages:[DuckRequest]=[]
+messagesCoordinator.onRoutineRequested={ requestedMessages.append($0) }
+messagesCoordinator.onRoutineEnded={ finishedMessages.append($0) }
+func messageButtons(_ view:NSView)->[NSButton] {
+    view.subviews.flatMap { child -> [NSButton] in (child as? NSButton).map { [$0] } ?? messageButtons(child) }
+}
+func visiblePhotoWindow(excluding other:NSWindow? = nil)->NSWindow {
+    NSApp.windows.first { $0.isVisible && $0.title=="A photo for you" && $0 !== other }!
+}
+messagesCoordinator.showInbox(); messagesCoordinator.didEnter(.showingPhoto)
+let keptWindow=visiblePhotoWindow()
+messageButtons(keptWindow.contentView!).first { $0.title=="Keep" }!.performClick(nil)
+precondition(finishedMessages==[.photoShow] && !messagesCoordinator.isInteracting && keptWindow.isVisible)
+messagesCoordinator.closeWindows(); messagesCoordinator.suspend()
+precondition(keptWindow.isVisible && finishedMessages==[.photoShow],"Routine changes/sleep must not close kept cards or finish twice")
+messagesCoordinator.showInbox(); messagesCoordinator.didEnter(.showingPhoto)
+let newWindow=visiblePhotoWindow(excluding:keptWindow)
+precondition(messagesCoordinator.isInteracting && newWindow.isVisible && requestedMessages==[.photoShow,.photoShow])
+keptWindow.close()
+precondition(finishedMessages==[.photoShow] && messagesCoordinator.isInteracting,"Closing an old kept card must not end the new viewer's duck routine")
+messageButtons(newWindow.contentView!).first { $0.title=="Keep" }!.performClick(nil)
+precondition(finishedMessages==[.photoShow,.photoShow] && !messagesCoordinator.isInteracting)
+messagesCoordinator.showComposer()
+precondition(requestedMessages.last == .photoTake && newWindow.isVisible)
+// Cancel before 6b, so this fixture never starts the real camera.
+messagesCoordinator.closeWindows()
+precondition(newWindow.isVisible && finishedMessages.last == .photoTake)
+messagesCoordinator.stop()
+precondition(!newWindow.isVisible,"App shutdown closes its independent windows")
+print("PASS Polaroid coordinator: Keep releases duck, survives routine changes, allows another viewer/composer, and closing old cards cannot cancel new routines")
+
+let previewService=MessageService(store:MessageStore(root:messageRoot.appendingPathComponent("receive-preview")),credentials:NoNetworkCredentials())
+let previewMessages=MessageCoordinator(service:previewService)
+previewMessages.receiveTestPhoto()
+precondition(previewMessages.unreadCount==1 && previewMessages.hasMessages && previewService.messages.isEmpty)
+previewMessages.showInbox(); previewMessages.didEnter(.showingPhoto)
+let previewWindow=visiblePhotoWindow()
+RunLoop.main.run(until:Date().addingTimeInterval(0.05))
+precondition(previewMessages.unreadCount==0 && previewService.messages.isEmpty && previewService.outbox.isEmpty,"Fixture reads must never touch server history or send receipts")
+func messageViews(_ view:NSView)->[NSView] { view.subviews.flatMap { [$0]+messageViews($0) } }
+precondition(messageViews(previewWindow.contentView!).compactMap { $0 as? NSTextView }.contains { $0.string.contains("Your test photo arrived") })
+precondition(messageViews(previewWindow.contentView!).compactMap { $0 as? NSImageView }.contains { $0.image != nil },"Show a real bundled image in the test Polaroid")
+previewMessages.stop()
+print("PASS local receive preview: unread badge, bundled image and styled message, no connection needed, no server history or receipt changes")
+
 }
 try MainActor.assumeIsolated { try runDesktopSmoke() }

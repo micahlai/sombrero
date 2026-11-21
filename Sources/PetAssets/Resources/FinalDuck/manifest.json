@@ -837,31 +837,78 @@
     },
     {
       "state": "5a",
-      "frames": [],
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0
+      "frames": [
+        {
+          "resource": "5a/5a0000.png"
+        },
+        {
+          "resource": "5a/5a0001.png"
+        },
+        {
+          "resource": "5a/5a0002.png"
+        },
+        {
+          "resource": "5a/5a0003.png"
+        },
+        {
+          "resource": "5a/5a0004.png"
+        }
+      ],
+      "scale": 1.617191,
+      "offsetX": 239.860213,
+      "offsetY": 294.771575
     },
     {
       "state": "5b",
-      "frames": [],
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0
+      "frames": [
+        {
+          "resource": "5b/5b0000.png"
+        },
+        {
+          "resource": "5b/5b0001.png"
+        },
+        {
+          "resource": "5b/5b0002.png"
+        },
+        {
+          "resource": "5b/5b0003.png"
+        },
+        {
+          "resource": "5b/5b0004.png"
+        },
+        {
+          "resource": "5b/5b0005.png"
+        },
+        {
+          "resource": "5b/5b0006.png"
+        }
+      ],
+      "scale": 1.622525,
+      "offsetX": 236.096741,
+      "offsetY": 290.254677
     },
     {
       "state": "5c",
-      "frames": [],
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0
-    },
-    {
-      "state": "5d",
-      "frames": [],
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0
+      "frames": [
+        {
+          "resource": "5c/5c0000.png"
+        },
+        {
+          "resource": "5c/5c0001.png"
+        },
+        {
+          "resource": "5c/5c0002.png"
+        },
+        {
+          "resource": "5c/5c0003.png"
+        },
+        {
+          "resource": "5c/5c0004.png"
+        }
+      ],
+      "scale": 1.619063,
+      "offsetX": 238.453634,
+      "offsetY": 293.897475
     },
     {
       "state": "6a",

@@ -186,7 +186,7 @@ export class GraphController {
       this.active = this.queue.shift();
       this.note('request', `Started ${this.active}`);
     }
-    if (['5d', '6c', '7c'].includes(from) && edge.to === '1a') {
+    if (['5c', '6c', '7c'].includes(from) && edge.to === '1a') {
       if (this.active) this.note('request', `Completed ${this.active}`);
       this.active = null;
     }

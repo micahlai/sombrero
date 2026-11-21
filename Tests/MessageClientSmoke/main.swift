@@ -1,4 +1,5 @@
 import Foundation
+import AppKit
 import PetCore
 
 private final class TestCredentials: MessageCredentialStorage {
@@ -176,5 +177,36 @@ private struct MessageClientSmoke {
         drafts.clear(); let clearedDraft=try drafts.load(); precondition(clearedDraft == nil)
         precondition(!FileManager.default.fileExists(atPath:restored.attachment!.path))
         print("PASS drafts: private staged attachments survive original-file removal and profiles cannot share unsent drafts")
+
+        let app=NSApplication.shared; app.setActivationPolicy(.prohibited)
+        let composer=MessageComposerWindow()
+        let coordinator=MessageCoordinator(service:reloaded,composer:composer,draftDirectory:root.appendingPathComponent("composer-drafts"))
+        defer { coordinator.stop() }
+        func buttons(_ view:NSView)->[NSButton] {
+            view.subviews.flatMap { child in (child as? NSButton).map { [$0] } ?? buttons(child) }
+        }
+        let send=buttons(composer.window.contentView!).first { $0.title=="Send" }!
+        func prepare(_ text:String) {
+            composer.setStatus("Ready")
+            composer.setDraft(text:MessageRichText.attributed(from:RichMessageBody(text:text)),attachmentURL:nil)
+            composer.show()
+        }
+        prepare("Close after acknowledgment")
+        server.offline=true; send.performClick(nil)
+        try await Task.sleep(nanoseconds:40_000_000)
+        precondition(composer.window.isVisible && !send.isEnabled && reloaded.outbox.count==1,"Queued/offline is not yet sent; prevent double submission")
+        server.offline=false; await reloaded.refresh()
+        precondition(!composer.window.isVisible && reloaded.outbox.isEmpty,"Close in the same service change as the server acknowledgment")
+
+        prepare("Old send, manually closed")
+        server.offline=true; send.performClick(nil)
+        try await Task.sleep(nanoseconds:40_000_000)
+        precondition(reloaded.outbox.count==1 && !send.isEnabled)
+        composer.window.close()
+        prepare("A new draft stays open")
+        server.offline=false; await reloaded.refresh()
+        precondition(composer.window.isVisible && composer.draftText.string=="A new draft stays open","A late old acknowledgment must not close another draft")
+        composer.window.close()
+        print("PASS composer: closes immediately on send acknowledgment, stays open offline, prevents duplicate sends, and late acknowledgments cannot close new drafts")
     }
 }

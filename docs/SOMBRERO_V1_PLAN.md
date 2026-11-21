@@ -1,6 +1,6 @@
 # sombrero — first release plan
 
-Updated November 21, 2026 (America/New_York). The native app runs the local animation graph at 6 fps and bundles seventeen calibrated clips, including 6a/6b camera artwork, with pink placeholders for the five remaining missing clips. Hover petting, speech menus, goodbye/recall, and the offline daily Bible reader are implemented. Photo/messaging now has native composition and inbox windows, rich text, explicit camera capture, image/video file attachments, Keychain credentials, per-device persistent drafts/outbox/cache, polling sync, and read receipts. The Python FastAPI/SQLite/media service and Pi deployment package are implemented; storage tests and native client/UI checks run locally. Real server HTTP tests require unavailable Python web dependencies on this host and must run on the Pi before provisioning. Remote installation and the public HTTPS/DNS route remain pending; no deployment is claimed.
+Updated November 21, 2026 (America/New_York). The native app runs the local animation graph at 6 fps and bundles all twenty-one calibrated clips, including the complete 5a/5b/5c photo and 6a/6b/6c camera routes. Hover petting, speech menus, goodbye/recall, and the offline daily Bible reader are implemented. Photo/messaging uses the supplied watercolor Polaroid artwork, native composition and independent resizable Keep/Close windows, rich text, explicit camera capture, image/video attachments, Keychain credentials, per-device persistent drafts/outbox/cache, polling sync, and read receipts. The user completed Pi installation, reported the HTTP/storage test command returned OK and healthy media storage, and enabled a public Tailscale Funnel at `https://home-lab.tail4869fe.ts.net`; remote client acceptance is pending. Local test tooling cannot reach that hostname or verify actual camera capture/video decoding.
 
 ## Authority and release scope
 
@@ -42,9 +42,8 @@ Black arrows run only at clip completion when no permitted red/purple condition 
 | 4c | Window peek in | 3a 1 |
 | timeout | Hidden/static | No automatic animation; recall/away timer uses the top/side clearance weights below |
 | 5a | Grab photo | 5b 1 |
-| 5b | Show photo | 5c 1 |
-| 5c | Showing photo idle | Conditional purple arrows only |
-| 5d | Put photo away | 1a 1 |
+| 5b | Showing photo idle | Conditional purple arrows only |
+| 5c | Put photo away | 1a 1 |
 | 6a | Grab camera | 6b 1 |
 | 6b | Camera idle | Conditional purple arrows only |
 | 6c | Take photo and deliver | 1a 1 |
@@ -52,7 +51,7 @@ Black arrows run only at clip completion when no permitted red/purple condition 
 | 7b | Bible idle | Conditional purple arrows only |
 | 7c | Stow Bible | 1a 1 |
 
-There are 22 animation states plus one hidden timeout state. The black weights from 1a total 1.02. Under the user's relative-weight instruction, the resulting probabilities are approximately 95.588% idle, 1.961% look, 1.961% wave, and 0.490% sit down. Keep this discrepancy visible; do not silently change a handwritten weight to make the numbers sum to one.
+There are 21 animation states plus one hidden timeout state. The supplied November 21 photo artwork supersedes the original PDF four-state photo numbering: 5a pulls out the picture, 5b holds it, and 5c puts it away. Native playback and the web preview use that three-clip route with the existing purple loop/exit timing. The black weights from 1a total 1.02. Under the user's relative-weight instruction, the resulting probabilities are approximately 95.588% idle, 1.961% look, 1.961% wave, and 0.490% sit down. Keep this discrepancy visible; do not silently change a handwritten weight to make the numbers sum to one.
 
 ## Red and purple arrows
 
@@ -73,7 +72,7 @@ Red means interrupt the current animation immediately, including before the firs
 | 1a | photo-show request | Red, immediate | 5a |
 | 1a | photo-take request | Red, immediate | 6a |
 | 1a | Bible-read request | Red, immediate | 7a |
-| 5c | showPhoto / not showPhoto | Purple, loop / exit at end | 5c / 5d |
+| 5b | showPhoto / not showPhoto | Purple, loop / exit at end | 5b / 5c |
 | 6b | takingPhoto / not takingPhoto | Purple, loop / exit at end | 6b / 6c |
 | 7b | reading / not reading | Purple, loop / exit at end | 7b / 7c |
 
@@ -94,7 +93,7 @@ The user's required example is an acceptance test:
 | Finish 2b | Reach 1a |
 | Enter 1a | Dispatch the retained photoShow request immediately; skip rendering 1a and start 5a |
 | Enter 5a | Atomically move request from pending to active and clear aggregate pending event |
-| Continue | 5a → 5b → 5c; showPhoto true holds 5c until the user closes the viewer |
+| Continue | 5a → 5b; showPhoto true holds 5b until Keep or Close, then 5c → 1a |
 
 For event entry from 1b, finish 1b first; from 3b, the red event edge interrupts immediately. From 2a, finish 2a, reach 3a, then take its red event edge through 2b. A later explicit menu request may queue while a page-two routine is active; do not tear props out mid-routine. Proposed policy: one active routine plus a small FIFO of explicit requests; deduplicate repeated clicks for the same message/draft. Incoming notifications never become unsolicited animation requests.
 
@@ -151,15 +150,19 @@ Compute a single badge from `unreadIncomingCount > 0 || dailyVerseUnread`. Draw 
 
 ## Receiving and reading a message
 
-A server notification refreshes the inbox and badge only. The user chooses See message/photo. The workflow routes to 5a, opens a separate polaroid-style message window in coordination with 5b, and holds 5c while that viewer remains open. The photo and rich-text message live in this second window, independent of duck clipping and placement. Final polaroid artwork is deferred; native placeholder framing is acceptable for backend work.
+Control panel → Debug → Receive Test Photo creates an in-memory incoming card using the bundled duck photo artwork and a styled test message. It raises the unread badge and enables See message/photo even without a connection. Showing the loaded card clears its test unread state; Keep/Close use the normal animation and window flow. This is a UI preview, not an end-to-end server test: no fixture messages or read receipts enter the server replica or network.
 
-Confirmed by the user: showPhoto is true while the viewer is open and false when the user finishes/closes it. After false, finish 5c, play 5d, then return to 1a. Closing before 5c records false; entry animations finish normally and the exit occurs at the next eligible boundary. A message is marked read only after its content is successfully loaded and shown, never merely because its notification arrived or a request was queued. Read updates are idempotent and retried offline. Multiple unread messages keep the badge present until consumed.
+A server notification refreshes the inbox and badge only. The user chooses See message/photo. The workflow routes to 5a, opens a separate Polaroid window in coordination with 5b, and holds 5b until the user chooses Keep or Close. The supplied `assets/polaroid-frame.png` is bundled unchanged and frames both composition and viewing. Photo controls/navigation sit along its top edge; rich text sits directly on the lower paper lip, with a small date/footer. All app-drawn lettering uses Matcha Style and brown ink. Both windows are key-capable, draggable and resizable, with aspect-preserving layout and a bottom-corner resize grip. Keep detaches the selected card into an independent native window and releases the duck's routine; Close dismisses it. Multiple kept cards can remain on screen while composing, viewing another photo, reading the Bible or hiding the duck. Kept cards remain for the current app session and close on disconnect/profile change or app shutdown; they are not restored automatically after quitting. Closing an old kept card never cancels a newer viewer's animation. Only loaded media can be kept, and read receipts still require successful visible presentation.
+
+showPhoto is true while the active viewer is open and false when the user chooses Keep or Close. After false, finish 5b, play 5c, then return to 1a. Closing before 5b records false; entry animations finish normally and the exit occurs at the next eligible boundary. A message is marked read only after its content is successfully loaded and shown, never merely because its notification arrived or a request was queued. Read updates are idempotent and retried offline. Multiple unread messages keep the badge present until consumed.
 
 ## Composing, camera capture, and sending
 
-Prepare a separate composer window with a polaroid-shaped camera preview and rich-text editor. Offer the built-in camera and discovered supported external/Continuity cameras. Use AVFoundation capture and native text controls. Per the user’s startup policy, request Camera authorization before the launch entrance. Start preview/capture hardware only from explicit Camera/Capture interaction in the composer. Do not request microphone access; videos are file attachments, not recordings. Apple documents Continuity Camera support through its capture-device discovery APIs; actual device availability depends on system setup [S1].
+The Polaroid composer defaults to the live camera when the user opens a new or text-only draft; a saved photo/video draft reopens for review. Start preview only after 6a reaches 6b and the composer is visible. Offer the built-in camera and discovered supported external/Continuity cameras. The top paper edge contains camera/stop/retake, attachment/removal, camera choice and shutter controls. Keep only B/I/U and Send beside the bottom date; the message editor has no separate box or panel. Matcha Style's single font face uses synthetic stroke/slant for bold/italic, preserving all three wire-format styles without switching to system fonts. Use AVFoundation capture and native text controls. Per the user’s startup policy, request Camera authorization before the launch entrance. Opening the composer can start preview; only an explicit shutter click captures a photo, and only Send queues delivery. Do not request microphone access; videos are file attachments, not recordings. Apple documents Continuity Camera support through its capture-device discovery APIs; actual device availability depends on system setup [S1].
 
 Set takingPhoto true while a capture is awaiting a successful photo. Start 6a → 6b and the preview. On successful photo capture, immediately retain the image/draft, freeze the preview to that image, set takingPhoto false, and stop live capture when safe. The diagram's purple exit means the current 6b clip then finishes before 6c starts; frame zero of 6c is the planned drawn camera flash. This can place the drawn flash after the physical exposure. If exact exposure-synchronized animation is required, change the 6b exit to red; the current plan preserves the purple arrow.
+
+After explicit Send, the composer prevents a second submission while the durable outbox retries as needed. It closes immediately when the server acknowledges that specific message, rather than waiting for recipient delivery/read or merely closing on local enqueue. An offline send remains queued and visible until acknowledged or manually closed; a delayed acknowledgment cannot close a newer draft.
 
 Capture success and message send success are distinct. Let the user review/edit the rich text and explicitly choose Send. 6c must not silently transmit a draft merely because a photo was taken. It may play its authored “take photo and deliver” gesture while the composer holds the draft; a real delivery indicator reflects server acknowledgment, independently. Closing/canceling before capture needs an authored recovery or a documented neutral fallback; do not fake a captured photo or send anything. A retake creates a fresh capture token, routes back to 6a/6b, and starts preview only when 6b is reached. Closing/canceling before a capture finishes the current 6b loop and uses a documented neutral return to 1a, without playing a fake exposure/delivery. Successful capture or explicit Send uses the normal 6c route. Stale queued camera operations cannot reopen after close or sleep.
 
@@ -224,7 +227,7 @@ Verification: `scripts/test-macos.sh` checks the catalog, scheduling, three-day 
 1. **Graph controller:** replace numeric prototype states with typed string IDs, validated graph data, priority policy, pending/active requests, and tokenized clip commands. Exhaustively test every pictured edge, entry-time skips, RNG weights, stale completions, and recovery paths. Map final assets only when supplied.
 2. **Local interaction and lifecycle:** hover signal, click/drag separation, drawn menu, notification overlay, timeout visibility, two away modes, recall through weighted 4b/4c, restart and wake reconciliation. Test input pass-through and focus behavior across every visible UI region.
 3. **Python test service:** provision two test identities, SQLite/media, API contract, durable sync, read receipts, upload limits, outbox and retries. Test third-device rejection, duplicated/lost replies, corrupted upload, server restart, absent media volume, and authorization for peer attachments. Do not collect photos during tests without explicit capture interaction.
-4. **Receive/compose/camera:** separate polaroid windows with native placeholder framing, rich-text round trip, camera selection/permission/device loss, successful capture flag, cancel/retake recovery, explicit send, and integration of 5a–5d/6a–6c. Confirm flash timing against the purple exit rule.
+4. **Receive/compose/camera:** supplied Polaroid artwork, independent resizable Keep/Close windows, rich-text round trip, camera selection/permission/device loss, successful capture flag, cancel/retake recovery, explicit send, and integration of 5a–5c/6a–6c. Confirm flash timing against the purple exit rule.
 5. **Daily verse:** exact verified offline text, persisted 11:00–19:00 schedule, three-day exclusion, bubble reader and 7a–7c. Test DST, timezone/date changes, offline startup, after-hours launch, and unread/read badge independence.
 6. **Two-laptop/Pi rehearsal:** app rename plus preference migration preserving old placement, actual camera/Continuity tests on target macOS versions, signed app identity and camera usage strings, realistic media transfer, drive removal/recovery, Spaces/fullscreen/sleep, then a complete real-user flow on both laptops.
 

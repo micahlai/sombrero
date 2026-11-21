@@ -40,8 +40,8 @@
     ],
     "uniqueSampleCount": 83,
     "graphPath": "docs/sombrero-v1-state-graph.json",
-    "graphSHA256": "0a5aac90765ef6face80704283db5b52f283bbe51fa51f7c902c72e6151099a9",
-    "measurementDetails": "Geometry uses alpha ≥32. Head width/center use the upper 60% of the alpha silhouette, filtered for yellow watercolor pigment (R>130, G>100, R-B>35, G-B>15). All endpoint pair equations use equal weight; head width and silhouette height are normalized by 290 and 489 source pixels, with 1a scale fixed at 1.4. X/Y offsets fit endpoint head centers and baselines. Canvas expanded to include ALL nonzero alpha across every frame, including alpha 1–7 speckles in 4a.",
+    "graphSHA256": "73cab632b42c704528ea461cb33e12962adfb0a9d7d5c995cbbc664698e96d99",
+    "measurementDetails": "Geometry uses alpha \u226532. Head width/center use the upper 60% of the alpha silhouette, filtered for yellow watercolor pigment (R>130, G>100, R-B>35, G-B>15). All endpoint pair equations use equal weight; head width and silhouette height are normalized by 290 and 489 source pixels, with 1a scale fixed at 1.4. X/Y offsets fit endpoint head centers and baselines. Canvas expanded to include ALL nonzero alpha across every frame, including alpha 1\u20137 speckles in 4a.",
     "limitations": [
       "Uniform clip-wide transforms reduce canvas/scale seams but cannot alter authored character proportions, eye/wing poses, or internal drawing drift.",
       "The 2b seated-to-standing drawings change head-to-body proportion; its transform is a best-fit compromise across both incoming and outgoing neighbors.",
@@ -90,7 +90,7 @@
           "7b",
           "7c"
         ],
-        "method": "Endpoint contact sheets visually reviewed; uniform scale, head-center and baseline registration across 1a → 7a → 7b → 7c → 1a. All-frame alpha containment checked; source PNGs unchanged.",
+        "method": "Endpoint contact sheets visually reviewed; uniform scale, head-center and baseline registration across 1a \u2192 7a \u2192 7b \u2192 7c \u2192 1a. All-frame alpha containment checked; source PNGs unchanged.",
         "checkedFrameCounts": {
           "7a": 17,
           "7b": 12,
@@ -130,7 +130,7 @@
           "5b",
           "5c"
         ],
-        "method": "Endpoint contact sheets visually reviewed; uniform scale, head-center and baseline registration across 1a → 5a → 5b → 5c → 1a. All-frame alpha containment checked; source PNGs unchanged.",
+        "method": "Endpoint contact sheets visually reviewed; uniform scale, head-center and baseline registration across 1a \u2192 5a \u2192 5b \u2192 5c \u2192 1a. All-frame alpha containment checked; source PNGs unchanged.",
         "checkedFrameCounts": {
           "5a": 5,
           "5b": 7,
@@ -436,7 +436,7 @@
         1071.592,
         1053.456
       ],
-      "notes": "Aligned across 1a↔1b and 1b→1c/4a. Its standing silhouette is slightly narrower than 1a; a uniform fit preserves that source-model difference."
+      "notes": "Aligned across 1a\u21941b and 1b\u21921c/4a. Its standing silhouette is slightly narrower than 1a; a uniform fit preserves that source-model difference."
     },
     "1c": {
       "status": "calibrated",
@@ -585,7 +585,7 @@
         1089.461,
         1053.522
       ],
-      "notes": "Aligned across 1a/1b→1c and 1c→1a. Waving/bouncing in the penultimate frame is authored motion and is not individually recentered."
+      "notes": "Aligned across 1a/1b\u21921c and 1c\u21921a. Waving/bouncing in the penultimate frame is authored motion and is not individually recentered."
     },
     "1d": {
       "status": "calibrated",
@@ -1331,7 +1331,7 @@
         1123.58,
         1057.024
       ],
-      "notes": "Aligned across 3a↔3b and 3b→2b. The look/lean motion and its slight end-frame height variation are retained."
+      "notes": "Aligned across 3a\u21943b and 3b\u21922b. The look/lean motion and its slight end-frame height variation are retained."
     },
     "3c": {
       "status": "calibrated",
@@ -2305,16 +2305,6 @@
         1050
       ],
       "notes": "First two and last two drawings visually reviewed. 5a standing entry and 5c standing exit registered to 1a; 5b fitted between the two photo-holding poses. One uniform transform per clip; authored motion and source PNGs retained."
-    },
-    "5d": {
-      "status": "missing",
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
-      "sourceFrameCount": 0,
-      "sourceFrameSize": null,
-      "sampleFrames": [],
-      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
     },
     "6a": {
       "status": "calibrated",
@@ -3541,7 +3531,7 @@
       "to": "7a",
       "samplePolicy": "last two versus first two",
       "baselineDeltaPixels": 0.00010200000008353527,
-      "headCenterDeltaPixels": 0.00007875000000012733
+      "headCenterDeltaPixels": 7.875000000012733e-05
     },
     {
       "from": "7a",
@@ -3561,15 +3551,15 @@
       "from": "7c",
       "to": "1a",
       "samplePolicy": "last two versus first two",
-      "baselineDeltaPixels": -0.00008650000000898217,
-      "headCenterDeltaPixels": -0.00006400000000894579
+      "baselineDeltaPixels": -8.650000000898217e-05,
+      "headCenterDeltaPixels": -6.400000000894579e-05
     },
     {
       "from": "1a",
       "to": "6a",
       "samplePolicy": "last two versus first two",
       "baselineDeltaPixels": 0.00013100000012400415,
-      "headCenterDeltaPixels": 0.00009900000003426612
+      "headCenterDeltaPixels": 9.900000003426612e-05
     },
     {
       "from": "6a",
@@ -3618,7 +3608,7 @@
       "to": "1a",
       "samplePolicy": "last two versus first two",
       "baselineDeltaPixels": 0.00010400000007848575,
-      "headCenterDeltaPixels": 0.00008350000004497815
+      "headCenterDeltaPixels": 8.350000004497815e-05
     }
   ]
 }
