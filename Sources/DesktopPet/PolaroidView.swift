@@ -5,6 +5,7 @@ enum PolaroidStyle {
     static let ink = NSColor(srgbRed: 0.33, green: 0.23, blue: 0.14, alpha: 1)
     static let mutedInk = ink.withAlphaComponent(0.65)
     static let size = NSSize(width: 500, height: 500 * 1384 / 1140)
+    static let minimumViewingWidth: CGFloat = 120
 
     static func label(_ value: String = "", size: CGFloat = 12) -> NSTextField {
         let field = NSTextField(labelWithString: value)
@@ -56,6 +57,13 @@ final class PolaroidCanvas: NSView {
     override var isFlipped: Bool { true }
     override var isOpaque: Bool { false }
     override var mouseDownCanMoveWindow: Bool { true }
+    // A stable paper coordinate system scales text, icons, and media together.
+    // Resizing must not reflow a tiny card into oversized fixed-point controls.
+    override func setFrameSize(_ newSize: NSSize) {
+        super.setFrameSize(newSize)
+        setBoundsSize(PolaroidStyle.size)
+        needsLayout=true; needsDisplay=true
+    }
     var mediaRect: NSRect { rect(x: 0.096, y: 0.085, width: 0.806, height: 0.599) }
     var controlsRect: NSRect { rect(x: 0.09, y: 0.039, width: 0.817, height: 0.035) }
     var writingRect: NSRect { rect(x: 0.115, y: 0.722, width: 0.774, height: 0.151) }
@@ -70,7 +78,9 @@ final class PolaroidCanvas: NSView {
     }
     override func layout() {
         super.layout()
-        resizeHandle.frame=rect(x:0.91,y:0.938,width:0.03,height:0.025)
+        let scale=max(0.1,frame.width/PolaroidStyle.size.width)
+        let target=max(16,18/scale)
+        resizeHandle.frame=NSRect(x:bounds.width*0.95-target,y:bounds.height*0.966-target,width:target,height:target)
         onLayout?()
     }
     override func mouseDown(with event: NSEvent) { window?.performDrag(with: event) }

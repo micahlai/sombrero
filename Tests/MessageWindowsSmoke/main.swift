@@ -85,6 +85,17 @@ inbox.onKeep={ kept+=1 }
 precondition(keep.isEnabled && inbox.window.parent==nil)
 keep.performClick(nil)
 precondition(kept==1 && inbox.isKept && inbox.window.isVisible && keep.isHidden,"Keep retains an independent visible Polaroid")
+precondition(inbox.window.level == .floating && !inbox.window.hidesOnDeactivate,"Pinned photos stay above ordinary windows when the app loses focus")
+precondition(inbox.window.contentMinSize.width == 120)
+for width:CGFloat in [120,160,240,500] {
+    inbox.window.setContentSize(NSSize(width:width,height:width*1384/1140))
+    let canvas=inbox.window.contentView as! PolaroidCanvas
+    canvas.layoutSubtreeIfNeeded()
+    precondition(abs(canvas.convert(NSSize(width:18,height:18),to:nil).width-18*width/500)<0.01,"Font and all artwork scale with the miniature card")
+    let writer=descendants(canvas).compactMap { $0 as? NSScrollView }.first!
+    precondition(canvas.bounds.contains(writer.frame) && writer.frame.minY>canvas.mediaRect.maxY)
+    if width==120 { try snapshot(canvas,name:"polaroid-miniature") }
+}
 let other=MessageInboxWindow(currentDeviceID:"self")
 other.show(messages:[message]); other.window.close()
 precondition(inbox.window.isVisible,"Opening/closing another viewer must not dismiss a kept card")

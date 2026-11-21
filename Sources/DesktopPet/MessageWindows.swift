@@ -345,6 +345,8 @@ final class MessageInboxWindow: NSObject, NSWindowDelegate {
         self.currentDeviceID = currentDeviceID
         super.init()
         window.delegate = self
+        let minimum=PolaroidStyle.minimumViewingWidth
+        window.contentMinSize=NSSize(width:minimum,height:minimum*1384/1140)
         paper.frame = window.contentView!.bounds; paper.autoresizingMask = [.width, .height]
         window.contentView = paper
         media.translatesAutoresizingMaskIntoConstraints = true; paper.addSubview(media)
@@ -468,7 +470,8 @@ final class MessageInboxWindow: NSObject, NSWindowDelegate {
     @objc private func closeWindow() { window.close() }
     @objc private func keepPhoto() {
         guard active, loaded, !isKept, selectedMessage != nil else { return }
-        isKept=true; updateNavigation(); onKeep?()
+        isKept=true; window.level = .floating; window.hidesOnDeactivate=false
+        updateNavigation(); onKeep?()
     }
     @objc private func retryAttachment() {
         guard let message = selectedMessage, message.attachment != nil else { return }
