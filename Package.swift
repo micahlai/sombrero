@@ -7,7 +7,7 @@ let package = Package(
     products: [.executable(name: "sombrero", targets: ["DesktopPet"])],
     targets: [
         .target(name: "PetCore"),
-        .target(name: "PetAssets", dependencies: ["PetCore"], exclude: ["Resources/Duck"], resources: [.copy("Resources/FinalDuck"), .copy("Resources/Fonts")]),
+        .target(name: "PetAssets", dependencies: ["PetCore"], exclude: ["Resources/Duck"], resources: [.copy("Resources/FinalDuck"), .copy("Resources/Fonts"), .copy("Resources/Bible")]),
         .executableTarget(name: "DesktopPet", dependencies: ["PetCore", "PetAssets"]),
         .testTarget(name: "PetCoreTests", dependencies: ["PetCore", "PetAssets"])
     ]

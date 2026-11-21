@@ -64,7 +64,9 @@ shows the entire shared canvas, including smoke; 1.5×/2× zoom enlarges the cha
 around the common ground anchor. PNG originals are never changed.
 
 The initial calibration visually reviewed the first two and last two frames of
-the initial eight available clips. Later reviews add 1D, 3C, 4B (23 frames), and 4C (39 frames), bringing the calibrated set to twelve clips. It includes
+the initial eight available clips. Later reviews add 1D, 3C, 4B (23 frames), 4C (39 frames), and the 7A/7B/7C Bible route (17/14/11 frames),
+followed by the 6A/6B camera route (14/12 frames), bringing the calibrated set to
+seventeen clips. It includes
 sample hashes, measurements, adjacent-state seam checks, and missing/hidden state
 entries. Re-review this file after changing artwork; it is a calibration snapshot,
 not an automatic character detector. A single transform preserves each clip's

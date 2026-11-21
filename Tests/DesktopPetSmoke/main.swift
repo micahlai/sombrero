@@ -3,6 +3,8 @@ import AppKit
 import PetAssets
 import PetCore
 
+@MainActor
+func runDesktopSmoke() throws {
 let app = NSApplication.shared
 app.setActivationPolicy(.prohibited)
 let assets = SpriteLibrary()
@@ -10,7 +12,7 @@ precondition(assets.failure == nil, "Packaged assets must load")
 let bubble = SpeechBubble(images: assets.speechFrames)
 let output = URL(fileURLWithPath: ".build/ui-smoke")
 try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
-for (name, mode) in [("menu", SpeechBubble.Mode.menu), ("away", .away), ("photo", .photo), ("camera", .camera), ("bible", .bible)] {
+for (name, mode) in [("menu", SpeechBubble.Mode.menu), ("away", .away), ("bible", .bible)] {
     bubble.show(mode: mode); bubble.advance(by: 1); bubble.panel.orderOut(nil)
     let view = bubble.panel.contentView!
     view.layoutSubtreeIfNeeded()
@@ -43,7 +45,7 @@ let workArea = NSRect(x: -800, y: 0, width: 800, height: 600)
 bubble.anchor(to: NSRect(x: -90, y: 40, width: 70, height: 120), workArea: workArea)
 precondition(workArea.contains(bubble.panel.frame), "Flipped bubble must remain on screen")
 precondition(!bubble.panel.frame.intersects(NSRect(x: -90, y: 40, width: 70, height: 120)))
-precondition(abs(bubble.panel.frame.width - 355.0/3) < 1)
+precondition(bubble.panel.frame.width < 200 && bubble.panel.frame.height < 250, "Menu stays compact while accommodating font metrics")
 bubble.panel.appearance = NSAppearance(named: .darkAqua)
 bubble.panel.orderOut(nil)
 let view = bubble.panel.contentView!
@@ -59,7 +61,7 @@ for sprite in [NSRect(x: -780, y: 440, width: 100, height: 130), NSRect(x: -120,
     precondition(workArea.contains(bubble.panel.frame))
     precondition(!bubble.panel.frame.intersects(sprite), "Bubble overlaps sprite at top edge")
 }
-print("PASS one-third size, fixed ink, no heading, and non-overlapping placement")
+print("PASS compact size, fixed ink, no heading, and non-overlapping placement")
 
 let duckPanel = PetPanel(size: 300)
 let outsideCanvas = NSRect(x: -120, y: -70, width: 300, height: 300)
@@ -168,3 +170,325 @@ for (name, petSize) in PetConstants.Size.options {
     }
 }
 print("PASS actual 4c ledge aligned to window top at small, medium, and large sizes")
+
+let bibleCatalog=BibleLibrary().catalog!
+let scriptureBubble=SpeechBubble(images:assets.speechFrames)
+var longest=bibleCatalog.verses[0]
+for verse in bibleCatalog.verses {
+    scriptureBubble.setBible(verse:verse); scriptureBubble.show(mode:.bible); scriptureBubble.advance(by:1)
+    scriptureBubble.panel.orderOut(nil)
+    let root=scriptureBubble.panel.contentView!
+    root.layoutSubtreeIfNeeded()
+    precondition(root.bounds.width <= 220 && root.bounds.height <= 260,"Verse length must not enlarge the compact reader")
+    precondition(scriptureBubble.biblePageTexts.joined() == verse.text,"Pagination must retain every source character")
+    for page in scriptureBubble.biblePageTexts.indices {
+        if page>0 { scriptureBubble.changeBiblePage(by:1) }
+        root.layoutSubtreeIfNeeded()
+        var foundText=false, foundNext=false
+        func checkReader(_ parent: NSView) {
+            for child in parent.subviews {
+                if let scroll=child as? NSScrollView, let text=scroll.documentView as? NSTextView {
+                    foundText=true
+                    precondition(text.string == scriptureBubble.biblePageTexts[page].trimmingCharacters(in:.whitespacesAndNewlines))
+                    let manager=text.layoutManager!,container=text.textContainer!
+                    manager.ensureLayout(for:container)
+                    precondition(manager.glyphRange(for:container).length == manager.numberOfGlyphs)
+                    precondition(manager.usedRect(for:container).maxY+2*text.textContainerInset.height <= text.frame.height+1,
+                                 "Last line must remain reachable: \(verse.reference)")
+                    precondition(text.frame.height <= scroll.contentSize.height+1,
+                                 "Normal reader must use more pages instead of scrolling: \(verse.reference)")
+                    precondition(root.bounds.contains(scroll.convert(scroll.bounds,to:root)))
+                }
+                if let button=child as? NSButton {
+                    precondition(button.title != "Done" && button.title != "Back","Reader shows only page controls")
+                    if button.title == "Next" && button.isEnabled { foundNext=true }
+                    precondition(root.bounds.contains(button.convert(button.bounds,to:root)))
+                    precondition(button.bounds.width >= button.attributedTitle.size().width+2*PetConstants.Speech.horizontalTextPadding)
+                    precondition(button.bounds.height >= button.font!.ascender-button.font!.descender+button.font!.leading)
+                }
+                if let label=child as? NSTextField {
+                    precondition(!label.stringValue.contains("eBible.org") && !label.stringValue.contains("WEB") && !label.stringValue.contains("World English Bible"),
+                                 "Reader must not show a source or translation line")
+                }
+                checkReader(child)
+            }
+        }
+        checkReader(root)
+        precondition(foundText && (page == scriptureBubble.biblePageTexts.count-1 || foundNext))
+    }
+    if verse.text.count>longest.text.count { longest=verse }
+}
+scriptureBubble.setBible(verse:longest); scriptureBubble.show(mode:.bible)
+let readerRoot=scriptureBubble.panel.contentView!; readerRoot.layoutSubtreeIfNeeded()
+let readerBitmap=readerRoot.bitmapImageRepForCachingDisplay(in:readerRoot.bounds)!
+readerRoot.cacheDisplay(in:readerRoot.bounds,to:readerBitmap)
+try readerBitmap.representation(using:.png,properties:[:])!.write(to:output.appendingPathComponent("bible-reader-longest.png"))
+scriptureBubble.close(immediately:true)
+let dailyFile=output.appendingPathComponent("daily-verses-test.json")
+let dailyStore=DailyBibleStore(file:dailyFile)
+var persisted=DailyBible(); persisted.reconcile(at:Date(),catalog:bibleCatalog) { 0 }
+dailyStore.save(persisted); precondition(dailyStore.load() == persisted)
+let assignment=persisted.today(at:Date())!
+var session=BibleReadingSession(verse:bibleCatalog.verses.first { $0.id == assignment.verseID }!,localDate:assignment.localDate)
+precondition(!session.complete(in:&persisted)); session.presentedContent(); precondition(session.complete(in:&persisted))
+dailyStore.save(persisted); precondition(dailyStore.load() == persisted)
+print("PASS all 100 passages fit a compact paginated reader without a source/version line or Done button")
+
+let stableBubble=SpeechBubble(images:assets.speechFrames)
+let envelope=assets.conversationBounds()!
+let stableDuck=NSRect(x:400+envelope.minX*300,y:100+envelope.minY*300,width:envelope.width*300,height:envelope.height*300)
+let conversationArea=NSRect(x:0,y:0,width:1500,height:1000)
+stableBubble.show(); stableBubble.advance(by:1); stableBubble.panel.orderOut(nil)
+stableBubble.anchor(to:stableDuck,workArea:conversationArea)
+let stableFrame=stableBubble.panel.frame
+for (state,frames) in assets.frames where state != .goodbye {
+    for frame in frames {
+        duckView.state=state; duckView.sprite=frame
+        stableBubble.anchor(to:stableDuck,workArea:conversationArea)
+        precondition(stableBubble.panel.frame == stableFrame,"Animation drawings must not change the speech anchor")
+    }
+}
+stableBubble.setBible(verse:nil,status:"Reader unavailable"); stableBubble.setMode(.bible)
+stableBubble.anchor(to:stableDuck,workArea:conversationArea); let readerFrame=stableBubble.panel.frame
+stableBubble.setBible(verse:longest); stableBubble.anchor(to:stableDuck,workArea:conversationArea)
+precondition(stableBubble.panel.frame == readerFrame,"Changing reader content must not move the reader")
+for _ in stableBubble.biblePageTexts.indices {
+    stableBubble.changeBiblePage(by:1); stableBubble.anchor(to:stableDuck,workArea:conversationArea)
+    precondition(stableBubble.panel.frame == readerFrame,"Page changes must not move the reader")
+}
+stableBubble.anchor(to:stableDuck.offsetBy(dx:40,dy:20),workArea:conversationArea)
+precondition(abs(stableBubble.panel.frame.minX-readerFrame.minX-40)<0.001 && abs(stableBubble.panel.frame.minY-readerFrame.minY-20)<0.001)
+stableBubble.close(immediately:true)
+print("PASS speech position stays fixed across every drawing, loading, and page changes; dragging still carries it")
+
+let constrainedBubble=SpeechBubble(images:assets.speechFrames)
+constrainedBubble.setBible(verse:longest)
+constrainedBubble.show(mode:.bible); constrainedBubble.advance(by:1)
+for area in [NSRect(x:-800,y:0,width:800,height:600), NSRect(x:0,y:0,width:300,height:350)] {
+    for duck in [NSRect(x:area.minX,y:area.maxY-140,width:100,height:130),
+                 NSRect(x:area.midX-50,y:area.midY-60,width:100,height:130)] {
+        constrainedBubble.anchor(to:duck,workArea:area)
+        precondition(area.contains(constrainedBubble.panel.frame),"Constrained reader must stay on screen even when no non-overlapping placement fits")
+        let root=constrainedBubble.panel.contentView!
+        root.layoutSubtreeIfNeeded()
+        func checkConstrainedControls(_ parent: NSView) {
+            for child in parent.subviews {
+                if child is NSButton || child is NSScrollView {
+                    precondition(root.bounds.contains(child.convert(child.bounds,to:root)),"Reader controls must remain reachable on a small work area")
+                }
+                checkConstrainedControls(child)
+            }
+        }
+        checkConstrainedControls(root)
+    }
+}
+constrainedBubble.close(immediately:true)
+print("PASS reader and page controls remain on screen in constrained work areas")
+
+// Exercise the real coordinator tick order, not just the reader in isolation.
+// Dedicated files/defaults keep these checks away from the user's daily history.
+let integrationOutput=output.appendingPathComponent("bible-integration-\(UUID().uuidString)")
+let integrationStore=DailyBibleStore(file:integrationOutput.appendingPathComponent("daily.json"))
+let integrationPreferences=PreferenceStore(file:integrationOutput.appendingPathComponent("preferences.json"))
+let defaultsName="sombrero.bible-tests.\(UUID().uuidString)"
+let integrationDefaults=UserDefaults(suiteName:defaultsName)!
+defer { integrationDefaults.removePersistentDomain(forName:defaultsName) }
+let integrationCalendar=DailyBible.calendar()
+let integrationDate=integrationCalendar.date(from:DateComponents(year:2026,month:11,day:21,hour:22))!
+var integrationDaily=DailyBible()
+let longestIndex=bibleCatalog.verses.firstIndex { $0.id == longest.id }!
+var assignmentRolls=[0.0,(Double(longestIndex)+0.5)/Double(bibleCatalog.verses.count)].makeIterator()
+integrationDaily.reconcile(at:integrationDate,catalog:bibleCatalog,calendar:integrationCalendar) { assignmentRolls.next()! }
+integrationStore.save(integrationDaily)
+let coordinator=PetCoordinator(store:integrationPreferences,dailyBibleStore:integrationStore,
+                               defaults:integrationDefaults,currentDate:{ integrationDate })
+defer { coordinator.stop() }
+let dailyVerseID=integrationDaily.today(at:integrationDate)!.verseID
+var uptime=100.0
+func stepCoordinator(_ seconds: Double) {
+    uptime+=seconds
+    coordinator.tick(at:uptime)
+}
+func completeReader() {
+    while coordinator.bubble.biblePageIndex<coordinator.bubble.biblePageTexts.count-1 {
+        coordinator.bubble.changeBiblePage(by:1)
+    }
+    stepCoordinator(0.1)
+}
+coordinator.bubble.setBibleAvailable(true); coordinator.bubble.show(); coordinator.bubble.advance(by:1)
+let originalMenuSize=coordinator.bubble.panel.frame.size
+coordinator.readDailyBible()
+precondition(!coordinator.bubble.wantsOpen && coordinator.bubble.isVisible,"Existing menu must animate closed")
+precondition(coordinator.bubble.panel.frame.size == originalMenuSize,"Closing menu must retain its original drawing size")
+precondition(coordinator.controller.state == .grabBible)
+coordinator.tick(at:uptime); stepCoordinator(1)
+precondition(!coordinator.bubble.isVisible && coordinator.bubble.bibleVerseID == nil,"Bubble must stay hidden during 7a")
+precondition(coordinator.bibleSession?.hasPresentedContent == false,"7a must not count as displayed scripture")
+stepCoordinator(Double(assets.frameCounts[.grabBible]!)/Double(PetConstants.Animation.drawingFPS)-1+0.01)
+precondition(coordinator.controller.state == .bibleIdle)
+precondition(coordinator.bubble.wantsOpen && !coordinator.bubble.isExpanded,"Reader must animate open only after 7a finishes")
+precondition(coordinator.bibleSession?.hasPresentedContent == false)
+stepCoordinator(1)
+precondition(coordinator.bubble.presentedBibleVerseID == dailyVerseID)
+precondition(coordinator.bibleSession?.hasPresentedContent == true)
+precondition(coordinator.dailyBible.today(at:integrationDate)?.isRead == false)
+coordinator.bubble.onAction?(.close)
+precondition(coordinator.bibleSession == nil && !coordinator.controller.reading)
+precondition(integrationStore.load().today(at:integrationDate)?.isRead == false,"Cancel preserves the unread badge")
+stepCoordinator(Double(assets.frameCounts[.bibleIdle]!)/Double(PetConstants.Animation.drawingFPS))
+precondition(coordinator.controller.state == .stowBible)
+coordinator.readDailyBible()
+precondition(coordinator.controller.pending == [.bibleRead],"Reopening during 7c retains the new request")
+stepCoordinator(Double(assets.frameCounts[.stowBible]!)/Double(PetConstants.Animation.drawingFPS))
+precondition(coordinator.controller.state == .grabBible)
+stepCoordinator(Double(assets.frameCounts[.grabBible]!)/Double(PetConstants.Animation.drawingFPS))
+stepCoordinator(1)
+precondition(coordinator.bubble.presentedBibleVerseID == dailyVerseID)
+completeReader()
+precondition(integrationStore.load().today(at:integrationDate)?.isRead == true,"Displaying the last page persists the daily read state")
+precondition(coordinator.controller.reading && coordinator.bubble.wantsOpen,"Final page stays open until dismissed")
+coordinator.toggleBubble()
+precondition(!coordinator.controller.reading && coordinator.bibleSession == nil)
+
+// A preview is independent of the daily assignment, even when completed.
+integrationStore.save(integrationDaily)
+let previewCoordinator=PetCoordinator(store:integrationPreferences,dailyBibleStore:integrationStore,
+                                      defaults:integrationDefaults,currentDate:{ integrationDate })
+previewCoordinator.previewBibleReader()
+previewCoordinator.tick(at:100); previewCoordinator.tick(at:104); previewCoordinator.tick(at:105)
+precondition(previewCoordinator.bubble.presentedBibleVerseID != nil)
+while previewCoordinator.bubble.biblePageIndex<previewCoordinator.bubble.biblePageTexts.count-1 {
+    previewCoordinator.bubble.changeBiblePage(by:1)
+}
+previewCoordinator.tick(at:105.1); previewCoordinator.toggleBubble()
+precondition(previewCoordinator.dailyBible.today(at:integrationDate)?.isRead == false)
+previewCoordinator.previewBibleReader()
+previewCoordinator.readDailyBible()
+precondition(previewCoordinator.bibleSession?.localDate == integrationDaily.today(at:integrationDate)?.localDate,
+             "Read Today's Bible Verse replaces a preview with the actual daily assignment")
+previewCoordinator.recoverCompanion()
+precondition(previewCoordinator.bibleSession == nil && !previewCoordinator.controller.reading,"Recovery cancels the reader without completing it")
+previewCoordinator.readDailyBible()
+previewCoordinator.suspend()
+precondition(previewCoordinator.bibleSession == nil && !previewCoordinator.controller.reading)
+precondition(previewCoordinator.dailyBible.today(at:integrationDate)?.isRead == false)
+previewCoordinator.stop()
+print("PASS coordinator: menu closes during 7a, verse reopens at 7b, last-page completion, cancel/reopen, preview, and sleep")
+
+// Readiness is reconciled by wall time even when drawing is hidden and paused.
+let readinessFile=integrationOutput.appendingPathComponent("readiness.json")
+let readinessStore=DailyBibleStore(file:readinessFile)
+let pausedPreferences=PreferenceStore(file:integrationOutput.appendingPathComponent("paused.json"))
+var paused=PetPreferences(); paused.isVisible=false; paused.isPaused=true
+pausedPreferences.save(paused)
+var readinessDate=integrationCalendar.date(bySettingHour:8,minute:0,second:0,of:integrationDate)!
+var readinessDaily=DailyBible()
+readinessDaily.reconcile(at:readinessDate,catalog:bibleCatalog) { 1 }
+let originalAssignment=readinessDaily.today(at:readinessDate)!
+readinessStore.save(readinessDaily)
+let readinessCoordinator=PetCoordinator(store:pausedPreferences,dailyBibleStore:readinessStore,
+                                        defaults:integrationDefaults,currentDate:{ readinessDate })
+let readinessMenu=NSMenu()
+readinessCoordinator.menuWillOpen(readinessMenu)
+precondition(!readinessMenu.items.contains { $0.title == "Today's Bible Verse — Not Ready" || $0.title == "Read Today's Bible Verse" },
+             "An unavailable Bible action must be absent from the control panel")
+func hasBibleMenuButton(_ parent: NSView) -> Bool {
+    parent.subviews.contains { child in
+        (child as? NSButton)?.title == "Read Bible verse" || hasBibleMenuButton(child)
+    }
+}
+readinessCoordinator.bubble.show()
+precondition(!hasBibleMenuButton(readinessCoordinator.bubble.panel.contentView!),"An unavailable Bible action must be absent from the speech menu")
+let debugMenu=readinessMenu.items.first { $0.title == "Debug" }!.submenu!
+let overrideIndex=debugMenu.items.firstIndex { $0.title == "Bible Verse Always Available" }!
+precondition(debugMenu.items[overrideIndex].state == .off)
+debugMenu.performActionForItem(at:overrideIndex)
+precondition(hasBibleMenuButton(readinessCoordinator.bubble.panel.contentView!),"Debug override must reveal the speech action immediately")
+readinessCoordinator.menuWillOpen(readinessMenu)
+precondition(readinessMenu.items.contains { $0.title == "Read Today's Bible Verse" && $0.isEnabled })
+let enabledDebugMenu=readinessMenu.items.first { $0.title == "Debug" }!.submenu!
+let enabledOverrideIndex=enabledDebugMenu.items.firstIndex { $0.title == "Bible Verse Always Available" }!
+precondition(enabledDebugMenu.items[enabledOverrideIndex].state == .on)
+precondition(readinessStore.load().today(at:readinessDate) == originalAssignment,"Debug override must preserve the stored assignment and ready time")
+enabledDebugMenu.performActionForItem(at:enabledOverrideIndex)
+readinessCoordinator.menuWillOpen(readinessMenu)
+precondition(!readinessMenu.items.contains { $0.title == "Read Today's Bible Verse" })
+precondition(!hasBibleMenuButton(readinessCoordinator.bubble.panel.contentView!),"Turning off the override must restore the normal schedule")
+precondition(readinessStore.load().today(at:readinessDate) == originalAssignment)
+readinessCoordinator.menuDidClose(readinessMenu)
+readinessDate=integrationDate
+readinessCoordinator.menuWillOpen(readinessMenu)
+precondition(readinessMenu.items.first { $0.title == "Read Today's Bible Verse" }?.isEnabled == true)
+precondition(hasBibleMenuButton(readinessCoordinator.bubble.panel.contentView!))
+precondition(readinessStore.load().today(at:readinessDate) == originalAssignment,"Readiness must not reroll the day's verse or time")
+readinessCoordinator.menuDidClose(readinessMenu)
+readinessCoordinator.stop()
+print("PASS menu hides unavailable Bible action; Debug override reveals it without rerolling; natural readiness works while hidden/paused")
+
+// Startup checks never invoke real permission prompts during tests.
+precondition(StartupPermissions.required.map(\.name) == ["Camera"],"Real photo capture needs camera access, without unrelated grants")
+var allowedA=false, allowedB=false, requested: [String]=[], requestCallbacks: [()->Void]=[]
+let requirements=[
+    StartupPermission(name:"First",reason:"Test feature A",isGranted:{ allowedA },request:{ callback in requested.append("First"); requestCallbacks.append(callback) }),
+    StartupPermission(name:"Second",reason:"Test feature B",isGranted:{ allowedB },request:{ callback in requested.append("Second"); requestCallbacks.append(callback) }),
+    StartupPermission(name:"Already allowed",reason:"Test feature C",isGranted:{ true },request:{ _ in preconditionFailure("Granted permission must not prompt") })
+]
+let launchStore=PreferenceStore(file:integrationOutput.appendingPathComponent("launch.json"))
+var launchPreferences=PetPreferences(); launchPreferences.isVisible=false; launchPreferences.isPaused=true; launchPreferences.clickThrough=true
+launchStore.save(launchPreferences)
+integrationDefaults.set(integrationDate.addingTimeInterval(3600),forKey:"sombrero.returnDeadline")
+let launchCoordinator=PetCoordinator(store:launchStore,dailyBibleStore:integrationStore,
+                                     defaults:integrationDefaults,currentDate:{ integrationDate })
+let permissionGate=StartupPermissions(requirements:requirements,showsWindow:false)
+var launches=0
+permissionGate.recheck() // A recheck before begin must not consume the startup.
+permissionGate.begin { launches+=1; launchCoordinator.launchFromTimeout() }
+precondition(requested == ["First"] && launches == 0 && launchCoordinator.controller.state == .timeout)
+requestCallbacks.removeFirst()()
+precondition(requested == ["First","Second"],"Request every missing grant, even if an earlier request is denied")
+requestCallbacks.removeFirst()()
+precondition(launches == 0 && permissionGate.missing.count == 2,"Request completion is not authorization")
+allowedA=true; permissionGate.recheck()
+precondition(launches == 0 && launchCoordinator.controller.state == .timeout,"Do not animate with a missing required grant")
+allowedB=true; permissionGate.recheck(); permissionGate.recheck()
+precondition(launches == 1 && permissionGate.isFinished)
+precondition([DuckState.peek,.windowPeek].contains(launchCoordinator.controller.state),"Launch must use an exit from timeout")
+precondition(integrationDefaults.object(forKey:"sombrero.returnDeadline") == nil)
+precondition(launchStore.load().isVisible && launchStore.load().isPaused,"Launching recalls the pet and retains Pause Motion")
+let launchState=launchCoordinator.controller.state
+let entryDuration=Double(assets.frameCounts[launchState]!)/Double(PetConstants.Animation.drawingFPS)
+launchCoordinator.tick(at:100); launchCoordinator.tick(at:100+entryDuration+0.01)
+precondition(![DuckState.peek,.windowPeek].contains(launchCoordinator.controller.state),"Startup entrance must complete even with motion paused")
+let completedEntry=launchCoordinator.controller.generation
+launchCoordinator.tick(at:130); launchCoordinator.tick(at:140)
+precondition(launchCoordinator.controller.generation == completedEntry,"Pause Motion resumes after the entrance")
+launchCoordinator.stop()
+
+let noPermissionGate=StartupPermissions(requirements:[],showsWindow:false)
+var immediateLaunches=0
+noPermissionGate.begin { immediateLaunches+=1 }
+noPermissionGate.begin { immediateLaunches+=1 }
+precondition(immediateLaunches == 1,"No required grants means immediate startup without an unnecessary prompt")
+allowedA=false; allowedB=false; requested=[]; requestCallbacks=[]
+let canceledGate=StartupPermissions(requirements:requirements,showsWindow:false)
+canceledGate.begin { preconditionFailure("Canceled startup must not launch") }
+canceledGate.cancel(); requestCallbacks.removeFirst()()
+precondition(requested == ["First"],"Cancel must stop pending authorization requests")
+print("PASS startup: request all missing grants, verify actual status, launch once from timeout, retain pause, and cancel safely")
+
+let pausedReader=PetCoordinator(store:launchStore,dailyBibleStore:integrationStore,
+                                defaults:integrationDefaults,currentDate:{ integrationDate })
+pausedReader.readDailyBible()
+pausedReader.tick(at:100); pausedReader.tick(at:104); pausedReader.tick(at:105)
+precondition(pausedReader.bubble.presentedBibleVerseID != nil,"Pause Motion must not block explicit reader entry")
+let heldReaderGeneration=pausedReader.controller.generation
+pausedReader.tick(at:115)
+precondition(pausedReader.controller.generation == heldReaderGeneration,"Held reader pose stays paused")
+pausedReader.toggleBubble(); pausedReader.tick(at:116); pausedReader.tick(at:120.2)
+precondition(pausedReader.controller.state == .look,"Closing an explicit reader finishes its exit while idle motion is paused")
+precondition(launchStore.load().isPaused)
+pausedReader.stop()
+print("PASS paused interaction: explicit reader can enter/exit, while its held pose remains still")
+
+}
+try MainActor.assumeIsolated { try runDesktopSmoke() }

@@ -207,8 +207,9 @@ final class SpriteTests: XCTestCase {
         let assets = SpriteLibrary()
         XCTAssertNil(assets.failure)
         let expected: [DuckState: Int] = [.look:14, .alternateLook:24, .wave:21, .standingPet:18, .sitDown:20,
-            .standUp:23, .sitting:3, .sittingLook:18, .sittingPet:9, .goodbye:27, .peek:23, .windowPeek:39]
-        XCTAssertEqual(assets.frames.count, 12); XCTAssertEqual(assets.missingStates.count, 10)
+            .standUp:23, .sitting:9, .sittingLook:18, .sittingPet:9, .goodbye:27, .peek:23, .windowPeek:39,
+            .grabCamera:14, .cameraIdle:12, .grabBible:17, .bibleIdle:14, .stowBible:11]
+        XCTAssertEqual(assets.frames.count, 17); XCTAssertEqual(assets.missingStates.count, 5)
         XCTAssertEqual(assets.speechFrames.count, 5)
         for (state, count) in expected {
             XCTAssertEqual(assets.frameCounts[state], count)

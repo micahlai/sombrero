@@ -89,6 +89,17 @@ public final class SpriteLibrary {
         let result = clip.reduce(CGRect.null) { $0.union($1.occupiedBounds) }
         return result.isNull ? nil : result
     }
+    /// Stable conversation envelope; smoke is excluded and both 4b facings fit.
+    public func conversationBounds() -> CGRect? {
+        var envelope=CGRect.null
+        for state in DuckState.allCases where state != .goodbye && state != .timeout {
+            if let rect=occupiedBounds(state:state) {
+                envelope=envelope.union(rect)
+                if state == .peek { envelope=envelope.union(CGRect(x:1-rect.maxX,y:rect.minY,width:rect.width,height:rect.height)) }
+            }
+        }
+        return envelope.isNull ? nil : envelope
+    }
     private static func load(_ url: URL) throws -> CGImage {
         guard let source = CGImageSourceCreateWithURL(url as CFURL, nil),
               let image = CGImageSourceCreateImageAtIndex(source, 0, nil), image.width > 0, image.height > 0 else {

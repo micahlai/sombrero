@@ -54,6 +54,7 @@ public struct DuckController {
     public var showPhoto = false
     public var takingPhoto = false
     public var reading = false
+    private var cameraCanceled = false
     private var hasEvent: Bool { goodbye || !pending.isEmpty }
     public init() {}
 
@@ -64,7 +65,15 @@ public struct DuckController {
         resolveImmediate()
     }
     public mutating func request(_ request: DuckRequest) {
-        guard active != request, !pending.contains(request), pending.count < PetConstants.Animation.maximumQueuedRequests else { return }
+        if request == .photoTake { cameraCanceled=false }
+        if active == request {
+            if request == .bibleRead, [.grabBible,.bibleIdle].contains(state) { reading=true; return }
+            if request == .photoShow, [.grabPhoto,.showPhoto,.showingPhoto].contains(state) { showPhoto=true; return }
+            if request == .photoTake, [.grabCamera,.cameraIdle].contains(state) { takingPhoto=true; return }
+        }
+        let reopening=active == request && ((request == .bibleRead && state == .stowBible) ||
+            (request == .photoShow && state == .putPhotoAway) || (request == .photoTake && state == .deliverPhoto))
+        guard (active != request || reopening), !pending.contains(request), pending.count < PetConstants.Animation.maximumQueuedRequests else { return }
         pending.append(request)
         switch request {
         case .photoShow: showPhoto = true
@@ -74,12 +83,22 @@ public struct DuckController {
         resolveImmediate()
     }
     public mutating func dismiss() {
+        if takingPhoto { cameraCanceled=true }
         pending.removeAll(); goodbye = true; pet = false
         showPhoto = false; takingPhoto = false; reading = false
         resolveImmediate()
     }
     public mutating func finishRoutine() {
         showPhoto = false; takingPhoto = false; reading = false
+    }
+    public mutating func cancel(_ request: DuckRequest) {
+        pending.removeAll { $0 == request }
+        switch request {
+        case .photoShow: showPhoto=false
+        case .photoTake: takingPhoto=false; cameraCanceled=true
+        case .bibleRead: reading=false
+        }
+        resolveImmediate()
     }
     public mutating func recall(windowAvailable: Bool = false, sideAvailable: Bool = false, sample: () -> Double = { Double.random(in: 0..<1) }) {
         guard state == .timeout else { return }
@@ -107,6 +126,7 @@ public struct DuckController {
         reading = [.grabBible, .bibleIdle].contains(state)
     }
     private mutating func enter(_ next: DuckState) {
+        if state == .cameraIdle, next == .look { active=nil }
         if [.putPhotoAway, .deliverPhoto, .stowBible].contains(state), next == .look { active = nil }
         if next != state { petCycleCompleted = false }
         state = next; generation += 1
@@ -155,7 +175,7 @@ public struct DuckController {
         case .standingPet: next = .standingPet
         case .sittingPet: next = .sittingPet
         case .showingPhoto: next = showPhoto ? .showingPhoto : .putPhotoAway
-        case .cameraIdle: next = takingPhoto ? .cameraIdle : .deliverPhoto
+        case .cameraIdle: next = takingPhoto ? .cameraIdle : cameraCanceled ? .look : .deliverPhoto
         case .bibleIdle: next = reading ? .bibleIdle : .stowBible
         default:
             let edges = Self.defaults(from: state)

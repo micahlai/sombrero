@@ -1,0 +1,4 @@
+# Requires DNS and an inbound route to this machine. Do not enable until verified.
+sombrero.micahlai.com {
+    reverse_proxy 127.0.0.1:8765
+}

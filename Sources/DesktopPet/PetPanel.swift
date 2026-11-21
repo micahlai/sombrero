@@ -23,6 +23,10 @@ final class SpriteView: NSView {
     var sprite: SpriteLibrary.Frame?
     var state: DuckState = .look
     var flipsHorizontally = false
+    var hasUnreadVerse = false
+    var hasUnreadMessages = false
+    private var hasNotifications: Bool { hasUnreadVerse || hasUnreadMessages }
+    var badgeBounds: CGRect?
     private var pointerOrigin: NSPoint?
     private var windowOrigin: NSPoint?
     private var didDrag = false
@@ -31,6 +35,7 @@ final class SpriteView: NSView {
         return NSRect(x: bounds.width * rect.x, y: bounds.height * rect.y, width: bounds.width * rect.width, height: bounds.height * rect.height)
     }
     func containsInteractivePoint(_ point: NSPoint) -> Bool {
+        if hasNotifications && badgeRect.contains(point) { return true }
         if let sprite {
             let x = point.x / bounds.width
             return sprite.contains(x: flipsHorizontally ? 1-x : x, y: point.y / bounds.height)
@@ -40,6 +45,13 @@ final class SpriteView: NSView {
     override var acceptsFirstResponder: Bool { false }
     override var mouseDownCanMoveWindow: Bool { false }
     override var isOpaque: Bool { false }
+    private var badgeRect: NSRect {
+        let fallback=PetConstants.Geometry.placeholderBounds
+        let painted=badgeBounds ?? sprite?.occupiedBounds ?? CGRect(x:fallback.x,y:fallback.y,width:fallback.width,height:fallback.height)
+        let size=PetConstants.Appearance.badgeSize
+        let x=flipsHorizontally ? 1-painted.minX : painted.maxX
+        return NSRect(x:min(bounds.width-size,max(0,x*bounds.width-size/2)),y:min(bounds.height-size,max(0,painted.maxY*bounds.height-size/2)),width:size,height:size)
+    }
 
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
@@ -58,6 +70,13 @@ final class SpriteView: NSView {
             let attributes: [NSAttributedString.Key: Any] = [.font: NSFont.systemFont(ofSize: PetConstants.Appearance.placeholderLabelSize, weight: .semibold), .foregroundColor: NSColor.white]
             let size = text.size(withAttributes: attributes)
             text.draw(at: NSPoint(x: interactiveRect.midX - size.width / 2, y: interactiveRect.midY - size.height / 2), withAttributes: attributes)
+        }
+        if hasNotifications {
+            NSColor.systemRed.setFill(); NSBezierPath(ovalIn:badgeRect).fill()
+            let mark="!" as NSString
+            let attributes: [NSAttributedString.Key:Any]=[.font:NSFont.systemFont(ofSize:10,weight:.bold),.foregroundColor:NSColor.white]
+            let size=mark.size(withAttributes:attributes)
+            mark.draw(at:NSPoint(x:badgeRect.midX-size.width/2,y:badgeRect.midY-size.height/2),withAttributes:attributes)
         }
     }
 

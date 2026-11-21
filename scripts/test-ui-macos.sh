@@ -13,8 +13,9 @@ else
     module_path="$bin_dir/Modules"
     objects=("$bin_dir"/PetCore.build/*.swift.o "$bin_dir"/PetAssets.build/*.swift.o)
 fi
+host_sources=(Sources/DesktopPet/*.swift)
+host_sources=(${host_sources:#Sources/DesktopPet/main.swift})
 swiftc -I "$module_path" Tests/DesktopPetSmoke/main.swift \
-    Sources/DesktopPet/PetCoordinator.swift Sources/DesktopPet/PetPanel.swift \
-    Sources/DesktopPet/PreferenceStore.swift Sources/DesktopPet/SpeechBubble.swift Sources/DesktopPet/WindowTracker.swift \
+    "${host_sources[@]}" \
     "${objects[@]}" -o "$bin_dir/ui-smoke"
 "$bin_dir/ui-smoke"

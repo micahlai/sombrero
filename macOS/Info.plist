@@ -13,4 +13,9 @@
     <key>LSUIElement</key><true/>
     <key>NSPrincipalClass</key><string>NSApplication</string>
     <key>NSSupportsAutomaticGraphicsSwitching</key><true/>
+    <key>NSCameraUsageDescription</key><string>sombrero uses your camera when you choose to take a photo for a message. Photos are sent only when you press Send.</string>
+    <key>NSCameraUseContinuityCameraDeviceType</key><true/>
+    <key>NSAppTransportSecurity</key><dict>
+        <key>NSAllowsLocalNetworking</key><true/>
+    </dict>
 </dict></plist>

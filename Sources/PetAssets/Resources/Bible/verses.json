@@ -1,0 +1,1012 @@
+{
+  "schemaVersion": 1,
+  "translation": "World English Bible",
+  "abbreviation": "WEB",
+  "source": "https://ebible.org/details.php?id=engwebp",
+  "downloadURL": "https://ebible.org/Scriptures/engwebp_vpl.zip",
+  "sourceArchiveSHA256": "f1e570fecb8ab80cf6d9e764172eb06e078b179aae3159a131ab98424267c3e6",
+  "retrievedAtUTC": "2026-11-21T15:19:43.651236+00:00",
+  "license": "Public domain. World English Bible is a trademark of eBible.org. Text extracted verbatim; no generated or paraphrased scripture.",
+  "verses": [
+    {
+      "id": "verse-001",
+      "reference": "Genesis 1:1",
+      "book": "Genesis",
+      "chapter": 1,
+      "verseStart": 1,
+      "verseEnd": 1,
+      "topic": "Creation",
+      "text": "In the beginning, God created the heavens and the earth."
+    },
+    {
+      "id": "verse-002",
+      "reference": "Numbers 6:24-26",
+      "book": "Numbers",
+      "chapter": 6,
+      "verseStart": 24,
+      "verseEnd": 26,
+      "topic": "Blessing",
+      "text": "‘The LORD bless you, and keep you.\n\nThe LORD make his face to shine on you, and be gracious to you.\n\nThe LORD lift up his face toward you, and give you peace.’"
+    },
+    {
+      "id": "verse-003",
+      "reference": "Deuteronomy 6:5",
+      "book": "Deuteronomy",
+      "chapter": 6,
+      "verseStart": 5,
+      "verseEnd": 5,
+      "topic": "Love God",
+      "text": "You shall love the LORD your God with all your heart, with all your soul, and with all your might."
+    },
+    {
+      "id": "verse-004",
+      "reference": "Deuteronomy 31:6",
+      "book": "Deuteronomy",
+      "chapter": 31,
+      "verseStart": 6,
+      "verseEnd": 6,
+      "topic": "Courage",
+      "text": "Be strong and courageous. Don’t be afraid or scared of them, for the LORD your God himself is who goes with you. He will not fail you nor forsake you.”"
+    },
+    {
+      "id": "verse-005",
+      "reference": "Joshua 1:9",
+      "book": "Joshua",
+      "chapter": 1,
+      "verseStart": 9,
+      "verseEnd": 9,
+      "topic": "Strength",
+      "text": "Haven’t I commanded you? Be strong and courageous. Don’t be afraid. Don’t be dismayed, for the LORD your God is with you wherever you go.”"
+    },
+    {
+      "id": "verse-006",
+      "reference": "Joshua 24:15",
+      "book": "Joshua",
+      "chapter": 24,
+      "verseStart": 15,
+      "verseEnd": 15,
+      "topic": "Serving God",
+      "text": "If it seems evil to you to serve the LORD, choose today whom you will serve; whether the gods which your fathers served that were beyond the River, or the gods of the Amorites, in whose land you dwell; but as for me and my house, we will serve the LORD.”"
+    },
+    {
+      "id": "verse-007",
+      "reference": "1 Samuel 16:7",
+      "book": "1 Samuel",
+      "chapter": 16,
+      "verseStart": 7,
+      "verseEnd": 7,
+      "topic": "The heart",
+      "text": "But the LORD said to Samuel, “Don’t look on his face, or on the height of his stature, because I have rejected him; for I don’t see as man sees. For man looks at the outward appearance, but the LORD looks at the heart.”"
+    },
+    {
+      "id": "verse-008",
+      "reference": "2 Chronicles 7:14",
+      "book": "2 Chronicles",
+      "chapter": 7,
+      "verseStart": 14,
+      "verseEnd": 14,
+      "topic": "Humility and prayer",
+      "text": "if my people who are called by my name will humble themselves, pray, seek my face, and turn from their wicked ways, then I will hear from heaven, will forgive their sin, and will heal their land."
+    },
+    {
+      "id": "verse-009",
+      "reference": "Nehemiah 8:10",
+      "book": "Nehemiah",
+      "chapter": 8,
+      "verseStart": 10,
+      "verseEnd": 10,
+      "topic": "Joy",
+      "text": "Then he said to them, “Go your way. Eat the fat, drink the sweet, and send portions to him for whom nothing is prepared, for today is holy to our Lord. Don’t be grieved, for the joy of the LORD is your strength.”"
+    },
+    {
+      "id": "verse-010",
+      "reference": "Job 19:25",
+      "book": "Job",
+      "chapter": 19,
+      "verseStart": 25,
+      "verseEnd": 25,
+      "topic": "Redeemer",
+      "text": "But as for me, I know that my Redeemer lives. In the end, he will stand upon the earth."
+    },
+    {
+      "id": "verse-011",
+      "reference": "Psalm 16:8",
+      "book": "Psalm",
+      "chapter": 16,
+      "verseStart": 8,
+      "verseEnd": 8,
+      "topic": "Steadfastness",
+      "text": "I have set the LORD always before me. Because he is at my right hand, I shall not be moved."
+    },
+    {
+      "id": "verse-012",
+      "reference": "Psalm 19:14",
+      "book": "Psalm",
+      "chapter": 19,
+      "verseStart": 14,
+      "verseEnd": 14,
+      "topic": "Words and meditation",
+      "text": "Let the words of my mouth and the meditation of my heart be acceptable in your sight, LORD, my rock, and my redeemer."
+    },
+    {
+      "id": "verse-013",
+      "reference": "Psalm 23:1",
+      "book": "Psalm",
+      "chapter": 23,
+      "verseStart": 1,
+      "verseEnd": 1,
+      "topic": "Shepherd",
+      "text": "A Psalm by David. The LORD is my shepherd; I shall lack nothing."
+    },
+    {
+      "id": "verse-014",
+      "reference": "Psalm 27:1",
+      "book": "Psalm",
+      "chapter": 27,
+      "verseStart": 1,
+      "verseEnd": 1,
+      "topic": "Confidence",
+      "text": "By David. The LORD is my light and my salvation. Whom shall I fear? The LORD is the strength of my life. Of whom shall I be afraid?"
+    },
+    {
+      "id": "verse-015",
+      "reference": "Psalm 34:8",
+      "book": "Psalm",
+      "chapter": 34,
+      "verseStart": 8,
+      "verseEnd": 8,
+      "topic": "God's goodness",
+      "text": "Oh taste and see that the LORD is good. Blessed is the man who takes refuge in him."
+    },
+    {
+      "id": "verse-016",
+      "reference": "Psalm 34:18",
+      "book": "Psalm",
+      "chapter": 34,
+      "verseStart": 18,
+      "verseEnd": 18,
+      "topic": "Comfort",
+      "text": "The LORD is near to those who have a broken heart, and saves those who have a crushed spirit."
+    },
+    {
+      "id": "verse-017",
+      "reference": "Psalm 37:4",
+      "book": "Psalm",
+      "chapter": 37,
+      "verseStart": 4,
+      "verseEnd": 4,
+      "topic": "Delight in God",
+      "text": "Also delight yourself in the LORD, and he will give you the desires of your heart."
+    },
+    {
+      "id": "verse-018",
+      "reference": "Psalm 46:1",
+      "book": "Psalm",
+      "chapter": 46,
+      "verseStart": 1,
+      "verseEnd": 1,
+      "topic": "Refuge",
+      "text": "For the Chief Musician. By the sons of Korah. According to Alamoth. God is our refuge and strength, a very present help in trouble."
+    },
+    {
+      "id": "verse-019",
+      "reference": "Psalm 46:10",
+      "book": "Psalm",
+      "chapter": 46,
+      "verseStart": 10,
+      "verseEnd": 10,
+      "topic": "Stillness",
+      "text": "“Be still, and know that I am God. I will be exalted among the nations. I will be exalted on the earth.”"
+    },
+    {
+      "id": "verse-020",
+      "reference": "Psalm 51:10",
+      "book": "Psalm",
+      "chapter": 51,
+      "verseStart": 10,
+      "verseEnd": 10,
+      "topic": "A clean heart",
+      "text": "Create in me a clean heart, O God. Renew a right spirit within me."
+    },
+    {
+      "id": "verse-021",
+      "reference": "Psalm 55:22",
+      "book": "Psalm",
+      "chapter": 55,
+      "verseStart": 22,
+      "verseEnd": 22,
+      "topic": "Burdens",
+      "text": "Cast your burden on the LORD and he will sustain you. He will never allow the righteous to be moved."
+    },
+    {
+      "id": "verse-022",
+      "reference": "Psalm 56:3",
+      "book": "Psalm",
+      "chapter": 56,
+      "verseStart": 3,
+      "verseEnd": 3,
+      "topic": "Trust",
+      "text": "When I am afraid, I will put my trust in you."
+    },
+    {
+      "id": "verse-023",
+      "reference": "Psalm 90:12",
+      "book": "Psalm",
+      "chapter": 90,
+      "verseStart": 12,
+      "verseEnd": 12,
+      "topic": "Wisdom",
+      "text": "So teach us to count our days, that we may gain a heart of wisdom."
+    },
+    {
+      "id": "verse-024",
+      "reference": "Psalm 100:4",
+      "book": "Psalm",
+      "chapter": 100,
+      "verseStart": 4,
+      "verseEnd": 4,
+      "topic": "Thanksgiving",
+      "text": "Enter into his gates with thanksgiving, and into his courts with praise. Give thanks to him, and bless his name."
+    },
+    {
+      "id": "verse-025",
+      "reference": "Psalm 103:12",
+      "book": "Psalm",
+      "chapter": 103,
+      "verseStart": 12,
+      "verseEnd": 12,
+      "topic": "Forgiveness",
+      "text": "As far as the east is from the west, so far has he removed our transgressions from us."
+    },
+    {
+      "id": "verse-026",
+      "reference": "Psalm 118:24",
+      "book": "Psalm",
+      "chapter": 118,
+      "verseStart": 24,
+      "verseEnd": 24,
+      "topic": "Rejoicing",
+      "text": "This is the day that the LORD has made. We will rejoice and be glad in it!"
+    },
+    {
+      "id": "verse-027",
+      "reference": "Psalm 119:105",
+      "book": "Psalm",
+      "chapter": 119,
+      "verseStart": 105,
+      "verseEnd": 105,
+      "topic": "Guidance",
+      "text": "Your word is a lamp to my feet, and a light for my path."
+    },
+    {
+      "id": "verse-028",
+      "reference": "Psalm 121:1-2",
+      "book": "Psalm",
+      "chapter": 121,
+      "verseStart": 1,
+      "verseEnd": 2,
+      "topic": "Help",
+      "text": "A Song of Ascents. I will lift up my eyes to the hills. Where does my help come from?\n\nMy help comes from the LORD, who made heaven and earth."
+    },
+    {
+      "id": "verse-029",
+      "reference": "Psalm 139:14",
+      "book": "Psalm",
+      "chapter": 139,
+      "verseStart": 14,
+      "verseEnd": 14,
+      "topic": "Wonderfully made",
+      "text": "I will give thanks to you, for I am fearfully and wonderfully made. Your works are wonderful. My soul knows that very well."
+    },
+    {
+      "id": "verse-030",
+      "reference": "Psalm 139:23-24",
+      "book": "Psalm",
+      "chapter": 139,
+      "verseStart": 23,
+      "verseEnd": 24,
+      "topic": "Examination",
+      "text": "Search me, God, and know my heart. Try me, and know my thoughts.\n\nSee if there is any wicked way in me, and lead me in the everlasting way."
+    },
+    {
+      "id": "verse-031",
+      "reference": "Proverbs 3:5-6",
+      "book": "Proverbs",
+      "chapter": 3,
+      "verseStart": 5,
+      "verseEnd": 6,
+      "topic": "Trust and direction",
+      "text": "Trust in the LORD with all your heart, and don’t lean on your own understanding.\n\nIn all your ways acknowledge him, and he will make your paths straight."
+    },
+    {
+      "id": "verse-032",
+      "reference": "Proverbs 4:23",
+      "book": "Proverbs",
+      "chapter": 4,
+      "verseStart": 23,
+      "verseEnd": 23,
+      "topic": "Guarding the heart",
+      "text": "Keep your heart with all diligence, for out of it is the wellspring of life."
+    },
+    {
+      "id": "verse-033",
+      "reference": "Proverbs 9:10",
+      "book": "Proverbs",
+      "chapter": 9,
+      "verseStart": 10,
+      "verseEnd": 10,
+      "topic": "Wisdom",
+      "text": "The fear of the LORD is the beginning of wisdom. The knowledge of the Holy One is understanding."
+    },
+    {
+      "id": "verse-034",
+      "reference": "Proverbs 16:3",
+      "book": "Proverbs",
+      "chapter": 16,
+      "verseStart": 3,
+      "verseEnd": 3,
+      "topic": "Commitment",
+      "text": "Commit your deeds to the LORD, and your plans shall succeed."
+    },
+    {
+      "id": "verse-035",
+      "reference": "Proverbs 17:17",
+      "book": "Proverbs",
+      "chapter": 17,
+      "verseStart": 17,
+      "verseEnd": 17,
+      "topic": "Friendship",
+      "text": "A friend loves at all times; and a brother is born for adversity."
+    },
+    {
+      "id": "verse-036",
+      "reference": "Proverbs 18:10",
+      "book": "Proverbs",
+      "chapter": 18,
+      "verseStart": 10,
+      "verseEnd": 10,
+      "topic": "Refuge",
+      "text": "The LORD’s name is a strong tower: the righteous run to him, and are safe."
+    },
+    {
+      "id": "verse-037",
+      "reference": "Proverbs 22:6",
+      "book": "Proverbs",
+      "chapter": 22,
+      "verseStart": 6,
+      "verseEnd": 6,
+      "topic": "Teaching children",
+      "text": "Train up a child in the way he should go, and when he is old he will not depart from it."
+    },
+    {
+      "id": "verse-038",
+      "reference": "Proverbs 27:17",
+      "book": "Proverbs",
+      "chapter": 27,
+      "verseStart": 17,
+      "verseEnd": 17,
+      "topic": "Encouragement",
+      "text": "Iron sharpens iron; so a man sharpens his friend’s countenance."
+    },
+    {
+      "id": "verse-039",
+      "reference": "Ecclesiastes 3:1",
+      "book": "Ecclesiastes",
+      "chapter": 3,
+      "verseStart": 1,
+      "verseEnd": 1,
+      "topic": "Seasons",
+      "text": "For everything there is a season, and a time for every purpose under heaven:"
+    },
+    {
+      "id": "verse-040",
+      "reference": "Isaiah 9:6",
+      "book": "Isaiah",
+      "chapter": 9,
+      "verseStart": 6,
+      "verseEnd": 6,
+      "topic": "The promised Son",
+      "text": "For a child is born to us. A son is given to us; and the government will be on his shoulders. His name will be called Wonderful Counselor, Mighty God, Everlasting Father, Prince of Peace."
+    },
+    {
+      "id": "verse-041",
+      "reference": "Isaiah 26:3",
+      "book": "Isaiah",
+      "chapter": 26,
+      "verseStart": 3,
+      "verseEnd": 3,
+      "topic": "Peace",
+      "text": "You will keep whoever’s mind is steadfast in perfect peace, because he trusts in you."
+    },
+    {
+      "id": "verse-042",
+      "reference": "Isaiah 40:31",
+      "book": "Isaiah",
+      "chapter": 40,
+      "verseStart": 31,
+      "verseEnd": 31,
+      "topic": "Renewed strength",
+      "text": "but those who wait for the LORD will renew their strength. They will mount up with wings like eagles. They will run, and not be weary. They will walk, and not faint."
+    },
+    {
+      "id": "verse-043",
+      "reference": "Isaiah 41:10",
+      "book": "Isaiah",
+      "chapter": 41,
+      "verseStart": 10,
+      "verseEnd": 10,
+      "topic": "Fearlessness",
+      "text": "Don’t you be afraid, for I am with you. Don’t be dismayed, for I am your God. I will strengthen you. Yes, I will help you. Yes, I will uphold you with the right hand of my righteousness."
+    },
+    {
+      "id": "verse-044",
+      "reference": "Isaiah 43:2",
+      "book": "Isaiah",
+      "chapter": 43,
+      "verseStart": 2,
+      "verseEnd": 2,
+      "topic": "God's presence",
+      "text": "When you pass through the waters, I will be with you, and through the rivers, they will not overflow you. When you walk through the fire, you will not be burned, and flame will not scorch you."
+    },
+    {
+      "id": "verse-045",
+      "reference": "Isaiah 53:5",
+      "book": "Isaiah",
+      "chapter": 53,
+      "verseStart": 5,
+      "verseEnd": 5,
+      "topic": "Healing and redemption",
+      "text": "But he was pierced for our transgressions. He was crushed for our iniquities. The punishment that brought our peace was on him; and by his wounds we are healed."
+    },
+    {
+      "id": "verse-046",
+      "reference": "Isaiah 55:8-9",
+      "book": "Isaiah",
+      "chapter": 55,
+      "verseStart": 8,
+      "verseEnd": 9,
+      "topic": "God's ways",
+      "text": "“For my thoughts are not your thoughts, and your ways are not my ways,” says the LORD.\n\n“For as the heavens are higher than the earth, so are my ways higher than your ways, and my thoughts than your thoughts."
+    },
+    {
+      "id": "verse-047",
+      "reference": "Jeremiah 29:11",
+      "book": "Jeremiah",
+      "chapter": 29,
+      "verseStart": 11,
+      "verseEnd": 11,
+      "topic": "Hope in exile",
+      "text": "For I know the thoughts that I think toward you,” says the LORD, “thoughts of peace, and not of evil, to give you hope and a future."
+    },
+    {
+      "id": "verse-048",
+      "reference": "Jeremiah 33:3",
+      "book": "Jeremiah",
+      "chapter": 33,
+      "verseStart": 3,
+      "verseEnd": 3,
+      "topic": "Calling on God",
+      "text": "‘Call to me, and I will answer you, and will show you great and difficult things, which you don’t know.’"
+    },
+    {
+      "id": "verse-049",
+      "reference": "Lamentations 3:22-23",
+      "book": "Lamentations",
+      "chapter": 3,
+      "verseStart": 22,
+      "verseEnd": 23,
+      "topic": "Mercies",
+      "text": "It is because of the LORD’s loving kindnesses that we are not consumed, because his mercies don’t fail.\n\nThey are new every morning. Great is your faithfulness."
+    },
+    {
+      "id": "verse-050",
+      "reference": "Micah 6:8",
+      "book": "Micah",
+      "chapter": 6,
+      "verseStart": 8,
+      "verseEnd": 8,
+      "topic": "Justice and humility",
+      "text": "He has shown you, O man, what is good. What does the LORD require of you, but to act justly, to love mercy, and to walk humbly with your God?"
+    },
+    {
+      "id": "verse-051",
+      "reference": "Zephaniah 3:17",
+      "book": "Zephaniah",
+      "chapter": 3,
+      "verseStart": 17,
+      "verseEnd": 17,
+      "topic": "God's delight",
+      "text": "The LORD, your God, is among you, a mighty one who will save. He will rejoice over you with joy. He will calm you in his love. He will rejoice over you with singing."
+    },
+    {
+      "id": "verse-052",
+      "reference": "Matthew 5:14-16",
+      "book": "Matthew",
+      "chapter": 5,
+      "verseStart": 14,
+      "verseEnd": 16,
+      "topic": "Light",
+      "text": "“You are the light of the world. A city located on a hill can’t be hidden.\n\nNeither do you light a lamp and put it under a measuring basket, but on a stand; and it shines to all who are in the house.\n\nEven so, let your light shine before men, that they may see your good works and glorify your Father who is in heaven."
+    },
+    {
+      "id": "verse-053",
+      "reference": "Matthew 6:33",
+      "book": "Matthew",
+      "chapter": 6,
+      "verseStart": 33,
+      "verseEnd": 33,
+      "topic": "Priorities",
+      "text": "But seek first God’s Kingdom and his righteousness; and all these things will be given to you as well."
+    },
+    {
+      "id": "verse-054",
+      "reference": "Matthew 7:7",
+      "book": "Matthew",
+      "chapter": 7,
+      "verseStart": 7,
+      "verseEnd": 7,
+      "topic": "Prayer",
+      "text": "“Ask, and it will be given you. Seek, and you will find. Knock, and it will be opened for you."
+    },
+    {
+      "id": "verse-055",
+      "reference": "Matthew 11:28",
+      "book": "Matthew",
+      "chapter": 11,
+      "verseStart": 28,
+      "verseEnd": 28,
+      "topic": "Rest",
+      "text": "“Come to me, all you who labor and are heavily burdened, and I will give you rest."
+    },
+    {
+      "id": "verse-056",
+      "reference": "Matthew 22:37-39",
+      "book": "Matthew",
+      "chapter": 22,
+      "verseStart": 37,
+      "verseEnd": 39,
+      "topic": "Love God and neighbor",
+      "text": "Jesus said to him, “‘You shall love the Lord your God with all your heart, with all your soul, and with all your mind.’\n\nThis is the first and great commandment.\n\nA second likewise is this, ‘You shall love your neighbor as yourself.’"
+    },
+    {
+      "id": "verse-057",
+      "reference": "Matthew 28:19-20",
+      "book": "Matthew",
+      "chapter": 28,
+      "verseStart": 19,
+      "verseEnd": 20,
+      "topic": "Discipleship",
+      "text": "Go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit,\n\nteaching them to observe all things that I commanded you. Behold, I am with you always, even to the end of the age.” Amen."
+    },
+    {
+      "id": "verse-058",
+      "reference": "Mark 10:45",
+      "book": "Mark",
+      "chapter": 10,
+      "verseStart": 45,
+      "verseEnd": 45,
+      "topic": "Service",
+      "text": "For the Son of Man also came not to be served but to serve, and to give his life as a ransom for many.”"
+    },
+    {
+      "id": "verse-059",
+      "reference": "Luke 1:37",
+      "book": "Luke",
+      "chapter": 1,
+      "verseStart": 37,
+      "verseEnd": 37,
+      "topic": "God's power",
+      "text": "For nothing spoken by God is impossible.”"
+    },
+    {
+      "id": "verse-060",
+      "reference": "Luke 6:31",
+      "book": "Luke",
+      "chapter": 6,
+      "verseStart": 31,
+      "verseEnd": 31,
+      "topic": "Kindness",
+      "text": "“As you would like people to do to you, do exactly so to them."
+    },
+    {
+      "id": "verse-061",
+      "reference": "John 1:1",
+      "book": "John",
+      "chapter": 1,
+      "verseStart": 1,
+      "verseEnd": 1,
+      "topic": "The Word",
+      "text": "In the beginning was the Word, and the Word was with God, and the Word was God."
+    },
+    {
+      "id": "verse-062",
+      "reference": "John 1:12",
+      "book": "John",
+      "chapter": 1,
+      "verseStart": 12,
+      "verseEnd": 12,
+      "topic": "Children of God",
+      "text": "But as many as received him, to them he gave the right to become God’s children, to those who believe in his name:"
+    },
+    {
+      "id": "verse-063",
+      "reference": "John 3:16",
+      "book": "John",
+      "chapter": 3,
+      "verseStart": 16,
+      "verseEnd": 16,
+      "topic": "God's love",
+      "text": "For God so loved the world, that he gave his only born Son, that whoever believes in him should not perish, but have eternal life."
+    },
+    {
+      "id": "verse-064",
+      "reference": "John 8:12",
+      "book": "John",
+      "chapter": 8,
+      "verseStart": 12,
+      "verseEnd": 12,
+      "topic": "Light of life",
+      "text": "Again, therefore, Jesus spoke to them, saying, “I am the light of the world. He who follows me will not walk in the darkness, but will have the light of life.”"
+    },
+    {
+      "id": "verse-065",
+      "reference": "John 10:10",
+      "book": "John",
+      "chapter": 10,
+      "verseStart": 10,
+      "verseEnd": 10,
+      "topic": "Abundant life",
+      "text": "The thief only comes to steal, kill, and destroy. I came that they may have life, and may have it abundantly."
+    },
+    {
+      "id": "verse-066",
+      "reference": "John 11:25-26",
+      "book": "John",
+      "chapter": 11,
+      "verseStart": 25,
+      "verseEnd": 26,
+      "topic": "Resurrection",
+      "text": "Jesus said to her, “I am the resurrection and the life. He who believes in me will still live, even if he dies.\n\nWhoever lives and believes in me will never die. Do you believe this?”"
+    },
+    {
+      "id": "verse-067",
+      "reference": "John 13:34-35",
+      "book": "John",
+      "chapter": 13,
+      "verseStart": 34,
+      "verseEnd": 35,
+      "topic": "Love one another",
+      "text": "A new commandment I give to you, that you love one another. Just as I have loved you, you also love one another.\n\nBy this everyone will know that you are my disciples, if you have love for one another.”"
+    },
+    {
+      "id": "verse-068",
+      "reference": "John 14:6",
+      "book": "John",
+      "chapter": 14,
+      "verseStart": 6,
+      "verseEnd": 6,
+      "topic": "The way",
+      "text": "Jesus said to him, “I am the way, the truth, and the life. No one comes to the Father, except through me."
+    },
+    {
+      "id": "verse-069",
+      "reference": "John 14:27",
+      "book": "John",
+      "chapter": 14,
+      "verseStart": 27,
+      "verseEnd": 27,
+      "topic": "Peace",
+      "text": "Peace I leave with you. My peace I give to you; not as the world gives, I give to you. Don’t let your heart be troubled, neither let it be fearful."
+    },
+    {
+      "id": "verse-070",
+      "reference": "John 15:5",
+      "book": "John",
+      "chapter": 15,
+      "verseStart": 5,
+      "verseEnd": 5,
+      "topic": "Abiding",
+      "text": "I am the vine. You are the branches. He who remains in me and I in him bears much fruit, for apart from me you can do nothing."
+    },
+    {
+      "id": "verse-071",
+      "reference": "John 15:13",
+      "book": "John",
+      "chapter": 15,
+      "verseStart": 13,
+      "verseEnd": 13,
+      "topic": "Sacrificial love",
+      "text": "Greater love has no one than this, that someone lay down his life for his friends."
+    },
+    {
+      "id": "verse-072",
+      "reference": "Acts 1:8",
+      "book": "Acts",
+      "chapter": 1,
+      "verseStart": 8,
+      "verseEnd": 8,
+      "topic": "Witness",
+      "text": "But you will receive power when the Holy Spirit has come upon you. You will be witnesses to me in Jerusalem, in all Judea and Samaria, and to the uttermost parts of the earth.”"
+    },
+    {
+      "id": "verse-073",
+      "reference": "Acts 4:12",
+      "book": "Acts",
+      "chapter": 4,
+      "verseStart": 12,
+      "verseEnd": 12,
+      "topic": "Salvation",
+      "text": "There is salvation in no one else, for there is no other name under heaven that is given among men, by which we must be saved!”"
+    },
+    {
+      "id": "verse-074",
+      "reference": "Romans 3:23",
+      "book": "Romans",
+      "chapter": 3,
+      "verseStart": 23,
+      "verseEnd": 23,
+      "topic": "Human need",
+      "text": "for all have sinned, and fall short of the glory of God;"
+    },
+    {
+      "id": "verse-075",
+      "reference": "Romans 5:8",
+      "book": "Romans",
+      "chapter": 5,
+      "verseStart": 8,
+      "verseEnd": 8,
+      "topic": "Grace",
+      "text": "But God commends his own love toward us, in that while we were yet sinners, Christ died for us."
+    },
+    {
+      "id": "verse-076",
+      "reference": "Romans 6:23",
+      "book": "Romans",
+      "chapter": 6,
+      "verseStart": 23,
+      "verseEnd": 23,
+      "topic": "Eternal life",
+      "text": "For the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord."
+    },
+    {
+      "id": "verse-077",
+      "reference": "Romans 8:1",
+      "book": "Romans",
+      "chapter": 8,
+      "verseStart": 1,
+      "verseEnd": 1,
+      "topic": "No condemnation",
+      "text": "There is therefore now no condemnation to those who are in Christ Jesus, who don’t walk according to the flesh, but according to the Spirit."
+    },
+    {
+      "id": "verse-078",
+      "reference": "Romans 8:28",
+      "book": "Romans",
+      "chapter": 8,
+      "verseStart": 28,
+      "verseEnd": 28,
+      "topic": "God's purpose",
+      "text": "We know that all things work together for good for those who love God, for those who are called according to his purpose."
+    },
+    {
+      "id": "verse-079",
+      "reference": "Romans 8:38-39",
+      "book": "Romans",
+      "chapter": 8,
+      "verseStart": 38,
+      "verseEnd": 39,
+      "topic": "Enduring love",
+      "text": "For I am persuaded that neither death, nor life, nor angels, nor principalities, nor things present, nor things to come, nor powers,\n\nnor height, nor depth, nor any other created thing will be able to separate us from God’s love which is in Christ Jesus our Lord."
+    },
+    {
+      "id": "verse-080",
+      "reference": "Romans 10:9",
+      "book": "Romans",
+      "chapter": 10,
+      "verseStart": 9,
+      "verseEnd": 9,
+      "topic": "Faith",
+      "text": "that if you will confess with your mouth that Jesus is Lord and believe in your heart that God raised him from the dead, you will be saved."
+    },
+    {
+      "id": "verse-081",
+      "reference": "Romans 12:1-2",
+      "book": "Romans",
+      "chapter": 12,
+      "verseStart": 1,
+      "verseEnd": 2,
+      "topic": "Renewal",
+      "text": "Therefore I urge you, brothers, by the mercies of God, to present your bodies a living sacrifice, holy, acceptable to God, which is your spiritual service.\n\nDon’t be conformed to this world, but be transformed by the renewing of your mind, so that you may prove what is the good, well-pleasing, and perfect will of God."
+    },
+    {
+      "id": "verse-082",
+      "reference": "Romans 12:12",
+      "book": "Romans",
+      "chapter": 12,
+      "verseStart": 12,
+      "verseEnd": 12,
+      "topic": "Hope and prayer",
+      "text": "rejoicing in hope, enduring in troubles, continuing steadfastly in prayer,"
+    },
+    {
+      "id": "verse-083",
+      "reference": "1 Corinthians 10:13",
+      "book": "1 Corinthians",
+      "chapter": 10,
+      "verseStart": 13,
+      "verseEnd": 13,
+      "topic": "Temptation",
+      "text": "No temptation has taken you except what is common to man. God is faithful, who will not allow you to be tempted above what you are able, but will with the temptation also make the way of escape, that you may be able to endure it."
+    },
+    {
+      "id": "verse-084",
+      "reference": "1 Corinthians 13:4-7",
+      "book": "1 Corinthians",
+      "chapter": 13,
+      "verseStart": 4,
+      "verseEnd": 7,
+      "topic": "Love",
+      "text": "Love is patient and is kind. Love doesn’t envy. Love doesn’t brag, is not proud,\n\ndoesn’t behave itself inappropriately, doesn’t seek its own way, is not provoked, takes no account of evil;\n\ndoesn’t rejoice in unrighteousness, but rejoices with the truth;\n\nbears all things, believes all things, hopes all things, and endures all things."
+    },
+    {
+      "id": "verse-085",
+      "reference": "1 Corinthians 16:14",
+      "book": "1 Corinthians",
+      "chapter": 16,
+      "verseStart": 14,
+      "verseEnd": 14,
+      "topic": "Acting in love",
+      "text": "Let all that you do be done in love."
+    },
+    {
+      "id": "verse-086",
+      "reference": "2 Corinthians 5:7",
+      "book": "2 Corinthians",
+      "chapter": 5,
+      "verseStart": 7,
+      "verseEnd": 7,
+      "topic": "Walking by faith",
+      "text": "for we walk by faith, not by sight."
+    },
+    {
+      "id": "verse-087",
+      "reference": "2 Corinthians 5:17",
+      "book": "2 Corinthians",
+      "chapter": 5,
+      "verseStart": 17,
+      "verseEnd": 17,
+      "topic": "New creation",
+      "text": "Therefore if anyone is in Christ, he is a new creation. The old things have passed away. Behold, all things have become new."
+    },
+    {
+      "id": "verse-088",
+      "reference": "2 Corinthians 12:9",
+      "book": "2 Corinthians",
+      "chapter": 12,
+      "verseStart": 9,
+      "verseEnd": 9,
+      "topic": "Sufficient grace",
+      "text": "He has said to me, “My grace is sufficient for you, for my power is made perfect in weakness.” Most gladly therefore I will rather glory in my weaknesses, that the power of Christ may rest on me."
+    },
+    {
+      "id": "verse-089",
+      "reference": "Galatians 2:20",
+      "book": "Galatians",
+      "chapter": 2,
+      "verseStart": 20,
+      "verseEnd": 20,
+      "topic": "Life in Christ",
+      "text": "I have been crucified with Christ, and it is no longer I who live, but Christ lives in me. That life which I now live in the flesh, I live by faith in the Son of God, who loved me and gave himself up for me."
+    },
+    {
+      "id": "verse-090",
+      "reference": "Galatians 5:22-23",
+      "book": "Galatians",
+      "chapter": 5,
+      "verseStart": 22,
+      "verseEnd": 23,
+      "topic": "Fruit of the Spirit",
+      "text": "But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faith,\n\ngentleness, and self-control. Against such things there is no law."
+    },
+    {
+      "id": "verse-091",
+      "reference": "Galatians 6:9",
+      "book": "Galatians",
+      "chapter": 6,
+      "verseStart": 9,
+      "verseEnd": 9,
+      "topic": "Perseverance",
+      "text": "Let’s not be weary in doing good, for we will reap in due season if we don’t give up."
+    },
+    {
+      "id": "verse-092",
+      "reference": "Ephesians 2:8-9",
+      "book": "Ephesians",
+      "chapter": 2,
+      "verseStart": 8,
+      "verseEnd": 9,
+      "topic": "Grace through faith",
+      "text": "for by grace you have been saved through faith, and that not of yourselves; it is the gift of God,\n\nnot of works, that no one would boast."
+    },
+    {
+      "id": "verse-093",
+      "reference": "Ephesians 3:20",
+      "book": "Ephesians",
+      "chapter": 3,
+      "verseStart": 20,
+      "verseEnd": 20,
+      "topic": "God's power",
+      "text": "Now to him who is able to do exceedingly abundantly above all that we ask or think, according to the power that works in us,"
+    },
+    {
+      "id": "verse-094",
+      "reference": "Ephesians 4:32",
+      "book": "Ephesians",
+      "chapter": 4,
+      "verseStart": 32,
+      "verseEnd": 32,
+      "topic": "Kindness and forgiveness",
+      "text": "And be kind to one another, tender hearted, forgiving each other, just as God also in Christ forgave you."
+    },
+    {
+      "id": "verse-095",
+      "reference": "Philippians 4:6-7",
+      "book": "Philippians",
+      "chapter": 4,
+      "verseStart": 6,
+      "verseEnd": 7,
+      "topic": "Prayer and peace",
+      "text": "In nothing be anxious, but in everything, by prayer and petition with thanksgiving, let your requests be made known to God.\n\nAnd the peace of God, which surpasses all understanding, will guard your hearts and your thoughts in Christ Jesus."
+    },
+    {
+      "id": "verse-096",
+      "reference": "Philippians 4:13",
+      "book": "Philippians",
+      "chapter": 4,
+      "verseStart": 13,
+      "verseEnd": 13,
+      "topic": "Strength in Christ",
+      "text": "I can do all things through Christ who strengthens me."
+    },
+    {
+      "id": "verse-097",
+      "reference": "Colossians 3:23",
+      "book": "Colossians",
+      "chapter": 3,
+      "verseStart": 23,
+      "verseEnd": 23,
+      "topic": "Wholehearted work",
+      "text": "And whatever you do, work heartily, as for the Lord and not for men,"
+    },
+    {
+      "id": "verse-098",
+      "reference": "2 Timothy 1:7",
+      "book": "2 Timothy",
+      "chapter": 1,
+      "verseStart": 7,
+      "verseEnd": 7,
+      "topic": "Courage and love",
+      "text": "For God didn’t give us a spirit of fear, but of power, love, and self-control."
+    },
+    {
+      "id": "verse-099",
+      "reference": "Hebrews 11:1",
+      "book": "Hebrews",
+      "chapter": 11,
+      "verseStart": 1,
+      "verseEnd": 1,
+      "topic": "Faith",
+      "text": "Now faith is assurance of things hoped for, proof of things not seen."
+    },
+    {
+      "id": "verse-100",
+      "reference": "1 Peter 5:7",
+      "book": "1 Peter",
+      "chapter": 5,
+      "verseStart": 7,
+      "verseEnd": 7,
+      "topic": "Casting anxiety",
+      "text": "casting all your worries on him, because he cares for you."
+    }
+  ]
+}

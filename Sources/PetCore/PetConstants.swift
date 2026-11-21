@@ -91,7 +91,7 @@ public enum PetConstants {
         public static let sourceWidth = 700.0
         public static let sourceHeight = 500.0
         public static let crop = PetRect(x: 200, y: 40, width: 355, height: 400)
-        public static let controls = PetRect(x: 0.10, y: 0.34, width: 0.78, height: 0.60)
+        public static let controls = PetRect(x: 0.12, y: 0.34, width: 0.76, height: 0.56)
         public static let fallback = PetRect(x: 0.04, y: 0.30, width: 0.92, height: 0.68)
         public static let controlSpacing = 1.5
         public static let buttonHeight = 14.0
@@ -103,8 +103,23 @@ public enum PetConstants {
         public static let fallbackCorner = PetPoint(x: 0.09, y: 0.08)
         public static let tailFraction = 0.14
         public static let sideAlignment = 0.3
+        public static let verticalTextPadding = 3.0
+        public static let horizontalTextPadding = 3.0
+        public static let readerWidth = 220.0
+        public static let readerMinimumHeight = 260.0
+        public static let readerMaximumHeight = 260.0
+        public static let readerFontSize = 12.0
+        public static let readerMinimumTextHeight = 90.0
+        public static let readerMaximumTextHeight = 90.0
+    }
+    public enum Bible {
+        public static let readyHourStart = 11
+        public static let readyHourEnd = 19
+        public static let excludedDays = 3
+        public static let timerMinimumDelay = 1.0
     }
     public enum Appearance {
         public static let placeholderLabelSize = 12.0
+        public static let badgeSize = 12.0
     }
 }

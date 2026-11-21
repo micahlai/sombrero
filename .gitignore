@@ -9,3 +9,10 @@ __pycache__/
 *$py.class
 # Local isolated checkouts and merge checkpoints
 .worktrees/
+
+# Private runtime state; source deployment archives use an explicit allowlist.
+server/.venv/
+server/data/
+server/media/
+server/credentials/
+server/.env

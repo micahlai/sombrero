@@ -1,0 +1,26 @@
+[Unit]
+Description=sombrero two-device messaging
+After=network-online.target
+Wants=network-online.target
+# Initial deployment intentionally uses the Pi's SD card, per its storage check.
+# If media is moved to USB, add that actual mount here and to ReadWritePaths.
+RequiresMountsFor=/home/admin/.local/share/sombrero
+
+[Service]
+Type=simple
+User=admin
+Group=admin
+WorkingDirectory=/home/admin/sombrero/server
+EnvironmentFile=/home/admin/.config/sombrero/server.env
+ExecStart=/home/admin/sombrero/server/.venv/bin/uvicorn sombrero_server.app:create_app --factory --host 127.0.0.1 --port 8765 --workers 1 --no-access-log --proxy-headers --forwarded-allow-ips=127.0.0.1
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/admin/.local/share/sombrero
+
+[Install]
+WantedBy=multi-user.target

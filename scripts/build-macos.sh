@@ -19,7 +19,7 @@ cp "$bin_dir/sombrero" "$app_path/Contents/MacOS/sombrero"
 resource_bundle="$bin_dir/sombrero_PetAssets.bundle"
 ditto "$resource_bundle" "$app_path/Contents/Resources/${resource_bundle:t}"
 cp macOS/Info.plist "$app_path/Contents/Info.plist"
-codesign --force --sign - "$app_path"
+codesign --force --sign - --entitlements macOS/entitlements.plist "$app_path"
 codesign --verify "$app_path"
 # Retain the previous generated bundle as a recoverable backup after a successful rename.
 legacy_app="$PWD/build/WatercolorDuck.app"

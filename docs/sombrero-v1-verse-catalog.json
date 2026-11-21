@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "selection": "100 familiar verses and short passages; editorial starter list, not a popularity ranking",
   "translationProposal": "WEB",
-  "textStatus": "References selected; ingest and verify exact public-domain WEB text before shipping the reader. No scripture text is paraphrased or generated here.",
+  "textStatus": "Exact publisher WEBP text is bundled offline in Sources/PetAssets/Resources/Bible/verses.json; reproduce with tools/import-bible-text.py. Scripture is neither generated nor paraphrased.",
   "textSource": "https://ebible.org/details.php?id=engwebp",
   "verses": [
     {

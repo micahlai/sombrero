@@ -3,14 +3,22 @@ import PetAssets
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var coordinator: PetCoordinator?
+    private let startupPermissions = StartupPermissions()
+    private var hasLaunched = false
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
-        let controller = PetCoordinator(); coordinator = controller; controller.start()
+        startupPermissions.begin { [weak self] in
+            guard let self else { return }
+            let controller = PetCoordinator(); self.coordinator = controller
+            controller.start(); self.hasLaunched = true
+        }
     }
-    func applicationWillTerminate(_ notification: Notification) { coordinator?.stop() }
+    func applicationWillTerminate(_ notification: Notification) { startupPermissions.cancel(); coordinator?.stop() }
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        coordinator?.recoverCompanion(); return true
+        if hasLaunched { coordinator?.recoverCompanion() }
+        else { startupPermissions.recheck() }
+        return true
     }
 }
 

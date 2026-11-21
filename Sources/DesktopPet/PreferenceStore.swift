@@ -3,10 +3,10 @@ import PetCore
 
 final class PreferenceStore {
     let file: URL
-    init() {
+    init(file: URL? = nil) {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
         // Retain the legacy path so the sombrero rename preserves existing settings.
-        file = base.appendingPathComponent("WatercolorDuck/preferences.json")
+        self.file = file ?? base.appendingPathComponent("WatercolorDuck/preferences.json")
     }
 
     func load() -> PetPreferences {
