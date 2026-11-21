@@ -25,9 +25,11 @@
       "3a",
       "3b",
       "3c",
-      "4a"
+      "4a",
+      "4b",
+      "4c"
     ],
-    "uniqueSampleCount": 39,
+    "uniqueSampleCount": 47,
     "graphPath": "docs/sombrero-v1-state-graph.json",
     "graphSHA256": "0a5aac90765ef6face80704283db5b52f283bbe51fa51f7c902c72e6151099a9",
     "measurementDetails": "Geometry uses alpha \u226532. Head width/center use the upper 60% of the alpha silhouette, filtered for yellow watercolor pigment (R>130, G>100, R-B>35, G-B>15). All endpoint pair equations use equal weight; head width and silhouette height are normalized by 290 and 489 source pixels, with 1a scale fixed at 1.4. X/Y offsets fit endpoint head centers and baselines. Canvas expanded to include ALL nonzero alpha across every frame, including alpha 1\u20137 speckles in 4a.",
@@ -58,6 +60,18 @@
         "method": "All 27 source frames visually reviewed; duck leg shafts, repeated cloud outlines, and sparkles used to correct positional drift with integer translations. Shared-canvas first-two-frame mean entry head center and baseline preserved. Exact RGBA values and total alpha preserved for every nontransparent source pixel; no clipping, resampling, or size changes.",
         "checkedFrameCounts": {
           "4a": 27
+        }
+      },
+      {
+        "reviewedAtUTC": "2026-11-21T13:36:04.336Z",
+        "animations": [
+          "4b",
+          "4c"
+        ],
+        "method": "Endpoint contact sheets visually reviewed; end-pose-only uniform least-squares scale fit (head width /406, silhouette height /685), then head-center and baseline registration to 1b and 3a. All-frame alpha containment checked. Source PNGs unchanged.",
+        "checkedFrameCounts": {
+          "4b": 23,
+          "4c": 39
         }
       }
     ]
@@ -101,7 +115,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 292,
-            "headCenterX": 349.0,
+            "headCenterX": 349,
             "silhouetteHeight": 490,
             "baselineY": 495
           }
@@ -153,7 +167,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 290,
-            "headCenterX": 350.0,
+            "headCenterX": 350,
             "silhouetteHeight": 491,
             "baselineY": 495
           }
@@ -200,13 +214,13 @@
       ],
       "transformedAlphaBounds": [
         644.9,
-        364.0,
+        364,
         1056.5,
         1051.4
       ],
       "transformedVisibleBounds": [
         644.9,
-        364.0,
+        364,
         1056.5,
         1051.4
       ],
@@ -328,7 +342,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 276,
-            "headCenterX": 355.0,
+            "headCenterX": 355,
             "silhouetteHeight": 487,
             "baselineY": 493
           }
@@ -477,7 +491,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 288,
-            "headCenterX": 350.0,
+            "headCenterX": 350,
             "silhouetteHeight": 487,
             "baselineY": 494
           }
@@ -548,7 +562,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 310,
-            "headCenterX": 347.0,
+            "headCenterX": 347,
             "silhouetteHeight": 415,
             "baselineY": 468
           }
@@ -574,7 +588,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 316,
-            "headCenterX": 354.0,
+            "headCenterX": 354,
             "silhouetteHeight": 407,
             "baselineY": 468
           }
@@ -626,7 +640,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 316,
-            "headCenterX": 354.0,
+            "headCenterX": 354,
             "silhouetteHeight": 407,
             "baselineY": 468
           }
@@ -750,7 +764,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 228,
-            "headCenterX": 381.0,
+            "headCenterX": 381,
             "silhouetteHeight": 344,
             "baselineY": 485
           }
@@ -776,7 +790,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 226,
-            "headCenterX": 381.0,
+            "headCenterX": 381,
             "silhouetteHeight": 352,
             "baselineY": 485
           }
@@ -847,7 +861,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 258,
-            "headCenterX": 348.0,
+            "headCenterX": 348,
             "silhouetteHeight": 371,
             "baselineY": 432
           }
@@ -996,7 +1010,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 228,
-            "headCenterX": 383.0,
+            "headCenterX": 383,
             "silhouetteHeight": 339,
             "baselineY": 487
           }
@@ -1074,7 +1088,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 226,
-            "headCenterX": 385.0,
+            "headCenterX": 385,
             "silhouetteHeight": 340,
             "baselineY": 488
           }
@@ -1145,7 +1159,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 230,
-            "headCenterX": 378.0,
+            "headCenterX": 378,
             "silhouetteHeight": 350,
             "baselineY": 489
           }
@@ -1171,7 +1185,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 238,
-            "headCenterX": 385.0,
+            "headCenterX": 385,
             "silhouetteHeight": 349,
             "baselineY": 489
           }
@@ -1197,7 +1211,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 226,
-            "headCenterX": 385.0,
+            "headCenterX": 385,
             "silhouetteHeight": 340,
             "baselineY": 488
           }
@@ -1223,7 +1237,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 228,
-            "headCenterX": 388.0,
+            "headCenterX": 388,
             "silhouetteHeight": 352,
             "baselineY": 486
           }
@@ -1320,7 +1334,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 278,
-            "headCenterX": 379.0,
+            "headCenterX": 379,
             "silhouetteHeight": 380,
             "baselineY": 476
           }
@@ -1346,7 +1360,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 276,
-            "headCenterX": 393.0,
+            "headCenterX": 393,
             "silhouetteHeight": 388,
             "baselineY": 476
           }
@@ -1444,7 +1458,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 156,
-            "headCenterX": 350.0,
+            "headCenterX": 350,
             "silhouetteHeight": 281,
             "baselineY": 404
           }
@@ -1470,7 +1484,7 @@
           ],
           "alignmentFeatures": {
             "headWidth": 162,
-            "headCenterX": 354.0,
+            "headCenterX": 354,
             "silhouetteHeight": 282,
             "baselineY": 405
           }
@@ -1647,14 +1661,148 @@
       }
     },
     "4b": {
-      "status": "missing",
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
-      "sourceFrameCount": 0,
-      "sourceFrameSize": null,
-      "sampleFrames": [],
-      "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
+      "status": "calibrated",
+      "scale": 1.625287,
+      "offsetX": 286.10978,
+      "offsetY": 284.27613,
+      "sourceFrameCount": 23,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sampleFrames": [
+        {
+          "file": "4b0000.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "6e7d26e4630b16a4ae074f0ed9cfba65a639838a14425e2f374031047897e9fa",
+          "alphaBounds": [
+            205,
+            0,
+            316,
+            385
+          ],
+          "alpha32Bounds": [
+            205,
+            63,
+            316,
+            385
+          ],
+          "alignmentFeatures": {
+            "headWidth": 90,
+            "headCenterX": 250,
+            "silhouetteHeight": 322,
+            "baselineY": 385
+          },
+          "index": 0,
+          "role": "first"
+        },
+        {
+          "file": "4b0001.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "bfe95482a7db1bee53cbf1dfb71bd02469dd53c8626e0f214ffdd73643b9731f",
+          "alphaBounds": [
+            204,
+            58,
+            330,
+            383
+          ],
+          "alpha32Bounds": [
+            204,
+            58,
+            330,
+            383
+          ],
+          "alignmentFeatures": {
+            "headWidth": 104,
+            "headCenterX": 256,
+            "silhouetteHeight": 325,
+            "baselineY": 383
+          },
+          "index": 1,
+          "role": "second"
+        },
+        {
+          "file": "4b0021.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "9fa4537a9a10686d85c945cdce5dfd5cf03b7468a76780ad6fa4ba76eab34375",
+          "alphaBounds": [
+            226,
+            38,
+            473,
+            462
+          ],
+          "alpha32Bounds": [
+            226,
+            38,
+            473,
+            461
+          ],
+          "alignmentFeatures": {
+            "headWidth": 247,
+            "headCenterX": 349.5,
+            "silhouetteHeight": 423,
+            "baselineY": 461
+          },
+          "index": 21,
+          "role": "penultimate"
+        },
+        {
+          "file": "4b0022.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "b642b191d69758c2c70ccfb9ea84eb6d021ea4a0fc25f3ac3551e333801664ad",
+          "alphaBounds": [
+            222,
+            59,
+            469,
+            483
+          ],
+          "alpha32Bounds": [
+            222,
+            59,
+            469,
+            482
+          ],
+          "alignmentFeatures": {
+            "headWidth": 247,
+            "headCenterX": 345.5,
+            "silhouetteHeight": 423,
+            "baselineY": 482
+          },
+          "index": 22,
+          "role": "last"
+        }
+      ],
+      "sourceInventorySHA256": "658bfb6e8be2ad90dc4fa0a99b3eac72e2bb02de35b5269a4b54e1be4ff24715",
+      "sourceInventoryHashMethod": "SHA256 of UTF-8 lines filename:sha256 followed by newline, ordered by natural filename.",
+      "sourceAlphaBounds": [
+        24,
+        0,
+        689,
+        488
+      ],
+      "sourceVisibleBounds": [
+        173,
+        38,
+        473,
+        482
+      ],
+      "transformedAlphaBounds": [
+        325.117,
+        284.276,
+        1405.933,
+        1077.416
+      ],
+      "transformedVisibleBounds": [
+        567.285,
+        346.037,
+        1054.871,
+        1067.665
+      ],
+      "notes": "First two and last two frames visually reviewed. End pose aligned to 1b's first-two-frame mean head size/height, head center, and baseline. One fixed clip-wide transform; entry movement/cropped peek and source pixels retained. Full clip alpha bounds fit the existing canvas."
     },
     "timeout": {
       "status": "hidden",
@@ -1767,14 +1915,148 @@
       "notes": "No final animation frames available; no calibration has been inferred. Ten-frame pink-square preview placeholder is uncalibrated."
     },
     "4c": {
-      "status": "missing",
-      "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
-      "sourceFrameCount": 0,
-      "sourceFrameSize": null,
-      "sampleFrames": [],
-      "notes": "Window peek entry; no final frames available. Ten-frame pink-square placeholder until authored and calibrated."
+      "status": "calibrated",
+      "scale": 1.972527,
+      "offsetX": 201.961057,
+      "offsetY": 331.923022,
+      "sourceFrameCount": 39,
+      "sourceFrameSize": {
+        "width": 700,
+        "height": 500
+      },
+      "sampleFrames": [
+        {
+          "file": "4c0000.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "3c773dde28993bc04329ff8afad93c06ccba8c41496a8b39d12821f2e3c582fd",
+          "alphaBounds": [
+            156,
+            221,
+            514,
+            358
+          ],
+          "alpha32Bounds": [
+            156,
+            221,
+            514,
+            358
+          ],
+          "alignmentFeatures": {
+            "headWidth": 183,
+            "headCenterX": 323.5,
+            "silhouetteHeight": 137,
+            "baselineY": 358
+          },
+          "index": 0,
+          "role": "first"
+        },
+        {
+          "file": "4c0001.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "ba626b14b970fc6f9c94752e99c8750eff5be24b6c2292ce8e29384ea6b69622",
+          "alphaBounds": [
+            156,
+            207,
+            514,
+            358
+          ],
+          "alpha32Bounds": [
+            156,
+            207,
+            514,
+            358
+          ],
+          "alignmentFeatures": {
+            "headWidth": 189,
+            "headCenterX": 323.5,
+            "silhouetteHeight": 151,
+            "baselineY": 358
+          },
+          "index": 1,
+          "role": "second"
+        },
+        {
+          "file": "4c0037.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "c0b3eaaf29807ec94bea8deaf1512062cf44540b40734ec9cbadc6f6d3afcc38",
+          "alphaBounds": [
+            63,
+            41,
+            638,
+            366
+          ],
+          "alpha32Bounds": [
+            188,
+            41,
+            481,
+            366
+          ],
+          "alignmentFeatures": {
+            "headWidth": 214,
+            "headCenterX": 329,
+            "silhouetteHeight": 325,
+            "baselineY": 366
+          },
+          "index": 37,
+          "role": "penultimate"
+        },
+        {
+          "file": "4c0038.png",
+          "width": 700,
+          "height": 500,
+          "sha256": "085d727ca3c5871612a88124a4c22205ebff9cb69d192c5334e587d31c1e8565",
+          "alphaBounds": [
+            183,
+            42,
+            476,
+            367
+          ],
+          "alpha32Bounds": [
+            183,
+            42,
+            476,
+            367
+          ],
+          "alignmentFeatures": {
+            "headWidth": 215,
+            "headCenterX": 323.5,
+            "silhouetteHeight": 325,
+            "baselineY": 367
+          },
+          "index": 38,
+          "role": "last"
+        }
+      ],
+      "sourceInventorySHA256": "1b13bb5c811df334136f1d5e2def4dc3ea3a010286cb8a3400b2d546d309896a",
+      "sourceInventoryHashMethod": "SHA256 of UTF-8 lines filename:sha256 followed by newline, ordered by natural filename.",
+      "sourceAlphaBounds": [
+        63,
+        27,
+        638,
+        475
+      ],
+      "sourceVisibleBounds": [
+        151,
+        27,
+        515,
+        475
+      ],
+      "transformedAlphaBounds": [
+        326.23,
+        385.181,
+        1460.433,
+        1268.873
+      ],
+      "transformedVisibleBounds": [
+        499.813,
+        385.181,
+        1217.813,
+        1268.873
+      ],
+      "notes": "First two and last two frames visually reviewed. End pose aligned to 3a's first-two-frame mean head size/height, head center, and baseline. One fixed clip-wide transform; entry movement/cropped peek and source pixels retained. Full clip alpha bounds fit the existing canvas."
     }
   },
   "adjacencyChecks": [
@@ -1975,6 +2257,24 @@
       "headCenterDeltaPixels": -14.702,
       "headWidthDeltaPercent": -1.957,
       "silhouetteHeightDeltaPercent": 3.87
+    },
+    {
+      "from": "4b",
+      "to": "1b",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": 0,
+      "headCenterDeltaPixels": 0,
+      "headWidthDeltaPercent": 1.457,
+      "silhouetteHeightDeltaPercent": -1.375
+    },
+    {
+      "from": "4c",
+      "to": "3a",
+      "samplePolicy": "mean of last two source frames versus mean of first two destination frames",
+      "baselineDeltaPixels": 0,
+      "headCenterDeltaPixels": 0,
+      "headWidthDeltaPercent": -0.93,
+      "silhouetteHeightDeltaPercent": 1.178
     }
   ]
 }
