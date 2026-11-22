@@ -110,7 +110,7 @@ function sync() {
 function draw() {
   context.clearRect(0,0,canvas.width,canvas.height);
   if (!controller||controller.hidden||!currentClip) return;
-  const frame=clock.frame(currentClip.frameCount);
+  const frame=clock.frame(currentClip.frameCount,controller.reversingCamera);
   if (currentClip.placeholder) {
     context.fillStyle='#e58db8';
     context.fillRect((canvas.width-225)/2,(canvas.height-225)/2,225,225);
@@ -125,9 +125,9 @@ function draw() {
 function render() {
   if (!controller) return;
   const state=controller.states.get(controller.state),clip=project.clips[controller.state];
-  const count=currentClip?.frameCount??clip.frameCount,frame=clock.frame(count);
+  const count=currentClip?.frameCount??clip.frameCount,frame=clock.frame(count,controller.reversingCamera);
   const hidden=controller.hidden;
-  $('#current-id').textContent=controller.state.toUpperCase();$('#current-name').textContent=state.name;
+  $('#current-id').textContent=controller.state.toUpperCase();$('#current-name').textContent=state.name+(controller.reversingCamera?' — backwards':'');
   $('#clip-source').textContent=hidden?'No animation while hidden':loadingVisible?'Loading frames…':clip.placeholder?'Pink-square placeholder':`${clip.folder} / ${clip.frameCount} drawings`;
   $('#running-status').textContent=hidden?'Hidden':loadingVisible?'Loading':paused?'Paused':controller.followGraph?'Playing':'Solo';
   $('#running-status').classList.toggle('paused',paused||hidden);
@@ -139,6 +139,7 @@ function render() {
   $('#scrubber').max=String(Math.max(0,count-1));$('#scrubber').value=String(frame);$('#scrubber').disabled=hidden||loading;
   for (const button of document.querySelectorAll('[data-event="manualRecall"],[data-event="timedAwayExpired"]')) button.disabled=!hidden||!controller.followGraph;
   $('#stage-recall').disabled=!controller.followGraph;
+  $('#cancel-message').disabled=!controller.followGraph||controller.reversingCamera||!['6a','6b'].includes(controller.state);
   $('#queue-count').textContent=controller.queue.length?`${controller.queue.length} queued`:'Nothing queued';
   $('#request-status').textContent=controller.active?`Active request: ${controller.active}`:'No active request';
   $('#request-status').classList.toggle('active',Boolean(controller.active));
@@ -290,7 +291,11 @@ $('#folder-input').addEventListener('change',async event=>{
 $('#play').addEventListener('click',()=>{paused=!paused;clock.last=performance.now();render();});
 $('#finish').addEventListener('click',finish);
 $('#previous-frame').addEventListener('click',()=>step(-1));$('#next-frame').addEventListener('click',()=>step(1));
-$('#scrubber').addEventListener('input',event=>{paused=true;clock.seek(Number(event.target.value));render();});
+$('#scrubber').addEventListener('input',event=>{
+  paused=true;
+  const frame=Number(event.target.value), count=currentClip?.frameCount??project.clips[controller.state].frameCount;
+  clock.seek(controller.reversingCamera?Math.max(0,count-1-frame):frame);render();
+});
 $('#reset').addEventListener('click',()=>safely(()=>{controller.reset();followCurrent=true;lastLogSerial=-1;}));
 $('#fps').addEventListener('change',event=>{
   const fps=Number(event.target.value);
@@ -301,6 +306,7 @@ $('#speed').addEventListener('change',event=>{clock.speed=Number(event.target.va
 $('#mode').addEventListener('change',event=>safely(()=>controller.setMode(event.target.value==='graph')));
 for(const input of document.querySelectorAll('[data-flag]'))input.addEventListener('change',()=>safely(()=>controller.setFlag(input.dataset.flag,input.checked)));
 for(const button of document.querySelectorAll('[data-event]'))button.addEventListener('click',()=>safely(()=>controller.trigger(button.dataset.event)));
+$('#cancel-message').addEventListener('click',()=>safely(()=>controller.cancelCamera()));
 $('#stage-recall').addEventListener('click',()=>safely(()=>controller.trigger('manualRecall')));
 $('#clear-queue').addEventListener('click',()=>safely(()=>controller.clearQueue()));
 $('#use-scale-map').addEventListener('change',()=>render());

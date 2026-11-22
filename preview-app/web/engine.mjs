@@ -41,7 +41,8 @@ export class GraphController {
     this.edges = graph.transitions.map((e, i) => ({...e, id: `edge-${i}`}));
     const guardFlags = {...Object.fromEntries(FLAG_NAMES.map(n => [n, false])), event: false,
       photoShowRequested: false, photoTakeRequested: false, bibleReadRequested: false,
-      manualRecall: false, timedAwayExpired: false, petCycleCompleted: false};
+      manualRecall: false, timedAwayExpired: false, petCycleCompleted: false,
+      cameraCanceled: false, reversingCamera: false};
     for (const edge of this.edges) {
       if (!this.states.has(edge.from) || !this.states.has(edge.to)) throw new Error('Unknown transition state');
       if (!['default', 'interrupt', 'afterClip', 'recall'].includes(edge.kind)) throw new Error('Unknown transition kind');
@@ -69,6 +70,8 @@ export class GraphController {
     this.state = this.graph.initialState;
     this.petCycleCompleted = false;
     this.recallEntry = null;
+    this.cameraCanceled = false;
+    this.reversingCamera = false;
     this.note('reset', `Start at ${this.state.toUpperCase()}`);
   }
 
@@ -85,7 +88,8 @@ export class GraphController {
     return {...this.flags, pet: this.flags.pet && !this.flags.dialogue_open, petCycleCompleted: this.petCycleCompleted,
       event: this.flags.goodbye || Boolean(pending),
       photoShowRequested: pending === 'photoShow', photoTakeRequested: pending === 'photoTake',
-      bibleReadRequested: pending === 'bibleRead', manualRecall: false, timedAwayExpired: false};
+      bibleReadRequested: pending === 'bibleRead', manualRecall: false, timedAwayExpired: false,
+      cameraCanceled:this.cameraCanceled, reversingCamera:this.reversingCamera};
   }
 
   outgoing(state = this.state) { return this.edges.filter(e => e.from === state); }
@@ -148,6 +152,7 @@ export class GraphController {
   }
 
   trigger(name) {
+    if (name === 'photoTake') this.cameraCanceled = false;
     if (name === 'manualRecall' || name === 'timedAwayExpired') {
       if (!this.hidden || !this.followGraph) {
         this.note('input', `${name}: only applies in timeout`);
@@ -171,8 +176,18 @@ export class GraphController {
 
   clearQueue() { this.queue = []; this.note('input', 'Cleared pending requests'); }
 
+  cancelCamera() {
+    this.queue = this.queue.filter(name => name !== 'photoTake');
+    this.flags.takingPhoto = false;
+    this.cameraCanceled = true;
+    this.note('input', 'Canceled message; finish 6B, then play 6A backwards');
+    if (this.followGraph) this.resolveImmediate(false);
+  }
+
   take(edge, skipped) {
     const from = this.state;
+    const wasReversingCamera = this.reversingCamera;
+    this.reversingCamera = edge.playback === 'reverse';
     if (this.defaultOverride) {
       this.note('override', edge.kind === 'default' ? 'Used one-time default override; original weights restored' : 'Conditional transition won; default override cleared');
       this.defaultOverride = null;
@@ -186,7 +201,7 @@ export class GraphController {
       this.active = this.queue.shift();
       this.note('request', `Started ${this.active}`);
     }
-    if (['5c', '6c', '7c'].includes(from) && edge.to === '1a') {
+    if ((['5c', '6c', '7c'].includes(from) || (from === '6a' && wasReversingCamera)) && edge.to === '1a') {
       if (this.active) this.note('request', `Completed ${this.active}`);
       this.active = null;
     }
@@ -244,6 +259,8 @@ export class GraphController {
     if (!this.states.has(id)) throw new Error(`Unknown state: ${id}`);
     this.state = id;
     this.recallEntry = null;
+    this.cameraCanceled = false;
+    this.reversingCamera = false;
     this.petCycleCompleted = false;
     this.queue = [];
     this.active = null;

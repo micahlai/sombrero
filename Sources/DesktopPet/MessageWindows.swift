@@ -427,8 +427,10 @@ final class MessageInboxWindow: NSObject, NSWindowDelegate {
     private func updateHeading() {
         guard let message = selectedMessage else { heading.stringValue = ""; return }
         let receipt=message.senderID == currentDeviceID ? (message.readAt == nil ? " · Sent" : " · Read") : ""
-        heading.stringValue = DateFormatter.localizedString(from:message.createdAt,dateStyle:.medium,timeStyle:.none)+receipt
-        heading.toolTip = "\(message.senderID == currentDeviceID ? "You" : "Your person") · \(DateFormatter.localizedString(from:message.createdAt,dateStyle:.medium,timeStyle:.short))\(receipt)"
+        let sender=message.senderID == currentDeviceID ? "You" : message.displaySenderName ?? "Your person"
+        heading.stringValue = sender+" · "+DateFormatter.localizedString(from:message.createdAt,dateStyle:.medium,timeStyle:.none)+receipt
+        heading.toolTip = "\(sender) · \(DateFormatter.localizedString(from:message.createdAt,dateStyle:.medium,timeStyle:.short))\(receipt)"
+        heading.lineBreakMode = .byTruncatingTail
     }
     private func updateNavigation() {
         previous.isEnabled = selection > 0

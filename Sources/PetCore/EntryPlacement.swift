@@ -72,7 +72,11 @@ public enum WindowSidePlacement {
         let boundary = edge == .left ? window.x-inset : window.maxX+inset
         return boundary-artwork.boundaryX(flipped: edge.flipsWindowPeekAnimation)
     }
-    public struct Interval { public let lower: Double; public let upper: Double }
+    public struct Interval {
+        public let lower: Double
+        public let upper: Double
+        public init(lower: Double, upper: Double) { self.lower = lower; self.upper = upper }
+    }
     public static func intervals(window: PetRect, area: PetRect, bounds: PetRect, artwork: PeekArtwork, edge: ScreenEdge, occluders: [PetRect] = []) -> [Interval] {
         guard window.isValid, area.isValid, bounds.isValid else { return [] }
         let x = horizontalOrigin(window: window, artwork: artwork, edge: edge)

@@ -2,6 +2,7 @@ import AppKit
 import PetCore
 
 /// Geometry-only WindowServer inventory. Never reads titles or captures images.
+/// Supplies safe landing intervals to the separate cropped screenshot detector.
 /// Only document windows (layer 0) obstruct candidates: floating overlays can have
 /// full-screen geometry and alpha=1 even when their pixels are transparent.
 final class WindowTracker {
@@ -67,6 +68,41 @@ final class WindowTracker {
         let painted = bounds.offsetBy(x:x,y:y)
         guard displays().contains(where: { $0.visibleFrame.contains(NSRect(x:painted.x,y:painted.y,width:painted.width,height:painted.height)) }) else { return nil }
         return NSPoint(x:x,y:y)
+    }
+
+    func landingPlan(for target: SideTarget, bounds: PetRect, artwork: PeekArtwork, baselineOffset: Double) -> EdgeLandingPlan? {
+        guard let context = sideContext(target.attachment,bounds:bounds,artwork:artwork,force:true) else { return nil }
+        return EdgeLandingPlan(area:context.area,fallback:PetPoint(x:target.origin.x,y:target.origin.y),
+            bounds:bounds,baselineOffset:baselineOffset,intervals:context.intervals)
+    }
+
+    func alignedSideTarget(_ target: SideTarget, origin: PetPoint, bounds: PetRect, artwork: PeekArtwork) -> SideTarget? {
+        // An old screenshot cannot reposition an entry after its window moves.
+        guard let current = self.origin(for:target.attachment,visibleBounds:bounds,artwork:artwork,force:true),
+              abs(current.x-target.origin.x) < 0.5, abs(current.y-target.origin.y) < 0.5,
+              let context = sideContext(target.attachment,bounds:bounds,artwork:artwork),
+              context.intervals.contains(where: { origin.y >= $0.lower && origin.y <= $0.upper }),
+              abs(origin.x-current.x) < 0.5 else { return nil }
+        let fraction = (origin.y+bounds.y-context.window.frame.y)/max(1,context.window.frame.height-bounds.height)
+        let updated = WindowSideAttachment(windowID:target.attachment.windowID,ownerPID:target.attachment.ownerPID,
+            edge:target.attachment.edge,verticalFraction:fraction)
+        return SideTarget(attachment:updated,origin:NSPoint(x:origin.x,y:origin.y))
+    }
+
+    private func sideContext(_ target: WindowSideAttachment, bounds: PetRect, artwork: PeekArtwork, force: Bool = false)
+        -> (window: Window, area: PetRect, intervals: [WindowSidePlacement.Interval])? {
+        let inventory = windows(force:force)
+        guard let index = inventory.firstIndex(where: { $0.id == target.windowID && $0.ownerPID == target.ownerPID }) else { return nil }
+        let window = inventory[index]
+        let edgeX = target.edge == .left ? window.frame.x-1 : window.frame.maxX+1
+        guard let screen = displays().first(where: { $0.frame.contains(NSPoint(x:edgeX,y:window.frame.center.y)) }) else { return nil }
+        let rect = screen.visibleFrame
+        let area = PetRect(x:rect.minX,y:rect.minY,width:rect.width,height:rect.height)
+        let blockers = inventory.prefix(index).filter { $0.layer == 0 }.map(\.frame)
+        let intervals = WindowSidePlacement.intervals(window:window.frame,area:area,bounds:bounds,artwork:artwork,
+                                                      edge:target.edge,occluders:blockers)
+        guard !intervals.isEmpty else { return nil }
+        return (window,area,intervals)
     }
     private func origin(window: Window, fraction: Double, viewportSize: Double, visibleBounds: PetRect, baselineY: Double?) -> PetPoint? {
         let anchor = NSPoint(x: window.frame.x+window.frame.width*fraction, y: window.frame.maxY-1)

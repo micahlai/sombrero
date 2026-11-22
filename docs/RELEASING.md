@@ -4,9 +4,15 @@
 
 Prepared in source: Sparkle updater and its menu/preferences, pinned Sparkle 2.10.1 download with the publisher's SwiftPM SHA-256, universal packaging, inside-out Developer ID signing when configured, optional notarization, signed appcast generation, GitHub Release publishing, and a first-install script requiring only stock macOS tools. The ordinary debug build remains usable offline without Sparkle.
 
-**Not completed or verified:** downloading/linking the real Sparkle framework, generating the product's Keychain signing key, creating the public binary repository, publishing a release, initial installation on a clean Mac, and updating between two releases. This session's shell cannot resolve GitHub. The browser can open the official release page, but downloading its framework archive timed out after 120 seconds. No Developer ID signing identity is installed here. Do not describe the other-Mac command as live until a release has actually been published and checked.
+The user subsequently ran setup and built `build/releases/v0.1.0-1/`. Its archive checksum, app identity, embedded update key/feed, and real Sparkle Ed25519 signature have been verified locally. It is an unnotarized build. The public release has not been verified or published by this session: shell GitHub operations still fail to connect. Clean-Mac installation and updates between two real releases remain untested. Do not describe the other-Mac command as live until publication succeeds.
 
-Source origin is `micahlai/sombrero`, which must remain private. Public distribution uses a separate proposed repository, `micahlai/sombrero-releases`, containing only release artifacts. No GitHub token or messaging credentials go into a public artifact.
+The corrected **0.1.1 / build 2** application is now built at `build/sombrero.app`, with the real Sparkle framework linked and embedded, both arm64/x86_64 slices, and `https://github.com/micahlai/sombrero/releases/latest/download/appcast.xml` embedded as its feed. Deep/strict code-signature verification passed. Release building here required `SOMBRERO_DEBUG_INFO_FORMAT=none` because the environment blocked dSYM generation; debug symbols are optional and the ordinary default remains unchanged. Six release-tool checks pass.
+
+**Publication is still blocked in this session:** reading the existing Sparkle signing key returns Keychain error `-50`, and GitHub API requests fail to connect. The old key was not rotated or exported. There is no signed/published 0.1.1 archive from this session. From the owner's logged-in Terminal, the concrete release command is `./scripts/release-macos.sh 0.1.1 2 --publish` (set `SOMBRERO_DEBUG_INFO_FORMAT=none` only if the same dSYM failure occurs there). The source repository must be public; the user authorized `gh repo edit micahlai/sombrero --visibility public --accept-visibility-change-consequences`, but that request could not connect from this session.
+
+Apple Developer Team ID supplied by the user: `98RU8TVC42`. The latest local identity check still found no valid signing identities; a Team ID alone does not provide a Developer ID Application certificate/private key.
+
+The user chose one public repository: `micahlai/sombrero` hosts both source and GitHub Releases. It is now the default for appcast URLs, archives and the installer. The user is deleting the earlier separate `sombrero-releases` repository. No GitHub token or messaging credentials go into a public artifact. The attempted visibility change from this session failed to connect to GitHub, so remote public visibility still needs verification.
 
 ## One-time release setup on the developer Mac
 
@@ -14,7 +20,7 @@ Once the developer Mac can reach GitHub:
 
 ```sh
 ./scripts/setup-sparkle.sh
-gh repo create micahlai/sombrero-releases --public --description 'Prebuilt sombrero macOS releases'
+gh repo edit micahlai/sombrero --visibility public --accept-visibility-change-consequences
 ```
 
 The setup script invokes Sparkle's official key tool with the product's dedicated Keychain account. It creates/reuses the private Ed25519 key in login Keychain and writes only the public key to `macOS/update-public-key.txt`. It refuses a mismatching existing public key. Keep the private key safe; do not export it into this checkout, public releases, logs, or chat. Commit the public key with the source after setup succeeds.
@@ -43,17 +49,19 @@ The optional notarization step submits the archive, waits for acceptance, staple
 Inspect the generated application, appcast, installer, checksums and release notes before publishing:
 
 ```sh
-./scripts/release-macos.sh 0.2.0 3 --publish
+./scripts/release-macos.sh 0.2.0 2 --publish-only
 ```
 
-The publish mode prepares a fresh build, verifies that the separate release repository is already public, rejects build numbers at or below the published feed, uploads the exact artifacts into a draft, then publishes it as latest. If an upload fails, inspect/recover the draft with `gh`; do not silently overwrite an existing tag or reuse a published build number. Preparation intentionally refuses an existing local release directory, so use another build number or review and explicitly remove an abandoned local preparation before retrying.
+Without a flag, the script prepares locally and explicitly reports that nothing was uploaded. `--publish-only` verifies the existing archive, installer/checksums, bundled version/identity/update key/feed, and Ed25519 signature using the public key; it does not rebuild, modify artifacts, or access the private signing key. The old `v0.1.0-1` archive embeds the removed repository’s update URL and cannot be republished unchanged to `sombrero`. Build and publish the corrected next release with `./scripts/release-macos.sh 0.1.1 2 --publish`.
+
+`--publish` builds a new version and publishes it in one invocation; use it only with an unused version/build directory. Both publishing modes verify that the target repository is public, reject build numbers at or below the published feed, upload the artifacts into a draft, then publish it as latest. A GitHub failure when looking up published builds stops publication rather than bypassing the version check. If an upload fails, inspect/recover the draft with `gh`; do not silently overwrite an existing tag or reuse a published build number. An existing prepared directory can be published with `--publish-only`.
 
 ## Other Mac: one command after publication
 
 After the actual public release is verified, the release script prints:
 
 ```sh
-curl -fsSL --proto '=https' --proto-redir '=https' https://github.com/micahlai/sombrero-releases/releases/latest/download/install.sh | /bin/sh
+curl -fsSL --proto '=https' --proto-redir '=https' https://github.com/micahlai/sombrero/releases/latest/download/install.sh | /bin/sh
 ```
 
 **This URL is planned, not published by this session.** The command needs macOS 13+, Internet and Terminal; no Homebrew, Git, Python, Xcode, or sudo. The downloaded installer contains a version-specific HTTPS archive URL and expected SHA-256. It verifies the downloaded bytes, bundle identity and code signature, installs to `~/Applications/sombrero.app`, preserves Gatekeeper approval using quarantine metadata, launches the app, and opens message setup after the existing Camera permission flow. It does not replace an existing app; installed users use Sparkle's update menu.

@@ -118,6 +118,6 @@ public enum PetConstants {
     }
     public enum Appearance {
         public static let placeholderLabelSize = 12.0
-        public static let badgeSize = 12.0
+        public static let badgeSize = 32.0
     }
 }

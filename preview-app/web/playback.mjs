@@ -12,7 +12,11 @@ export class DrawingClock {
     this.fps = fps;
   }
   seek(frame) { this.elapsed = Math.max(0, frame) / this.fps; }
-  frame(count) { return Math.min(Math.max(0, count - 1), Math.floor(this.elapsed * this.fps + 1e-8)); }
+  frame(count, reversed = false) {
+    const last = Math.max(0, count - 1);
+    const frame = Math.min(last, Math.floor(this.elapsed * this.fps + 1e-8));
+    return reversed ? last - frame : frame;
+  }
   completed(count) { return count > 0 && this.elapsed * this.fps + 1e-8 >= count; }
 }
 

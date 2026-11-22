@@ -54,11 +54,12 @@ precondition(MessageRichText.body(from:composer.draftText)==body,"Project letter
 precondition((editor.attributedString().attribute(.font,at:0,effectiveRange:nil) as? NSFont)?.fontName == AppTypography.font(size:18).fontName)
 composer.window.close(); precondition(closes==1 && sends==1)
 let now=Date()
-let message=ChatMessage(id:"one",pairID:"pair",senderID:"peer",recipientID:"self",clientRequestID:"request",body:body,attachment:nil,createdAt:now)
+let message=ChatMessage(id:"one",pairID:"pair",senderID:"peer",recipientID:"self",clientRequestID:"request",body:body,attachment:nil,createdAt:now,senderName:"Micah")
 let inbox=MessageInboxWindow(currentDeviceID:"self")
 var presented:[String]=[]
 inbox.onPresented={ presented.append($0.id) }
 inbox.show(messages:[message]); inbox.window.contentView!.layoutSubtreeIfNeeded()
+precondition(descendants(inbox.window.contentView!).compactMap { $0 as? NSTextField }.contains { $0.stringValue.hasPrefix("Micah · ") },"The Polaroid must show the server-provided sender")
 RunLoop.main.run(until:Date().addingTimeInterval(0.05))
 precondition(presented==["one"])
 inbox.window.close()

@@ -73,9 +73,10 @@ final class SpeechBubble {
         view.bibleAvailable=available
         if mode == .menu { setMode(.menu) }
     }
-    func setMessagesAvailable(_ available: Bool) {
-        guard view.messagesAvailable != available else { return }
-        view.messagesAvailable=available
+    func setMessageStatus(unreadCount: Int) {
+        let count=max(0,unreadCount)
+        guard view.unreadMessageCount != count else { return }
+        view.unreadMessageCount=count
         if mode == .menu { setMode(.menu) }
     }
     func anchor(to duck: NSRect, workArea: NSRect) {
@@ -123,7 +124,7 @@ private final class BubbleView: NSView {
     var bibleVerse: BibleVerse?
     var bibleStatus=""
     var bibleAvailable=false
-    var messagesAvailable=false
+    var unreadMessageCount=0
     var biblePage=0
     private(set) var biblePages: [String] = []
     var action: ((SpeechBubble.Action)->Void)?
@@ -153,7 +154,7 @@ private final class BubbleView: NSView {
     }
     private func rowHeight(_ row: NSView, width: CGFloat) -> CGFloat {
         let padding=PetConstants.Speech.verticalTextPadding
-        if let button=row as? BubbleButton { return max(PetConstants.Speech.buttonHeight,ceil(button.font!.ascender-button.font!.descender+button.font!.leading)+2*padding) }
+        if let button=row as? BubbleButton { return max(PetConstants.Speech.buttonHeight,button.preferredHeight) }
         if let navigation=row as? BubbleNavigation { return navigation.preferredHeight }
         if let label=row as? NSTextField { return textHeight(label.attributedStringValue,width:width-2*PetConstants.Speech.horizontalTextPadding)+2*padding }
         if let scroll=row as? NSScrollView, let text=scroll.documentView as? NSTextView {
@@ -165,7 +166,7 @@ private final class BubbleView: NSView {
         let region=PetConstants.Speech.controls
         let widest=rows.compactMap { row -> Double? in
             guard let button=row as? BubbleButton else { return nil }
-            return ceil(button.attributedTitle.size().width)+2*PetConstants.Speech.horizontalTextPadding
+            return ceil(button.attributedTitle.size().width)+2*PetConstants.Speech.horizontalTextPadding+(button.reservesNotificationSpace ? 20 : 0)
         }.max() ?? 0
         let width=reader ? PetConstants.Speech.readerWidth : max(PetConstants.Speech.width,ceil(widest/region.width))
         let contentHeight=rows.reduce(0) { $0+rowHeight($1,width:width*region.width) }+Double(max(0,rows.count-1))*PetConstants.Speech.controlSpacing
@@ -219,7 +220,10 @@ private final class BubbleView: NSView {
         switch mode {
         case .menu:
             button("Go away…",.goAway)
-            if messagesAvailable { button("See message",.seePhoto) }
+            let messages=makeButton("Show message",.seePhoto)
+            messages.reservesNotificationSpace=true; messages.hasNewMessage=unreadMessageCount>0
+            messages.setAccessibilityLabel("Show message\(unreadMessageCount>0 ? ", \(unreadMessageCount) new" : "")")
+            add(messages)
             button("Send message",.sendPhoto)
             if bibleAvailable { button("Read Bible verse",.readBible) }
         case .away:
@@ -323,11 +327,22 @@ private final class BubbleLabel: NSTextField {
     }
 }
 private final class BubbleButton: NSButton {
+    override var isFlipped: Bool { false }
     var handler: (()->Void)?
+    var hasNewMessage=false
+    var reservesNotificationSpace=false
+    private var titleHeight: CGFloat { ceil(font!.ascender-font!.descender+font!.leading) }
+    var preferredHeight: CGFloat { titleHeight+2*PetConstants.Speech.verticalTextPadding }
     override func draw(_ dirtyRect: NSRect) {
         // Native mini-button cells crop Matcha's tall glyphs. Draw the accessible
         // button's title in an explicitly padded row using the actual font metrics.
-        (isEnabled ? attributedTitle : NSAttributedString(string:title,attributes:[.font:font!,.foregroundColor:NSColor(srgbRed:PetConstants.Speech.ink.red,green:PetConstants.Speech.ink.green,blue:PetConstants.Speech.ink.blue,alpha:0.45)])).draw(in:bounds.insetBy(dx:PetConstants.Speech.horizontalTextPadding,dy:PetConstants.Speech.verticalTextPadding))
+        let ink=NSColor(srgbRed:PetConstants.Speech.ink.red,green:PetConstants.Speech.ink.green,blue:PetConstants.Speech.ink.blue,alpha:isEnabled ? 1 : 0.45)
+        let content=bounds.insetBy(dx:PetConstants.Speech.horizontalTextPadding,dy:PetConstants.Speech.verticalTextPadding)
+        let textRect=NSRect(x:content.minX,y:content.maxY-titleHeight,width:content.width-(reservesNotificationSpace ? 20 : 0),height:titleHeight)
+        (isEnabled ? attributedTitle : NSAttributedString(string:title,attributes:[.font:font!,.foregroundColor:ink])).draw(in:textRect)
+        if hasNewMessage, let image=NotificationArtwork.frames.first, let context=NSGraphicsContext.current?.cgContext {
+            context.draw(image,in:NSRect(x:content.maxX-18,y:textRect.midY-9,width:18,height:18))
+        }
     }
     @objc func invoke() { handler?() }
 }

@@ -163,7 +163,7 @@ final class MessageCoordinator {
         testPhoto=ChatMessage(id:UUID().uuidString,pairID:testPairID,senderID:UUID().uuidString,recipientID:receiver,
             clientRequestID:UUID().uuidString,body:RichMessageBody(runs:[
                 RichTextRun(text:"A little hello from your person!\n",bold:true),
-                RichTextRun(text:"Your test photo arrived. Keep me on your screen 💛")]),attachment:attachment,createdAt:Date())
+                RichTextRun(text:"Your test photo arrived. Keep me on your screen 💛")]),attachment:attachment,createdAt:Date(),senderName:"Your person")
         testPhotoUnread=true; update()
     }
     func showOutbox() { update(); outbox.show(); onWindowsChanged?() }

@@ -409,7 +409,20 @@
       "from": "6b",
       "to": "6c",
       "kind": "afterClip",
-      "guard": "!takingPhoto"
+      "guard": "!takingPhoto && !cameraCanceled"
+    },
+    {
+      "from": "6b",
+      "to": "6a",
+      "kind": "afterClip",
+      "guard": "!takingPhoto && cameraCanceled",
+      "playback": "reverse"
+    },
+    {
+      "from": "6a",
+      "to": "1a",
+      "kind": "afterClip",
+      "guard": "reversingCamera"
     },
     {
       "from": "7b",
@@ -507,7 +520,7 @@
     "Single black arrows without a written weight are treated as deterministic weight 1.",
     "Check red guards on entry before issuing play; skipped gateway clips render no frame.",
     "No implicit event-interrupt edges are added to other states.",
-    "Only server acknowledgment of the active composer message clears takingPhoto; capture and offline enqueue hold 6b. The purple exit waits for the current 6b clip.",
+    "Capture and offline enqueue hold 6b. Server acknowledgment clears takingPhoto and uses 6c. Cancel clears takingPhoto with cameraCanceled, finishes 6b, then reverses the existing 6a clip before 1a. Reversed 6a is a playback variant, not another authored clip.",
     "Pet release/event exits are immediate after the first full pet cycle; self-loops retain completion eligibility. Dialogue forces pet false, including while the bubble is growing/collapsing.",
     "Recall weights (4c top, 4b screen, 4b window side): neither clearance 0/1/0; top only .8/.2/0; side only 0/.5/.5; both .4/.4/.2. Window-side 4b detaches at clip end; 4c stays attached until drag or the target disappears."
   ],

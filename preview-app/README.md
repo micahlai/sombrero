@@ -87,6 +87,7 @@ the animation folders, including the existing empty `1a` folder.
 - **Show photo**, **Take photo**, and **Read Bible** enqueue named requests.
   Requests remain pending through return/gateway states. There is an eight-item
   FIFO; every explicit button press is a separate test request.
+- **Cancel message** finishes the current 6B cycle, plays 6A backwards, then returns to 1A. It does not play 6C. Reversed 6A uses the original frames and calibration; the frame counter and scrubber follow the source frames in reverse.
 - **Pet**, **Goodbye**, **Showing photo**, **Taking photo**, and **Reading** are
   held checkboxes. Events do not silently set them. Check the corresponding held
   boolean when you want an idle routine to loop.

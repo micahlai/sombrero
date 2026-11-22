@@ -58,6 +58,24 @@ class StoreTests(unittest.TestCase):
             self.assertEqual(self.store.authenticate("Bearer " + client["token"]), client["deviceID"])
             self.assertEqual((self.credentials / f"device-{index}.json").stat().st_mode & 0o777, 0o600)
         self.error(401, lambda: self.store.authenticate("Bearer third-device"))
+
+    def test_sender_names_are_server_derived_and_legacy_history_is_decorated(self):
+        self.store.devices[self.first]["label"] = "  Micah\nLai  "
+        sent = self.store.send(self.first, self.message())
+        self.assertEqual(sent["senderName"], "Micah Lai")
+        received = self.store.sync(self.second, 0, 100)["changes"][0]["message"]
+        self.assertEqual(received["senderID"], self.first)
+        self.assertEqual(received["senderName"], "Micah Lai")
+        self.error(422, lambda: self.store.send(self.second, {**self.message(), "senderName":"Someone else"}))
+        with self.store.connect() as db:
+            old = dict(sent)
+            del old["senderName"]
+            db.execute("UPDATE changes SET payload=?", (json.dumps(old),))
+        self.store.devices[self.first]["label"] = "Micah"
+        upgraded = self.store.sync(self.second, 0, 100)["changes"][0]["message"]
+        self.assertEqual(upgraded["id"], sent["id"])
+        self.assertEqual(upgraded["senderName"], "Micah")
+        self.assertEqual(self.store.mark_read(self.second, sent["id"])["senderName"], "Micah")
         self.error(401, lambda: self.store.authenticate(None))
         self.assertEqual(self.store.identity(self.first)["peerID"], self.second)
 

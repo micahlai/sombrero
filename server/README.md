@@ -24,6 +24,12 @@ export SOMBRERO_MEDIA_DIR="$PWD/media"
 
 The provisioning command generates two private credential files and prints only their paths. Import one file on each Mac in the app's messaging connection settings. Never paste tokens into logs, chat, source control or shell command lines. The credential files contain `baseURL`, `deviceID`, `peerID`, `pairID` and `token`. Remote base URLs require HTTPS; plaintext is accepted only for loopback integration testing. Provisioning refuses to overwrite existing identities or message history.
 
+Messages now include `senderName`, derived from the authenticated sender's `label` in the server's existing `devices.json`. The client cannot choose/spoof this field. Sync also decorates historical change records with the current label, without rewriting message history. Names are whitespace-normalized and limited to 80 characters. Older clients ignore the extra field; updated clients still read older messages without it.
+
+New provisioning defaults to **Micah** for device 1 and **Angela** for device 2. First-time `setup-pi.sh` also accepts `SOMBRERO_FIRST_NAME` and `SOMBRERO_SECOND_NAME` overrides. These defaults do not rename an already provisioned deployment; edit its existing labels instead.
+
+For the existing Pi, human-readable names can be set by editing only each device's `label` in `/home/admin/.local/share/sombrero/devices.json`, then restarting `sombrero.service`. Preserve IDs, token hashes, pair ID and all other settings; do not rerun provisioning. The name appears in the Polaroid footer. The speech menu shows only Show message and its unread exclamation mark. This code update must be deployed to the Pi before live messages carry names.
+
 Run the tests from the repository root:
 
 ```sh

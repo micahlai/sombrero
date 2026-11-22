@@ -2,6 +2,20 @@ import XCTest
 import PetCore
 
 final class MessagingTests: XCTestCase {
+    func testSenderNamesRoundTripAndLegacyMessagesStillDecode() throws {
+        let message=ChatMessage(id:UUID().uuidString,pairID:UUID().uuidString,senderID:UUID().uuidString,
+            recipientID:UUID().uuidString,clientRequestID:UUID().uuidString,body:RichMessageBody(text:"Hi"),
+            attachment:nil,createdAt:Date(),senderName:"Micah")
+        let data=try MessagingJSON.encoder().encode(message)
+        let decoded=try MessagingJSON.decoder().decode(ChatMessage.self,from:data)
+        XCTAssertEqual(decoded.displaySenderName,"Micah")
+        var legacy=try JSONSerialization.jsonObject(with:data) as! [String:Any]
+        legacy.removeValue(forKey:"senderName")
+        let old=try MessagingJSON.decoder().decode(ChatMessage.self,from:JSONSerialization.data(withJSONObject:legacy))
+        XCTAssertNil(old.senderName); XCTAssertTrue(old.isValid)
+        var replica=MessageReplica(); replica.upsert(message); replica.upsert(old)
+        XCTAssertEqual(replica.messages[0].displaySenderName,"Micah")
+    }
     let identity=ChatIdentity(deviceID:"11111111-1111-4111-8111-111111111111",peerID:"22222222-2222-4222-8222-222222222222",pairID:"33333333-3333-4333-8333-333333333333")
     func message(readAt: Date? = nil) -> ChatMessage {
         ChatMessage(id:"44444444-4444-4444-8444-444444444444",pairID:identity.pairID,senderID:identity.peerID,
@@ -68,9 +82,23 @@ final class MessagingTests: XCTestCase {
         var duck=DuckController(); duck.request(.photoTake)
         duck.complete { 0 }; XCTAssertEqual(duck.state,.cameraIdle)
         duck.cancel(.photoTake); duck.complete { 0 }
+        XCTAssertEqual(duck.state,.grabCamera); XCTAssertTrue(duck.isReversingCamera)
+        duck.complete { 0 }
         XCTAssertEqual(duck.state,.look); XCTAssertNil(duck.active)
         duck.request(.photoTake); duck.complete { 0 }
         duck.takingPhoto=false; duck.complete { 0 }
         XCTAssertEqual(duck.state,.deliverPhoto)
+    }
+    func testReopenCameraDuringReverseQueuesNewGrabWithoutInterruptingStow() {
+        var duck=DuckController(); duck.request(.photoTake); duck.complete { 0 }
+        duck.cancel(.photoTake); duck.complete { 0 }
+        XCTAssertTrue(duck.isReversingCamera)
+        let token=duck.generation
+        duck.request(.photoTake); duck.request(.photoTake)
+        XCTAssertEqual(duck.pending,[.photoTake]); XCTAssertEqual(duck.generation,token)
+        duck.complete { 0 }
+        XCTAssertEqual(duck.state,.grabCamera); XCTAssertFalse(duck.isReversingCamera)
+        XCTAssertTrue(duck.takingPhoto); XCTAssertTrue(duck.pending.isEmpty)
+        duck.complete { 0 }; XCTAssertEqual(duck.state,.cameraIdle)
     }
 }

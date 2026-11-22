@@ -2,6 +2,15 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {DrawingClock,naturalFrameSize,ClipCache} from '../web/playback.mjs';
 
+test('reversed camera playback shows every original frame from last to first',()=>{
+  const clock=new DrawingClock(6);clock.reset(0);
+  for(let frame=13;frame>=0;frame--){
+    assert.equal(clock.frame(14,true),frame);assert.equal(clock.completed(14),false);
+    clock.advance((14-frame)*1000/6);
+  }
+  assert.equal(clock.completed(14),true);
+});
+
 test('10 placeholder frames hold for exactly 10/6 seconds, not 10 timeline frames',()=>{
   const c=new DrawingClock(6);c.reset(0);c.advance(1500);
   assert.equal(c.frame(10),9);assert.equal(c.completed(10),false);

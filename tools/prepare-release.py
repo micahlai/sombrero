@@ -4,6 +4,8 @@ import os
 import re
 import sys
 import xml.etree.ElementTree as ET
+import plistlib
+import zipfile
 from pathlib import Path
 
 namespace = {"sparkle":"http://www.andymatuschak.org/xml-namespaces/sparkle"}
@@ -16,7 +18,9 @@ if sys.argv[1] == "--check-build":
         raise SystemExit("Build number must exceed every build in the published feed")
     raise SystemExit(0)
 
-directory, repo, tag = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
+verify_only = sys.argv[1] == "--verify"
+arguments = sys.argv[2:] if verify_only else sys.argv[1:]
+directory, repo, tag = Path(arguments[0]), arguments[1], arguments[2]
 if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repo) or not re.fullmatch(r"v[0-9.]+-[0-9]+", tag):
     raise SystemExit("Invalid release URL components")
 archive = directory / "sombrero.zip"
@@ -33,6 +37,28 @@ if enclosure is None or enclosure.get("url") != url or not enclosure.get("{"+nam
 version = item.findtext("sparkle:version", namespaces=namespace) or enclosure.get("{"+namespace["sparkle"]+"}version")
 if version != os.environ["SOMBRERO_BUILD"]:
     raise SystemExit("Appcast build differs from requested release build")
+short_version = item.findtext("sparkle:shortVersionString", namespaces=namespace) or enclosure.get("{"+namespace["sparkle"]+"}shortVersionString")
+if short_version and short_version != os.environ["SOMBRERO_VERSION"]:
+    raise SystemExit("Appcast version differs from requested release version")
+if verify_only:
+    expected_sum = f"{digest}  sombrero.zip\n"
+    if (directory / "SHA256SUMS").read_text() != expected_sum:
+        raise SystemExit("Prepared archive checksum changed; refusing to publish")
+    installer = (directory / "install.sh").read_text()
+    if f"archive_url='{url}'" not in installer or f"archive_sha256='{digest}'" not in installer:
+        raise SystemExit("Prepared installer does not match this archive")
+    if not (directory / "release-notes.md").is_file():
+        raise SystemExit("Prepared release notes are missing")
+    with zipfile.ZipFile(archive) as bundle:
+        info = plistlib.loads(bundle.read("sombrero.app/Contents/Info.plist"))
+    required = {"CFBundleIdentifier":"com.desktop-pet.watercolor-duck", "CFBundleVersion":version,
+                "CFBundleShortVersionString":os.environ["SOMBRERO_VERSION"],
+                "SUPublicEDKey":os.environ["SOMBRERO_UPDATE_PUBLIC_KEY"],
+                "SUFeedURL":f"https://github.com/{repo}/releases/latest/download/appcast.xml"}
+    if any(info.get(key) != value for key, value in required.items()):
+        raise SystemExit("Prepared app identity, version, signing key, or update feed does not match")
+    print(f"Verified prepared release {tag}; existing artifacts were not modified.")
+    raise SystemExit(0)
 template = Path("scripts/install-macos.sh.in").read_text()
 (directory / "install.sh").write_text(template.replace("@ARCHIVE_URL@", url).replace("@ARCHIVE_SHA256@", digest))
 (directory / "SHA256SUMS").write_text(f"{digest}  sombrero.zip\n")

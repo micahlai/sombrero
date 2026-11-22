@@ -10,6 +10,9 @@ export CLANG_MODULE_CACHE_PATH="$PWD/.build/clang-module-cache"
 export SWIFTPM_MODULECACHE_OVERRIDE="$PWD/.build/swift-module-cache"
 configuration="${1:-debug}"
 build_args=(-c "$configuration")
+if [[ -n "${SOMBRERO_DEBUG_INFO_FORMAT:-}" ]]; then
+    build_args+=(-debug-info-format "$SOMBRERO_DEBUG_INFO_FORMAT")
+fi
 if [[ "${SOMBRERO_UNIVERSAL:-0}" == 1 ]]; then
     build_args+=(--arch arm64 --arch x86_64)
 fi
@@ -24,6 +27,7 @@ if [[ "${SOMBRERO_SPARKLE:-0}" == 1 ]]; then
     }
 fi
 python3 tools/import-final-sprites.py
+python3 tools/import-notification-artwork.py
 swift build --disable-sandbox --cache-path "$PWD/.build/package-cache" "${build_args[@]}"
 bin_dir="$(swift build --disable-sandbox --cache-path "$PWD/.build/package-cache" "${build_args[@]}" --show-bin-path)"
 mkdir -p "$PWD/build" "$PWD/.build"

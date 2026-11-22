@@ -77,6 +77,7 @@ public struct ChatMessage: Codable, Equatable, Identifiable {
     public let id: String
     public let pairID: String
     public let senderID: String
+    public var senderName: String?
     public let recipientID: String
     public let clientRequestID: String
     public let body: RichMessageBody
@@ -84,9 +85,15 @@ public struct ChatMessage: Codable, Equatable, Identifiable {
     public let createdAt: Date
     public var readAt: Date?
     public init(id: String, pairID: String, senderID: String, recipientID: String, clientRequestID: String,
-                body: RichMessageBody, attachment: ChatAttachment?, createdAt: Date, readAt: Date? = nil) {
+                body: RichMessageBody, attachment: ChatAttachment?, createdAt: Date, readAt: Date? = nil, senderName: String? = nil) {
         self.id=id; self.pairID=pairID; self.senderID=senderID; self.recipientID=recipientID
         self.clientRequestID=clientRequestID; self.body=body; self.attachment=attachment; self.createdAt=createdAt; self.readAt=readAt
+        self.senderName=senderName
+    }
+    public var displaySenderName: String? {
+        guard let senderName else { return nil }
+        let name=senderName.split(whereSeparator: { $0.isWhitespace }).joined(separator:" ")
+        return name.isEmpty ? nil : String(name.prefix(80))
     }
     public func belongs(to identity: ChatIdentity) -> Bool {
         identity.isValid && pairID == identity.pairID &&
@@ -154,6 +161,7 @@ public struct MessageReplica: Codable, Equatable {
         if let index=messages.firstIndex(where: { $0.id == value.id }) {
             // Read state is monotonic, including receipts queued while offline.
             if value.readAt == nil { value.readAt=messages[index].readAt }
+            if value.senderName == nil { value.senderName=messages[index].senderName }
             messages[index]=value
         } else { messages.append(value) }
         messages.sort { $0.createdAt == $1.createdAt ? $0.id < $1.id : $0.createdAt < $1.createdAt }

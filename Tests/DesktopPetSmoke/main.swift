@@ -9,9 +9,30 @@ let app = NSApplication.shared
 app.setActivationPolicy(.prohibited)
 let assets = SpriteLibrary()
 precondition(assets.failure == nil, "Packaged assets must load")
+precondition(NotificationArtwork.frames.count==5 && NotificationArtwork.frames.allSatisfy { $0.width==512 && $0.height==512 })
+let notificationView=SpriteView(frame:NSRect(x:0,y:0,width:300,height:300))
+notificationView.sprite=assets.frame(state:.look,index:0); notificationView.hasUnreadMessages=true
+let initialNotice=notificationView.notificationFrameIndex
+notificationView.advanceNotification(by:1.0/6)
+precondition(notificationView.notificationFrameIndex != initialNotice)
+notificationView.state = .wave; notificationView.sprite=assets.frame(state:.wave,index:0)
+precondition(notificationView.notificationFrameIndex==1,"Duck state changes must not reset the notification loop")
+notificationView.hasUnreadVerse=true; notificationView.hasUnreadMessages=false
+precondition(notificationView.notificationFrameIndex==1,"A verse keeps the shared notification visible after messages are read")
+notificationView.hasUnreadVerse=false
+precondition(notificationView.notificationFrameIndex==0)
 let bubble = SpeechBubble(images: assets.speechFrames)
 let output = URL(fileURLWithPath: ".build/ui-smoke")
 try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
+notificationView.hasUnreadMessages=true
+for frame in 0..<NotificationArtwork.frames.count {
+    precondition(notificationView.notificationFrameIndex==frame)
+    let markerBitmap=notificationView.bitmapImageRepForCachingDisplay(in:notificationView.bounds)!
+    notificationView.cacheDisplay(in:notificationView.bounds,to:markerBitmap)
+    try markerBitmap.representation(using:.png,properties:[:])!.write(to:output.appendingPathComponent("notification-\(frame).png"))
+    notificationView.advanceNotification(by:1.0/6)
+}
+notificationView.hasUnreadMessages=false
 for (name, mode) in [("menu", SpeechBubble.Mode.menu), ("away", .away), ("bible", .bible)] {
     bubble.show(mode: mode); bubble.advance(by: 1); bubble.panel.orderOut(nil)
     let view = bubble.panel.contentView!
@@ -139,6 +160,37 @@ precondition(tracker.targets(viewportSize: viewport, visibleBounds: anchorBounds
              "A real foreground document must still block windows behind it")
 precondition(tracker.sideTargets(visibleBounds: reference, artwork: artwork).isEmpty)
 print("PASS WindowServer detection: transparent overlay, both clearances, moving anchors, real occlusion, calibrated cut alignment")
+
+// A screenshot may change only the safe height, preserving the calibrated cut
+// and following that chosen fraction while the window moves during 4b.
+inventory = [overlay,windowInfo(42,document)]
+let landingSide=tracker.sideTargets(visibleBounds:reference,artwork:artwork,force:true)[0]
+let landingPlan=tracker.landingPlan(for:landingSide,bounds:reference,artwork:artwork,baselineOffset:78)!
+let landingRow=Int(landingPlan.region.height/2)
+let landingPoint=landingPlan.choose(rows:[landingRow],imageHeight:Int(ceil(landingPlan.region.height)),sample:0)
+let alignedSide=tracker.alignedSideTarget(landingSide,origin:landingPoint,bounds:reference,artwork:artwork)!
+precondition(abs(alignedSide.origin.x-landingSide.origin.x) < 0.001)
+precondition(abs(tracker.origin(for:alignedSide.attachment,visibleBounds:reference,artwork:artwork)!.y-landingPoint.y) < 0.001)
+document=document.offsetBy(dx:10,dy:10); inventory=[overlay,windowInfo(42,document)]
+precondition(tracker.alignedSideTarget(landingSide,origin:landingPoint,bounds:reference,artwork:artwork) == nil,
+             "A screenshot taken before the window moved must not change its height")
+inventory=[windowInfo(100,display.visibleFrame),windowInfo(42,document)]
+precondition(tracker.landingPlan(for:alignedSide,bounds:reference,artwork:artwork,baselineOffset:78) == nil,
+             "Occluded landing intervals cannot be suggested to image detection")
+
+func landingImage(width: Int, height: Int, row: Int) -> CGImage {
+    var pixels=[UInt8](repeating:255,count:width*height*4)
+    for y in row..<height { for x in 0..<width {
+        let index=(y*width+x)*4
+        pixels[index]=50; pixels[index+1]=70; pixels[index+2]=90
+    } }
+    return CGImage(width:width,height:height,bitsPerComponent:8,bitsPerPixel:32,bytesPerRow:width*4,
+        space:CGColorSpaceCreateDeviceRGB(),bitmapInfo:CGBitmapInfo(rawValue:CGImageAlphaInfo.premultipliedLast.rawValue),
+        provider:CGDataProvider(data:Data(pixels) as CFData)!,decode:nil,shouldInterpolate:false,intent:.defaultIntent)!
+}
+precondition(EdgeLandingCapture.edgeRows(in:landingImage(width:80,height:160,row:45)) == [45],
+             "Native CGImage conversion must retain the screenshot's top-down row coordinates")
+print("PASS screenshot landing coordinates, safe window-side alignment, and stale/occluded target rejection")
 
 // Render the supplied 4c ledge against a window edge at every native pet size.
 // This catches source padding/calibration offsets, beyond a synthetic ground anchor.
@@ -390,7 +442,7 @@ let readinessCoordinator=PetCoordinator(store:pausedPreferences,dailyBibleStore:
                                         defaults:integrationDefaults,currentDate:{ readinessDate })
 let readinessMenu=NSMenu()
 readinessCoordinator.menuWillOpen(readinessMenu)
-precondition(readinessMenu.items.contains { $0.title == "Read Today's Bible Verse" && $0.isEnabled },
+precondition(readinessMenu.items.first { $0.title == "Preferences" }?.submenu?.items.contains { $0.title == "Read Today's Bible Verse" && $0.isEnabled } == true,
              "The daily verse is available in the morning, including while hidden/paused")
 func bubbleButtons(_ parent: NSView) -> [NSButton] {
     parent.subviews.flatMap { child in
@@ -400,24 +452,115 @@ func bubbleButtons(_ parent: NSView) -> [NSButton] {
 readinessCoordinator.bubble.show()
 let morningButtons=bubbleButtons(readinessCoordinator.bubble.panel.contentView!)
 precondition(morningButtons.contains { $0.title == "Read Bible verse" })
-precondition(!morningButtons.contains { ["Done","Close","See message"].contains($0.title) },
-             "Main menu omits Done/Close and hides See message when no message exists")
-readinessCoordinator.bubble.setMessagesAvailable(true)
-precondition(bubbleButtons(readinessCoordinator.bubble.panel.contentView!).contains { $0.title == "See message" && $0.isEnabled })
-readinessCoordinator.bubble.setMessagesAvailable(false)
-precondition(!bubbleButtons(readinessCoordinator.bubble.panel.contentView!).contains { $0.title == "See message" })
+precondition(!morningButtons.contains { ["Done","Close"].contains($0.title) },"Main menu omits Done/Close")
+precondition(morningButtons.contains { $0.title == "Show message" && $0.isEnabled },"Messages stay available even with an empty inbox")
+readinessCoordinator.bubble.setMessageStatus(unreadCount:2)
+readinessCoordinator.bubble.advance(by:1)
+let unreadButton=bubbleButtons(readinessCoordinator.bubble.panel.contentView!).first { $0.title == "Show message" }!
+precondition(unreadButton.isEnabled && unreadButton.title == "Show message" && unreadButton.accessibilityLabel()?.contains("2 new") == true)
+readinessCoordinator.bubble.panel.contentView!.layoutSubtreeIfNeeded()
+let menuImage=readinessCoordinator.bubble.panel.contentView!.bitmapImageRepForCachingDisplay(in:readinessCoordinator.bubble.panel.contentView!.bounds)!
+readinessCoordinator.bubble.panel.contentView!.cacheDisplay(in:readinessCoordinator.bubble.panel.contentView!.bounds,to:menuImage)
+try menuImage.representation(using:.png,properties:[:])!.write(to:output.appendingPathComponent("menu-new-message.png"))
+readinessCoordinator.bubble.setMessageStatus(unreadCount:0)
+let readButton=bubbleButtons(readinessCoordinator.bubble.panel.contentView!).first { $0.title == "Show message" }!
+precondition(readButton.isEnabled && readButton.accessibilityLabel()?.contains("new") == false,"Reading clears the marker without hiding messages")
 precondition(readinessStore.load().today(at:readinessDate) == originalAssignment)
 readinessCoordinator.menuDidClose(readinessMenu)
 readinessDate=integrationDate
 readinessCoordinator.menuWillOpen(readinessMenu)
-precondition(readinessMenu.items.first { $0.title == "Read Today's Bible Verse" }?.isEnabled == true)
+precondition(readinessMenu.items.first { $0.title == "Preferences" }?.submenu?.items.first { $0.title == "Read Today's Bible Verse" }?.isEnabled == true)
 precondition(readinessStore.load().today(at:readinessDate) == originalAssignment,"The verse stays the same all day")
 readinessCoordinator.menuDidClose(readinessMenu)
 readinessDate=integrationCalendar.date(byAdding:.day,value:1,to:readinessDate)!
 readinessCoordinator.readDailyBible()
 precondition(readinessStore.load().today(at:readinessDate)?.verseID != originalAssignment.verseID,"A new local date receives a different verse")
 readinessCoordinator.stop()
-print("PASS daily verse is available all day and changes tomorrow; main menu hides unavailable messages and omits Done/Close")
+print("PASS daily verse available all day; Show message always enabled with only an unread marker, cleared after reading")
+
+// Keep recovery, timing, and window controls at the top level; count down even while paused/hidden.
+let countdownDefaults=UserDefaults(suiteName:"sombrero.smoke.countdown.\(UUID().uuidString)")!
+var countdownDate=integrationDate
+countdownDefaults.set(countdownDate.addingTimeInterval(4*3600),forKey:"sombrero.returnDeadline")
+let countdownStore=PreferenceStore(file:integrationOutput.appendingPathComponent("countdown.json"))
+countdownStore.save(paused)
+let countdownCoordinator=PetCoordinator(store:countdownStore,dailyBibleStore:readinessStore,
+                                        defaults:countdownDefaults,currentDate:{ countdownDate })
+let controlMenu=NSMenu()
+countdownCoordinator.menuWillOpen(controlMenu)
+precondition(controlMenu.items.filter { !$0.isSeparatorItem }.map(\.title) == [
+    "Come back now", "Back in 4:00:00", "Always on Top", "Show on All Desktops",
+    "Click Through Pet", "Pause Motion", "Size", "Preferences"
+],"Only recovery, timing, and window settings belong in the main control panel")
+let settings=controlMenu.items.first { $0.title == "Preferences" }!.submenu!
+precondition(settings.items.first!.title.hasPrefix("Version ") && !settings.items.first!.isEnabled)
+precondition(["Show Pet","Open Speech Menu","Send Message…","Message Connection…","Message Outbox…","Debug","Quit sombrero"].allSatisfy { title in settings.items.contains { $0.title == title } })
+precondition(controlMenu.items.first { $0.title == "Size" }!.submenu!.items.count == PetConstants.Size.options.count)
+precondition(controlMenu.items.first { $0.title == "Pause Motion" }!.state == .on)
+countdownDate=countdownDate.addingTimeInterval(3*3600+59*60+45)
+RunLoop.main.run(until:Date().addingTimeInterval(1.1))
+precondition(controlMenu.items[1].title == "Back in 0:15","The countdown refreshes while its menu stays open")
+countdownCoordinator.menuDidClose(controlMenu)
+let recallAction=controlMenu.items[0]
+precondition(NSApp.sendAction(recallAction.action!,to:recallAction.target,from:recallAction))
+precondition(countdownDefaults.object(forKey:"sombrero.returnDeadline") == nil)
+countdownCoordinator.menuWillOpen(controlMenu)
+precondition(controlMenu.items[1].title == "Not away","Come back now clears the timer")
+countdownCoordinator.menuDidClose(controlMenu)
+countdownCoordinator.stop()
+countdownDefaults.removeObject(forKey:"sombrero.returnDeadline")
+print("PASS compact control panel, Preferences/version, live away countdown, and immediate recall")
+
+// Exercise asynchronous 4b preparation with synthetic screenshots; no real
+// capture, Screen Recording prompt, or screen content is used by this test.
+var pendingLandingCapture: ((CGImage?) -> Void)?
+var capturedLandingRegion=CGRect.zero
+let captureFixture=EdgeLandingCapture(capture: { rect,callback in
+    capturedLandingRegion=rect; pendingLandingCapture=callback
+})
+let landingPreferences=PreferenceStore(file:integrationOutput.appendingPathComponent("landing.json"))
+var landingPaused=PetPreferences(); landingPaused.isPaused=true
+landingPreferences.save(landingPaused)
+let landingCoordinator=PetCoordinator(store:landingPreferences,dailyBibleStore:readinessStore,
+    defaults:integrationDefaults,landingCapture:captureFixture,screenEntryFrame:{ display.frame })
+let landingMenu=NSMenu()
+func previewLanding(_ state: DuckState) {
+    landingCoordinator.menuWillOpen(landingMenu)
+    let options=landingMenu.items.first { $0.title == "Preferences" }!.submenu!.items.first { $0.title == "Debug" }!
+        .submenu!.items.first { $0.title == "Preview Animation" }!.submenu!
+    let option=options.items.first { $0.representedObject as? String == state.rawValue }!
+    landingCoordinator.menuDidClose(landingMenu)
+    precondition(NSApp.sendAction(option.action!,to:option.target,from:option))
+}
+previewLanding(.peek)
+let landingView=NSApp.windows.compactMap { $0.contentView as? SpriteView }.first { $0.coordinator === landingCoordinator }!
+precondition(landingView.isHidden && pendingLandingCapture != nil,"Wait for placement before showing 4b")
+let screenshotHeight=Int(ceil(capturedLandingRegion.height)), screenshotRow=screenshotHeight/3
+let screenshot=landingImage(width:Int(ceil(capturedLandingRegion.width)),height:screenshotHeight,row:screenshotRow)
+pendingLandingCapture!(screenshot)
+precondition(!landingView.isHidden)
+let expectedFeet=capturedLandingRegion.maxY-Double(screenshotRow)*capturedLandingRegion.height/Double(screenshotHeight)
+precondition(abs(landingView.window!.frame.minY+landingView.bounds.width*PetConstants.Geometry.groundAnchor.y-expectedFeet) <= 1,
+             "The duck's feet must align with the selected screenshot edge within AppKit pixel rounding")
+previewLanding(.peek)
+let failedOrigin=landingView.window!.frame.origin
+pendingLandingCapture!(nil)
+precondition(!landingView.isHidden && landingView.window!.frame.origin == failedOrigin,"Failed capture retains the exact traditional placement")
+previewLanding(.peek)
+let staleCapture=pendingLandingCapture!
+previewLanding(.look)
+let newerOrigin=landingView.window!.frame.origin
+staleCapture(screenshot)
+precondition(!landingView.isHidden && landingView.window!.frame.origin == newerOrigin && landingCoordinator.controller.state == .look,
+             "A stale screenshot cannot move or hide a newer animation")
+previewLanding(.peek)
+let timeoutCapture=pendingLandingCapture!, timeoutOrigin=landingView.window!.frame.origin
+RunLoop.main.run(until:Date().addingTimeInterval(0.75))
+precondition(!landingView.isHidden && landingView.window!.frame.origin == timeoutOrigin,"A slow capture must fall back promptly")
+timeoutCapture(screenshot)
+precondition(landingView.window!.frame.origin == timeoutOrigin,"A late screenshot cannot move the visible duck")
+landingCoordinator.stop()
+print("PASS 4b screenshot preparation, feet alignment, capture failure/timeout fallback, and stale callback safety")
 
 // Startup checks never invoke real permission prompts during tests.
 precondition(StartupPermissions.required.map(\.name) == ["Camera"],"Real photo capture needs camera access, without unrelated grants")

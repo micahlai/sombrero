@@ -23,10 +23,23 @@ final class SpriteView: NSView {
     var sprite: SpriteLibrary.Frame?
     var state: DuckState = .look
     var flipsHorizontally = false
-    var hasUnreadVerse = false
-    var hasUnreadMessages = false
+    var hasUnreadVerse = false { didSet { notificationsChanged() } }
+    var hasUnreadMessages = false { didSet { notificationsChanged() } }
     private var hasNotifications: Bool { hasUnreadVerse || hasUnreadMessages }
     var badgeBounds: CGRect?
+    private var notificationElapsed = 0.0
+    private(set) var notificationFrameIndex = 0
+    private func notificationsChanged() {
+        if !hasNotifications { notificationElapsed=0; notificationFrameIndex=0 }
+        needsDisplay=true
+    }
+    func advanceNotification(by delta: Double) {
+        guard hasNotifications, delta.isFinite, delta>0, !NotificationArtwork.frames.isEmpty else { return }
+        let period=Double(NotificationArtwork.frames.count)/Double(PetConstants.Animation.drawingFPS)
+        notificationElapsed=(notificationElapsed+delta).truncatingRemainder(dividingBy:period)
+        let frame=min(NotificationArtwork.frames.count-1,Int(notificationElapsed*Double(PetConstants.Animation.drawingFPS)+PetConstants.Animation.timeEpsilon))
+        if frame != notificationFrameIndex { notificationFrameIndex=frame; needsDisplay=true }
+    }
     private var pointerOrigin: NSPoint?
     private var windowOrigin: NSPoint?
     private var didDrag = false
@@ -49,8 +62,9 @@ final class SpriteView: NSView {
         let fallback=PetConstants.Geometry.placeholderBounds
         let painted=badgeBounds ?? sprite?.occupiedBounds ?? CGRect(x:fallback.x,y:fallback.y,width:fallback.width,height:fallback.height)
         let size=PetConstants.Appearance.badgeSize
-        let x=flipsHorizontally ? 1-painted.minX : painted.maxX
-        return NSRect(x:min(bounds.width-size,max(0,x*bounds.width-size/2)),y:min(bounds.height-size,max(0,painted.maxY*bounds.height-size/2)),width:size,height:size)
+        let x=flipsHorizontally ? 1-painted.midX : painted.midX
+        // Keep the marker directly above the duck; screen edges may clip it.
+        return NSRect(x:x*bounds.width-size/2,y:painted.maxY*bounds.height+4,width:size,height:size)
     }
 
     override func draw(_ dirtyRect: NSRect) {
@@ -72,11 +86,16 @@ final class SpriteView: NSView {
             text.draw(at: NSPoint(x: interactiveRect.midX - size.width / 2, y: interactiveRect.midY - size.height / 2), withAttributes: attributes)
         }
         if hasNotifications {
-            NSColor.systemRed.setFill(); NSBezierPath(ovalIn:badgeRect).fill()
-            let mark="!" as NSString
-            let attributes: [NSAttributedString.Key:Any]=[.font:NSFont.systemFont(ofSize:10,weight:.bold),.foregroundColor:NSColor.white]
-            let size=mark.size(withAttributes:attributes)
-            mark.draw(at:NSPoint(x:badgeRect.midX-size.width/2,y:badgeRect.midY-size.height/2),withAttributes:attributes)
+            if NotificationArtwork.frames.indices.contains(notificationFrameIndex), let context=NSGraphicsContext.current?.cgContext {
+                context.saveGState(); context.interpolationQuality = .high
+                context.draw(NotificationArtwork.frames[notificationFrameIndex],in:badgeRect)
+                context.restoreGState()
+            } else {
+                let mark="!" as NSString
+                let attributes: [NSAttributedString.Key:Any]=[.font:AppTypography.font(size:24),.foregroundColor:NSColor(srgbRed:0.43,green:0.73,blue:0.48,alpha:1)]
+                let size=mark.size(withAttributes:attributes)
+                mark.draw(at:NSPoint(x:badgeRect.midX-size.width/2,y:badgeRect.midY-size.height/2),withAttributes:attributes)
+            }
         }
     }
 

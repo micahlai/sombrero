@@ -151,6 +151,26 @@ final class SpriteTests: XCTestCase {
             }
         }
     }
+    func testCameraCancelFinishesHeldCycleThenPlaysEveryGrabFrameBackwards() throws {
+        let counts=SpriteLibrary().frameCounts
+        var controller=DuckController(); controller.setDialogueOpen(true); controller.request(.photoTake)
+        var player=SpritePlayback(frameCounts:counts)
+        let tick=1.0/Double(PetConstants.Animation.drawingFPS)
+        player.advance(by:Double(counts[.grabCamera]!)*tick,controller:&controller) { 0 }
+        XCTAssertEqual(player.state,.cameraIdle)
+        player.advance(by:tick,controller:&controller) { 0 }
+        controller.cancel(.photoTake)
+        XCTAssertEqual(controller.state,.cameraIdle)
+        player.advance(by:Double(counts[.cameraIdle]!-2)*tick,controller:&controller) { 0 }
+        XCTAssertEqual(player.state,.cameraIdle)
+        player.advance(by:tick,controller:&controller) { 0 }
+        XCTAssertEqual(player.state,.grabCamera); XCTAssertTrue(player.isReversed)
+        for frame in (0..<counts[.grabCamera]!).reversed() {
+            XCTAssertEqual(player.frameIndex,frame)
+            player.advance(by:tick,controller:&controller) { XCTFail("Cancel exit must not roll randomness"); return 0 }
+        }
+        XCTAssertEqual(player.state,.look); XCTAssertFalse(player.isReversed); XCTAssertNil(controller.active)
+    }
     func testShortHoverHoldsActualFramesUntilFirstCycleCompletes() {
         let counts = Dictionary(uniqueKeysWithValues: DuckState.allCases.filter { $0 != .timeout }.map { ($0, 6) })
         for (idle, petState, released) in [(DuckState.look, DuckState.standingPet, DuckState.wave), (.sitting, .sittingPet, .sitting)] {

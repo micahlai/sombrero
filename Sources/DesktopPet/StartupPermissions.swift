@@ -13,6 +13,8 @@ final class StartupPermissions: NSObject {
     /// Real still-photo capture needs Camera access. Mouse-only monitoring,
     /// geometry-only window inventory, app-owned storage, and offline reading
     /// need no further privacy grants. Authorization never starts a camera.
+    /// Optional 4b screenshot landing requests Screen Recording separately;
+    /// declining it preserves geometry-based entries and never blocks startup.
     /// Video attachments are files; the app never requests microphone access.
     static let required: [StartupPermission] = [CameraService.startupPermission]
 

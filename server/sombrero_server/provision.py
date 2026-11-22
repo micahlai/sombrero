@@ -19,7 +19,7 @@ def private_json(path: Path, value: dict):
 
 
 def provision(data_dir: Path, media_dir: Path, credentials_dir: Path, base_url: str,
-              initialize_media: bool = False, labels: tuple[str, str] = ("First Mac", "Second Mac"),
+              initialize_media: bool = False, labels: tuple[str, str] = ("Micah", "Angela"),
               mount_root: Path | None = None) -> list[Path]:
     parsed = urlparse(base_url)
     if parsed.scheme != "https" and not (parsed.scheme == "http" and parsed.hostname in ("localhost", "127.0.0.1", "::1")):
@@ -80,8 +80,8 @@ def main():
     parser.add_argument("--base-url", required=True)
     parser.add_argument("--initialize-media", action="store_true")
     parser.add_argument("--mount-root", type=Path, help="Require this external-volume mount now and on every service request")
-    parser.add_argument("--first-name", default="First Mac")
-    parser.add_argument("--second-name", default="Second Mac")
+    parser.add_argument("--first-name", default="Micah")
+    parser.add_argument("--second-name", default="Angela")
     args = parser.parse_args()
     try:
         paths = provision(args.data_dir, args.media_dir, args.credentials_dir, args.base_url,

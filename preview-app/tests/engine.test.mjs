@@ -141,7 +141,27 @@ test('all authored edges are reachable with suitable flags and RNG', () => {
       for (const h of c.history) visited.add(h.edge);
     }
   }
+  const canceled=make();canceled.setFlag('takingPhoto',true);canceled.trigger('photoTake');canceled.complete();
+  canceled.cancelCamera();canceled.complete();canceled.complete();
+  for (const h of canceled.history) visited.add(h.edge);
   assert.deepEqual(graph.transitions.map((_,i) => `edge-${i}`).filter(id => !visited.has(id)), []);
+});
+
+test('canceling a message holds the current 6b cycle then reverses 6a without delivery', () => {
+  const c=make(()=>{throw Error('Cancel must not consume randomness');});
+  c.setFlag('takingPhoto',true);c.trigger('photoTake');c.complete();
+  assert.equal(c.state,'6b');c.cancelCamera();assert.equal(c.state,'6b');
+  c.complete();assert.equal(c.state,'6a');assert.equal(c.reversingCamera,true);
+  c.complete();assert.equal(c.state,'1a');assert.equal(c.reversingCamera,false);assert.equal(c.active,null);
+  assert.equal(c.history.some(h=>h.to==='6c'),false);
+});
+
+test('a new message requested during reversed 6a starts after stowing completes', () => {
+  const c=make();c.setFlag('takingPhoto',true);c.trigger('photoTake');c.complete();
+  c.cancelCamera();c.complete();assert.equal(c.reversingCamera,true);
+  c.setFlag('takingPhoto',true);c.trigger('photoTake');assert.equal(c.reversingCamera,true);
+  c.complete();assert.equal(c.state,'6a');assert.equal(c.reversingCamera,false);
+  c.complete();assert.equal(c.state,'6b');assert.equal(c.flags.takingPhoto,true);
 });
 
 test('both pet exits invalidate stale clips immediately and held loops stay finite', () => {

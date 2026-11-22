@@ -150,6 +150,13 @@ class Store:
     def peer(self, device: str) -> str:
         return next(d for d in self.devices if d != device)
 
+    def with_sender_name(self, message: dict) -> dict:
+        # Display names come from the authenticated device configuration, never
+        # client-supplied message fields. This also decorates pre-upgrade history.
+        label = self.devices.get(message["senderID"], {}).get("label", "")
+        name = " ".join(label.split())[:80] if isinstance(label, str) else ""
+        return {**message, "senderName": name or "Your person"}
+
     @staticmethod
     def validate_body(body: Any) -> dict:
         if not isinstance(body, dict) or set(body) != {"version", "runs"} or type(body["version"]) is not int or body["version"] != 1:
@@ -177,10 +184,10 @@ class Store:
         attachment = None
         if row["attachment_id"]:
             attachment = self.attachment_json(db.execute("SELECT * FROM attachments WHERE id=?", (row["attachment_id"],)).fetchone())
-        return {"id": row["id"], "pairID": self.pair_id, "senderID": row["sender_id"],
+        return self.with_sender_name({"id": row["id"], "pairID": self.pair_id, "senderID": row["sender_id"],
                 "recipientID": row["recipient_id"], "clientRequestID": row["client_request_id"],
                 "body": json.loads(row["body"]), "attachment": attachment,
-                "createdAt": row["created_at"], "readAt": row["read_at"]}
+                "createdAt": row["created_at"], "readAt": row["read_at"]})
 
     def send(self, device: str, payload: Any) -> dict:
         if not isinstance(payload, dict) or not set(payload) <= {"clientRequestID", "body", "attachmentID"}:
@@ -241,7 +248,7 @@ class Store:
             rows = db.execute("SELECT * FROM changes WHERE sequence>? ORDER BY sequence LIMIT ?", (cursor, limit + 1)).fetchall()
             selected = rows[:limit]
             return {"cursor": selected[-1]["sequence"] if selected else cursor, "hasMore": len(rows) > limit,
-                    "changes": [{"sequence": r["sequence"], "type": r["type"], "message": json.loads(r["payload"])} for r in selected]}
+                    "changes": [{"sequence": r["sequence"], "type": r["type"], "message": self.with_sender_name(json.loads(r["payload"]))} for r in selected]}
 
     def attachment_path(self, attachment_id: str) -> Path:
         return self.settings.media_dir / (identifier(attachment_id) + ".bin")

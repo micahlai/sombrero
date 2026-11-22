@@ -21,6 +21,9 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     private let sprites: SpriteLibrary
     let bubble: SpeechBubble
     private let windowTracker = WindowTracker()
+    private let landingCapture: EdgeLandingCapture
+    private let screenEntryFrame: () -> NSRect?
+    private var landingRequest: UUID?
     private var messaging: MessageCoordinator?
     private let updates = UpdateController()
     private var attachment = PetAttachment()
@@ -39,6 +42,8 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     private var statusItem: NSStatusItem!
     private var timer: Timer?
     private var recallTimer: Timer?
+    private var menuCountdownTimer: Timer?
+    private weak var countdownItem: NSMenuItem?
     private var pointerCaptured = false
     private var menuTracking = false
     private var suspended = false
@@ -47,11 +52,17 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     private var workspaceObservers: [NSObjectProtocol] = []
 
     init(store: PreferenceStore = PreferenceStore(), dailyBibleStore: DailyBibleStore = DailyBibleStore(),
-         defaults: UserDefaults = .standard, currentDate: @escaping () -> Date = Date.init) {
+         defaults: UserDefaults = .standard, currentDate: @escaping () -> Date = Date.init,
+         landingCapture: EdgeLandingCapture? = nil, screenEntryFrame: (() -> NSRect?)? = nil) {
         self.store = store
         self.dailyBibleStore = dailyBibleStore
         self.defaults = defaults
         self.currentDate = currentDate
+        self.landingCapture = landingCapture ?? EdgeLandingCapture()
+        self.screenEntryFrame = screenEntryFrame ?? {
+            NSScreen.screens.first(where: { $0.frame.contains(NSEvent.mouseLocation) })?.frame
+                ?? NSScreen.main?.frame ?? NSScreen.screens.first?.frame
+        }
         let loaded = store.load()
         preferences = loaded
         dailyBible = dailyBibleStore.load()
@@ -72,6 +83,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     }
 
     func start() {
+        landingCapture.isEnabled = true
         updates.start()
         configureMessaging()
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
@@ -115,9 +127,11 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     }
 
     func stop() {
+        cancelEdgeLanding()
         messaging?.stop()
         endBibleReading()
         savePlacement(); persist(); timer?.invalidate(); timer = nil; recallTimer?.invalidate(); bibleTimer?.invalidate()
+        menuCountdownTimer?.invalidate(); menuCountdownTimer = nil
         bubble.close(immediately: true)
         if let outsideMonitor { NSEvent.removeMonitor(outsideMonitor) }
         for observer in observers { NotificationCenter.default.removeObserver(observer) }
@@ -160,6 +174,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         playback.advance(by: delta, controller: &controller) { Double.random(in: 0..<1) }
         if isLaunching, ![.peek, .windowPeek].contains(controller.state) { isLaunching = false }
         bubble.advance(by: uiDelta)
+        petView.advanceNotification(by: preferences.isPaused ? 0 : uiDelta)
         controller.setDialogueOpen(bubble.isVisible || menuTracking || bibleSession != nil || messaging?.isInteracting == true)
         if oldState != playback.state || oldFrame != playback.frameIndex || oldGeneration != controller.generation { renderFrame() }
         presentBibleReaderIfReady()
@@ -180,7 +195,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     }
 
     private var shouldAnimate: Bool {
-        guard behavior.isVisible, !suspended else { return false }
+        guard behavior.isVisible, !suspended, landingRequest == nil else { return false }
         if !behavior.isPaused || isLaunching { return true }
         // Pause idle motion, while explicit user actions can still reach their
         // windows and finish closing. Held reading/camera poses remain still.
@@ -197,6 +212,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     }
 
     private func renderFrame() {
+        if controller.state != .peek { cancelEdgeLanding() }
         configureEntryIfNeeded()
         attachment.didEnterState(controller.state)
         if attachment.window != nil { updateWindowAttachment() }
@@ -210,6 +226,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     }
 
     private func updateMouseRouting() {
+        if landingRequest != nil { panel.ignoresMouseEvents = true; return }
         if pointerCaptured || menuTracking { panel.ignoresMouseEvents = false; return }
         let screenPoint = NSEvent.mouseLocation
         let local = NSPoint(x: screenPoint.x - panel.frame.minX, y: screenPoint.y - panel.frame.minY)
@@ -217,7 +234,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         if panel.ignoresMouseEvents != desired { panel.ignoresMouseEvents = desired }
     }
 
-    func beginPointerGesture() { pointerCaptured = true; panel.ignoresMouseEvents = false }
+    func beginPointerGesture() { cancelEdgeLanding(); pointerCaptured = true; panel.ignoresMouseEvents = false }
     func endPointerGesture() { pointerCaptured = false; savePlacement(); persist(); updateMouseRouting() }
     func drag(to origin: NSPoint) {
         attachment.drag()
@@ -295,10 +312,10 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
             self?.controller.cancel(request); self?.renderFrame()
         }
         messaging.onMessageSent = { [weak self] in self?.controller.takingPhoto=false }
-        messaging.onUnreadChanged = { [weak self, weak messaging] count in
+        messaging.onUnreadChanged = { [weak self] count in
             guard let self else { return }
             self.petView.hasUnreadMessages=count>0
-            self.bubble.setMessagesAvailable(messaging?.hasMessages == true)
+            self.bubble.setMessageStatus(unreadCount:count)
             self.updateNotificationStatus()
         }
         messaging.onWindowsChanged = { [weak self, weak messaging] in
@@ -428,16 +445,56 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
 
     private func makeMenu() -> NSMenu {
         let menu = NSMenu(); menu.delegate = self; menu.autoenablesItems = false
-        let heading = NSMenuItem(title: "sombrero", action: nil, keyEquivalent: ""); heading.isEnabled = false
-        menu.addItem(heading); menu.addItem(.separator())
+        menu.addItem(item("Come back now", #selector(bringBack)))
+        let timing = NSMenuItem(title: returnTimingTitle, action: nil, keyEquivalent: "")
+        timing.isEnabled = false; menu.addItem(timing); countdownItem = timing
+        menu.addItem(.separator())
+        menu.addItem(item("Always on Top", #selector(toggleOnTop), checked: preferences.alwaysOnTop))
+        menu.addItem(item("Show on All Desktops", #selector(toggleSpaces), checked: preferences.allSpaces))
+        menu.addItem(item("Click Through Pet", #selector(toggleClickThrough), checked: preferences.clickThrough))
+        menu.addItem(item("Pause Motion", #selector(togglePause), checked: behavior.isPaused))
+        let sizes = NSMenuItem(title: "Size", action: nil, keyEquivalent: "")
+        let submenu = NSMenu()
+        for (title, size) in PetConstants.Size.options {
+            let option = item(title, #selector(changeSize(_:)), checked: preferences.size == Double(size))
+            option.tag = size; submenu.addItem(option)
+        }
+        sizes.submenu = submenu; menu.addItem(sizes)
+        menu.addItem(.separator())
+        let settings = NSMenuItem(title: "Preferences", action: nil, keyEquivalent: "")
+        settings.submenu = makePreferencesMenu(); menu.addItem(settings)
+        return menu
+    }
+
+    private var returnTimingTitle: String {
+        if let deadline = returnDeadline {
+            let seconds = Int(ceil(max(0, deadline.timeIntervalSince(currentDate()))))
+            let time = seconds >= 3600
+                ? String(format: "%d:%02d:%02d", seconds / 3600, (seconds / 60) % 60, seconds % 60)
+                : String(format: "%d:%02d", seconds / 60, seconds % 60)
+            return "Back in \(time)"
+        }
+        if !behavior.isVisible { return "Away until called" }
+        if controller.state == .goodbye { return "Going away…" }
+        return "Not away"
+    }
+
+    private func makePreferencesMenu() -> NSMenu {
+        let menu = NSMenu(); menu.autoenablesItems = false
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Development"
+        let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+        let heading = NSMenuItem(title: "Version \(version)\(build.map { " (\($0))" } ?? "")", action: nil, keyEquivalent: "")
+        heading.isEnabled = false; menu.addItem(heading); menu.addItem(.separator())
         menu.addItem(item(behavior.isVisible ? "Hide Pet" : "Show Pet", #selector(toggleVisibility)))
-        menu.addItem(item("Bring Back to This Screen", #selector(bringBack)))
         menu.addItem(item("Open Speech Menu", #selector(openSpeechMenu)))
         menu.addItem(item("Send Message…", #selector(composeMessage)))
         let unread=messaging?.unreadCount ?? 0
         menu.addItem(item(unread>0 ? "Messages (\(unread) unread)" : "Messages…", #selector(showMessages)))
         menu.addItem(item("Message Connection…", #selector(showMessageSettings)))
         menu.addItem(item("Message Outbox…", #selector(showMessageOutbox)))
+        if landingCapture.isEnabled && landingCapture.canRequestPermission {
+            menu.addItem(item("Allow Screen Edge Detection…", #selector(allowScreenEdgeDetection)))
+        }
         if activeDailyVerse() != nil { menu.addItem(item("Read Today's Bible Verse",#selector(readDailyBible))) }
         let debug = NSMenuItem(title:"Debug",action:nil,keyEquivalent:"")
         let debugMenu = NSMenu(); debugMenu.autoenablesItems = false
@@ -464,18 +521,6 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         }
         debug.submenu = debugMenu; menu.addItem(debug)
         menu.addItem(.separator())
-        menu.addItem(item("Always on Top", #selector(toggleOnTop), checked: preferences.alwaysOnTop))
-        menu.addItem(item("Show on All Desktops", #selector(toggleSpaces), checked: preferences.allSpaces))
-        menu.addItem(item("Click Through Pet", #selector(toggleClickThrough), checked: preferences.clickThrough))
-        menu.addItem(item("Pause Motion", #selector(togglePause), checked: behavior.isPaused))
-        let sizes = NSMenuItem(title: "Size", action: nil, keyEquivalent: "")
-        let submenu = NSMenu()
-        for (title, size) in PetConstants.Size.options {
-            let option = item(title, #selector(changeSize(_:)), checked: preferences.size == Double(size))
-            option.tag = size; submenu.addItem(option)
-        }
-        sizes.submenu = submenu; menu.addItem(sizes)
-        menu.addItem(.separator())
         updates.addMenuItems(to:menu)
         menu.addItem(item("Quit sombrero", #selector(quit), key: "q"))
         return menu
@@ -494,9 +539,18 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         let fresh = makeMenu()
         menu.removeAllItems()
         for item in fresh.items { fresh.removeItem(item); menu.addItem(item) }
+        menuCountdownTimer?.invalidate()
+        let countdownTimer = Timer(timeInterval: 1, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated {
+                guard let self else { return }
+                self.countdownItem?.title = self.returnTimingTitle
+            }
+        }
+        RunLoop.main.add(countdownTimer, forMode: .common); menuCountdownTimer = countdownTimer
     }
 
     func menuDidClose(_ menu: NSMenu) {
+        menuCountdownTimer?.invalidate(); menuCountdownTimer = nil
         menuTracking = false; controller.setDialogueOpen(bubble.isVisible || bibleSession != nil || messaging?.isInteracting == true); updateMouseRouting()
     }
 
@@ -561,6 +615,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         savePlacement(); persist()
     }
     @objc private func quit() { NSApp.terminate(nil) }
+    @objc private func allowScreenEdgeDetection() { landingCapture.requestPermission() }
 
     private var displays: [PetDisplay] { NSScreen.screens.map { screen in
         let area = freeArea(screen)
@@ -603,6 +658,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     }
     private func configureEntryIfNeeded() {
         guard [.peek,.windowPeek].contains(controller.state), configuredEntryGeneration != controller.generation else { return }
+        cancelEdgeLanding()
         attachment.detach(); entryFlip=false
         if controller.state == .windowPeek {
             if let target = preparedTop ?? windowTracker.targets(viewportSize:panel.frame.width,visibleBounds:anchoringBounds,baselineY:windowPeekBaselineY,force:true).randomElement() {
@@ -613,17 +669,56 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         } else if controller.recallEntry == .windowSide {
             if let target = preparedSide ?? windowTracker.sideTargets(visibleBounds:referenceBounds,artwork:peekArtwork,force:true).randomElement() {
                 attachment.enterSide(target.attachment); entryFlip=target.attachment.flipsAnimation; panel.setFrameOrigin(target.origin)
+                if let plan = windowTracker.landingPlan(for:target,bounds:referenceBounds,artwork:peekArtwork,
+                                                       baselineOffset:panel.frame.width*PetConstants.Geometry.groundAnchor.y) {
+                    prepareEdgeLanding(plan,side:target)
+                }
                 configuredEntryGeneration = controller.generation; preparedTop=nil; preparedSide=nil; return
             }
             controller.fallbackToScreenEntry()
         }
-        if let screen = screenAtPointer() ?? NSScreen.main ?? NSScreen.screens.first {
-            let rect=screen.frame
+        if let rect = screenEntryFrame() {
             let placement=ScreenEntryPlacement.choose(screen:PetRect(x:rect.minX,y:rect.minY,width:rect.width,height:rect.height),
                 referenceBounds:referenceBounds,artwork:peekArtwork,sideSample:Double.random(in:0..<1),heightSample:Double.random(in:0..<1))
             attachment.enterScreen(placement.edge); entryFlip=placement.flipsAnimation; panel.setFrameOrigin(NSPoint(x:placement.origin.x,y:placement.origin.y))
+            if let plan = EdgeLandingPlan(area:PetRect(x:rect.minX,y:rect.minY,width:rect.width,height:rect.height),
+                fallback:placement.origin,bounds:referenceBounds,baselineOffset:panel.frame.width*PetConstants.Geometry.groundAnchor.y) {
+                prepareEdgeLanding(plan)
+            }
         }
         configuredEntryGeneration=controller.generation; preparedTop=nil; preparedSide=nil
+    }
+
+    private func cancelEdgeLanding() {
+        landingRequest = nil; petView.isHidden = false
+    }
+
+    private func prepareEdgeLanding(_ plan: EdgeLandingPlan, side: WindowTracker.SideTarget? = nil) {
+        let request = UUID(), generation = controller.generation, viewport = panel.frame.width
+        landingRequest = request; petView.isHidden = true; rebaseClock()
+        let finish: ([Int],Int) -> Void = { [weak self] rows,height in
+            guard let self, self.landingRequest == request else { return }
+            self.cancelEdgeLanding()
+            if self.controller.state == .peek, self.controller.generation == generation,
+               !self.pointerCaptured, !self.suspended, self.panel.frame.width == viewport {
+                let point = plan.choose(rows:rows,imageHeight:height,sample:Double.random(in:0..<1))
+                if let side {
+                    if let target = self.windowTracker.alignedSideTarget(side,origin:point,bounds:self.referenceBounds,artwork:self.peekArtwork) {
+                        self.attachment.enterSide(target.attachment); self.panel.setFrameOrigin(target.origin)
+                    }
+                // AppKit rounds panel origins up to the backing pixel grid.
+                } else if abs(self.panel.frame.minX-plan.fallback.x) <= 1,
+                          abs(self.panel.frame.minY-plan.fallback.y) <= 1 {
+                    self.panel.setFrameOrigin(NSPoint(x:point.x,y:point.y))
+                }
+            }
+            self.rebaseClock(); self.updateMouseRouting(); self.updateBubblePlacement()
+        }
+        if landingCapture.capture(plan,completion:finish) {
+            // Never hang an entrance on slow/failed capture, or move a duck
+            // after its first visible frame. Late callbacks are ignored.
+            DispatchQueue.main.asyncAfter(deadline:.now()+0.65) { finish([],0) }
+        } else { finish([],0) }
     }
     private func updateWindowAttachment(force: Bool = false) {
         guard !pointerCaptured else { return }
@@ -660,8 +755,8 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         if let deadline = returnDeadline { defaults.set(deadline, forKey: "sombrero.returnDeadline") }
         else { defaults.removeObject(forKey: "sombrero.returnDeadline") }
     }
-    private func recoverAfterDisplayChange() { pointerCaptured = false; attachment.detach(); restorePlacement(); savePlacement(); persist() }
-    func suspend() { suspended = true; messaging?.suspend(); endBibleReading(); bibleTimer?.invalidate(); bubble.close(immediately: true); controller.finishRoutine(); uiClock = DrawingClock(); rebaseClock(); pointerCaptured = false; timer?.invalidate(); timer = nil; recallTimer?.invalidate(); recallTimer = nil; panel.orderOut(nil) }
+    private func recoverAfterDisplayChange() { cancelEdgeLanding(); pointerCaptured = false; attachment.detach(); restorePlacement(); savePlacement(); persist() }
+    func suspend() { cancelEdgeLanding(); suspended = true; messaging?.suspend(); endBibleReading(); bibleTimer?.invalidate(); bubble.close(immediately: true); controller.finishRoutine(); uiClock = DrawingClock(); rebaseClock(); pointerCaptured = false; timer?.invalidate(); timer = nil; recallTimer?.invalidate(); recallTimer = nil; panel.orderOut(nil) }
     private func resume() {
         messaging?.resume()
         suspended = false; refreshDailyBible(); rebaseClock();

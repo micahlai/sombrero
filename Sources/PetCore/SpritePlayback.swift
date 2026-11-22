@@ -53,6 +53,7 @@ public struct DuckController {
     public var showPhoto = false
     public var takingPhoto = false
     public var reading = false
+    public private(set) var isReversingCamera = false
     private var cameraCanceled = false
     private var hasEvent: Bool { goodbye || !pending.isEmpty }
     public init() {}
@@ -68,10 +69,10 @@ public struct DuckController {
         if active == request {
             if request == .bibleRead, [.grabBible,.bibleIdle].contains(state) { reading=true; return }
             if request == .photoShow, [.grabPhoto,.showingPhoto].contains(state) { showPhoto=true; return }
-            if request == .photoTake, [.grabCamera,.cameraIdle].contains(state) { takingPhoto=true; return }
+            if request == .photoTake, !isReversingCamera, [.grabCamera,.cameraIdle].contains(state) { takingPhoto=true; return }
         }
         let reopening=active == request && ((request == .bibleRead && state == .stowBible) ||
-            (request == .photoShow && state == .putPhotoAway) || (request == .photoTake && state == .deliverPhoto))
+            (request == .photoShow && state == .putPhotoAway) || (request == .photoTake && (state == .deliverPhoto || isReversingCamera)))
         guard (active != request || reopening), !pending.contains(request), pending.count < PetConstants.Animation.maximumQueuedRequests else { return }
         pending.append(request)
         switch request {
@@ -124,11 +125,11 @@ public struct DuckController {
         takingPhoto = [.grabCamera, .cameraIdle].contains(state)
         reading = [.grabBible, .bibleIdle].contains(state)
     }
-    private mutating func enter(_ next: DuckState) {
-        if state == .cameraIdle, next == .look { active=nil }
+    private mutating func enter(_ next: DuckState, reversingCamera: Bool = false) {
+        if isReversingCamera, next == .look { active=nil }
         if [.putPhotoAway, .deliverPhoto, .stowBible].contains(state), next == .look { active = nil }
         if next != state { petCycleCompleted = false }
-        state = next; generation += 1
+        state = next; isReversingCamera = reversingCamera; generation += 1
         if next == .timeout {
             pet = false; isDialogueOpen = false; goodbye = false; pending.removeAll(); active = nil; finishRoutine()
         }
@@ -174,7 +175,8 @@ public struct DuckController {
         case .standingPet: next = .standingPet
         case .sittingPet: next = .sittingPet
         case .showingPhoto: next = showPhoto ? .showingPhoto : .putPhotoAway
-        case .cameraIdle: next = takingPhoto ? .cameraIdle : cameraCanceled ? .look : .deliverPhoto
+        case .cameraIdle: next = takingPhoto ? .cameraIdle : cameraCanceled ? .grabCamera : .deliverPhoto
+        case .grabCamera where isReversingCamera: next = .look
         case .bibleIdle: next = reading ? .bibleIdle : .stowBible
         default:
             let edges = Self.defaults(from: state)
@@ -189,7 +191,8 @@ public struct DuckController {
                 next = chosen
             }
         }
-        enter(next); resolveImmediate(); return state
+        let reverseCamera = state == .cameraIdle && next == .grabCamera
+        enter(next, reversingCamera: reverseCamera); resolveImmediate(); return state
     }
 }
 
@@ -221,12 +224,15 @@ public struct SpritePlayback {
     public private(set) var state: DuckState = .look
     public private(set) var frameIndex = 0
     public private(set) var elapsed: Double = 0
+    public private(set) var isReversed = false
     private var generation = 0
     private let counts: [DuckState: Int]
     public init(frameCounts: [DuckState: Int]) { counts = frameCounts }
     public mutating func synchronize(with controller: DuckController) {
         if state != controller.state || generation != controller.generation {
-            state = controller.state; generation = controller.generation; elapsed = 0; frameIndex = 0
+            state = controller.state; generation = controller.generation; elapsed = 0
+            isReversed = controller.isReversingCamera
+            frameIndex = isReversed ? (counts[state] ?? PetConstants.Animation.placeholderFrames)-1 : 0
         }
     }
     public mutating func advance(by delta: Double, controller: inout DuckController, sample: () -> Double) {
@@ -242,7 +248,9 @@ public struct SpritePlayback {
             synchronize(with: controller); elapsed = remainder
             if state == .timeout { elapsed = 0; break }
         }
-        frameIndex = min((counts[state] ?? PetConstants.Animation.placeholderFrames) - 1, Int(elapsed * Double(PetConstants.Animation.drawingFPS) + PetConstants.Animation.timeEpsilon))
+        let lastFrame = (counts[state] ?? PetConstants.Animation.placeholderFrames)-1
+        let timelineFrame = min(lastFrame, Int(elapsed * Double(PetConstants.Animation.drawingFPS) + PetConstants.Animation.timeEpsilon))
+        frameIndex = isReversed ? lastFrame-timelineFrame : timelineFrame
     }
 }
 

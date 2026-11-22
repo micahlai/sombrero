@@ -19,6 +19,8 @@ data_dir="$HOME/.local/share/sombrero"
 media_dir="$data_dir/media"
 credentials_dir="$config_dir/device-credentials"
 public_url="${SOMBRERO_PUBLIC_URL:-https://sombrero.micahlai.com}"
+first_name="${SOMBRERO_FIRST_NAME:-Micah}"
+second_name="${SOMBRERO_SECOND_NAME:-Angela}"
 if [ -e "$config_dir/server.env" ] || [ -e "$data_dir/devices.json" ] || [ -e "$data_dir/messages.sqlite3" ]; then
     echo 'Existing setup detected. Refusing to replace its settings, identities or message history.' >&2
     echo 'For an installed service, use: sudo systemctl status sombrero' >&2; exit 1
@@ -30,7 +32,8 @@ umask 077
 mkdir -p "$config_dir" "$data_dir"
 .venv/bin/python -m sombrero_server.provision \
     --data-dir "$data_dir" --media-dir "$media_dir" \
-    --credentials-dir "$credentials_dir" --base-url "$public_url" --initialize-media
+    --credentials-dir "$credentials_dir" --base-url "$public_url" --initialize-media \
+    --first-name "$first_name" --second-name "$second_name"
 cat > "$config_dir/server.env" <<EOF
 SOMBRERO_DATA_DIR=$data_dir
 SOMBRERO_MEDIA_DIR=$media_dir
