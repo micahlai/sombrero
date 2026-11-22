@@ -98,6 +98,15 @@ final class MessageService {
         origin.scheme=origin.scheme?.lowercased(); origin.host=origin.host?.lowercased(); origin.path=""
         if origin.scheme == "https" && origin.port == 443 { origin.port=nil }
         let serverURL=origin.url!
+        if token.hasPrefix("smbr_enroll_") {
+            struct Enrollment: Decodable { let token: String }
+            let operation=generation
+            let enrollment: Enrollment=try await jsonRequest("POST",path:"v1/enrollments/redeem",server:serverURL,token:token)
+            guard generation == operation else { throw CancellationError() }
+            guard !enrollment.token.hasPrefix("smbr_enroll_") else { throw MessageServiceError.invalidResponse }
+            try await configure(serverURL:serverURL,token:enrollment.token)
+            return
+        }
         stop()
         let operation=generation
         connectionStatus="Connecting…"; lastError=nil; notify()

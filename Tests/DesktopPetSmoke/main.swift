@@ -297,7 +297,7 @@ let integrationCalendar=DailyBible.calendar()
 let integrationDate=integrationCalendar.date(from:DateComponents(year:2026,month:11,day:21,hour:22))!
 var integrationDaily=DailyBible()
 let longestIndex=bibleCatalog.verses.firstIndex { $0.id == longest.id }!
-var assignmentRolls=[0.0,(Double(longestIndex)+0.5)/Double(bibleCatalog.verses.count)].makeIterator()
+var assignmentRolls=[(Double(longestIndex)+0.5)/Double(bibleCatalog.verses.count)].makeIterator()
 integrationDaily.reconcile(at:integrationDate,catalog:bibleCatalog,calendar:integrationCalendar) { assignmentRolls.next()! }
 integrationStore.save(integrationDaily)
 let coordinator=PetCoordinator(store:integrationPreferences,dailyBibleStore:integrationStore,
@@ -390,40 +390,34 @@ let readinessCoordinator=PetCoordinator(store:pausedPreferences,dailyBibleStore:
                                         defaults:integrationDefaults,currentDate:{ readinessDate })
 let readinessMenu=NSMenu()
 readinessCoordinator.menuWillOpen(readinessMenu)
-precondition(!readinessMenu.items.contains { $0.title == "Today's Bible Verse — Not Ready" || $0.title == "Read Today's Bible Verse" },
-             "An unavailable Bible action must be absent from the control panel")
-func hasBibleMenuButton(_ parent: NSView) -> Bool {
-    parent.subviews.contains { child in
-        (child as? NSButton)?.title == "Read Bible verse" || hasBibleMenuButton(child)
+precondition(readinessMenu.items.contains { $0.title == "Read Today's Bible Verse" && $0.isEnabled },
+             "The daily verse is available in the morning, including while hidden/paused")
+func bubbleButtons(_ parent: NSView) -> [NSButton] {
+    parent.subviews.flatMap { child in
+        (child as? NSButton).map { [$0] } ?? bubbleButtons(child)
     }
 }
 readinessCoordinator.bubble.show()
-precondition(!hasBibleMenuButton(readinessCoordinator.bubble.panel.contentView!),"An unavailable Bible action must be absent from the speech menu")
-let debugMenu=readinessMenu.items.first { $0.title == "Debug" }!.submenu!
-let overrideIndex=debugMenu.items.firstIndex { $0.title == "Bible Verse Always Available" }!
-precondition(debugMenu.items[overrideIndex].state == .off)
-debugMenu.performActionForItem(at:overrideIndex)
-precondition(hasBibleMenuButton(readinessCoordinator.bubble.panel.contentView!),"Debug override must reveal the speech action immediately")
-readinessCoordinator.menuWillOpen(readinessMenu)
-precondition(readinessMenu.items.contains { $0.title == "Read Today's Bible Verse" && $0.isEnabled })
-let enabledDebugMenu=readinessMenu.items.first { $0.title == "Debug" }!.submenu!
-let enabledOverrideIndex=enabledDebugMenu.items.firstIndex { $0.title == "Bible Verse Always Available" }!
-precondition(enabledDebugMenu.items[enabledOverrideIndex].state == .on)
-precondition(readinessStore.load().today(at:readinessDate) == originalAssignment,"Debug override must preserve the stored assignment and ready time")
-enabledDebugMenu.performActionForItem(at:enabledOverrideIndex)
-readinessCoordinator.menuWillOpen(readinessMenu)
-precondition(!readinessMenu.items.contains { $0.title == "Read Today's Bible Verse" })
-precondition(!hasBibleMenuButton(readinessCoordinator.bubble.panel.contentView!),"Turning off the override must restore the normal schedule")
+let morningButtons=bubbleButtons(readinessCoordinator.bubble.panel.contentView!)
+precondition(morningButtons.contains { $0.title == "Read Bible verse" })
+precondition(!morningButtons.contains { ["Done","Close","See message"].contains($0.title) },
+             "Main menu omits Done/Close and hides See message when no message exists")
+readinessCoordinator.bubble.setMessagesAvailable(true)
+precondition(bubbleButtons(readinessCoordinator.bubble.panel.contentView!).contains { $0.title == "See message" && $0.isEnabled })
+readinessCoordinator.bubble.setMessagesAvailable(false)
+precondition(!bubbleButtons(readinessCoordinator.bubble.panel.contentView!).contains { $0.title == "See message" })
 precondition(readinessStore.load().today(at:readinessDate) == originalAssignment)
 readinessCoordinator.menuDidClose(readinessMenu)
 readinessDate=integrationDate
 readinessCoordinator.menuWillOpen(readinessMenu)
 precondition(readinessMenu.items.first { $0.title == "Read Today's Bible Verse" }?.isEnabled == true)
-precondition(hasBibleMenuButton(readinessCoordinator.bubble.panel.contentView!))
-precondition(readinessStore.load().today(at:readinessDate) == originalAssignment,"Readiness must not reroll the day's verse or time")
+precondition(readinessStore.load().today(at:readinessDate) == originalAssignment,"The verse stays the same all day")
 readinessCoordinator.menuDidClose(readinessMenu)
+readinessDate=integrationCalendar.date(byAdding:.day,value:1,to:readinessDate)!
+readinessCoordinator.readDailyBible()
+precondition(readinessStore.load().today(at:readinessDate)?.verseID != originalAssignment.verseID,"A new local date receives a different verse")
 readinessCoordinator.stop()
-print("PASS menu hides unavailable Bible action; Debug override reveals it without rerolling; natural readiness works while hidden/paused")
+print("PASS daily verse is available all day and changes tomorrow; main menu hides unavailable messages and omits Done/Close")
 
 // Startup checks never invoke real permission prompts during tests.
 precondition(StartupPermissions.required.map(\.name) == ["Camera"],"Real photo capture needs camera access, without unrelated grants")

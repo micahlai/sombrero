@@ -28,10 +28,18 @@ private final class TestServer {
     var offline=false, loseNextSend=false, corruptDownload=false
     var messages: [ChatMessage]=[], changes: [MessageChange]=[]
     var uploadIDs: [String]=[], sendIDs: [String]=[], downloads=0, readRequests=0
+    var enrollmentRedeems=0
     let lock=NSRecursiveLock()
     func respond(_ request: URLRequest) throws -> (Int,Data) {
         lock.lock(); defer { lock.unlock() }
         if offline { throw URLError(.notConnectedToInternet) }
+        if request.url!.path == "/v1/enrollments/redeem" {
+            precondition(request.httpMethod == "POST")
+            precondition(request.value(forHTTPHeaderField:"Authorization") == "Bearer smbr_enroll_fixture")
+            precondition(enrollmentRedeems==0,"Enrollment may be redeemed once")
+            enrollmentRedeems += 1
+            return (200,Data("{\"token\":\"fixture-token\"}".utf8))
+        }
         precondition(request.value(forHTTPHeaderField:"Authorization") == "Bearer fixture-token","Every request must authenticate")
         let path=request.url!.path
         if path == "/v1/me" { return (200,try MessagingJSON.encoder().encode(identity)) }
@@ -107,12 +115,14 @@ private struct MessageClientSmoke {
         precondition(!MessageService.validServerURL(URL(string:"https://user:password@example.com")!))
         precondition(!MessageService.validServerURL(URL(string:"https://example.com/not-an-origin")!))
         precondition(MessageService.validServerURL(URL(string:"http://127.0.0.1:8765")!))
-        try await client.configure(serverURL:URL(string:"https://SOMBRERO.test:443/")!,token:"fixture-token")
+        try await client.configure(serverURL:URL(string:"https://SOMBRERO.test:443/")!,token:"smbr_enroll_fixture")
+        precondition(server.enrollmentRedeems==1)
         client.stop()
         let configuration=client.configuration!
         precondition(configuration.serverURL.absoluteString == "https://sombrero.test","Equivalent origins must share one history/outbox partition")
         let configData=try Data(contentsOf:store.root.appendingPathComponent("configuration.json"))
         precondition(!String(decoding:configData,as:UTF8.self).contains("fixture-token"),"Tokens must not enter on-disk configuration")
+        precondition(!String(decoding:configData,as:UTF8.self).contains("smbr_enroll_fixture"),"Setup codes must not enter saved configuration")
 
         // A lost server response must retain the same request ID and staged file.
         server.offline=true
@@ -182,6 +192,10 @@ private struct MessageClientSmoke {
         let composer=MessageComposerWindow()
         let coordinator=MessageCoordinator(service:reloaded,composer:composer,draftDirectory:root.appendingPathComponent("composer-drafts"))
         defer { coordinator.stop() }
+        var sentRoutines=0
+        var canceledRoutines:[DuckRequest]=[]
+        coordinator.onMessageSent = { sentRoutines += 1 }
+        coordinator.onRoutineEnded = { canceledRoutines.append($0) }
         func buttons(_ view:NSView)->[NSButton] {
             view.subviews.flatMap { child in (child as? NSButton).map { [$0] } ?? buttons(child) }
         }
@@ -195,17 +209,21 @@ private struct MessageClientSmoke {
         server.offline=true; send.performClick(nil)
         try await Task.sleep(nanoseconds:40_000_000)
         precondition(composer.window.isVisible && !send.isEnabled && reloaded.outbox.count==1,"Queued/offline is not yet sent; prevent double submission")
+        precondition(sentRoutines==0,"6b must continue while the message is queued/offline")
         server.offline=false; await reloaded.refresh()
         precondition(!composer.window.isVisible && reloaded.outbox.isEmpty,"Close in the same service change as the server acknowledgment")
+        precondition(sentRoutines==1 && canceledRoutines.isEmpty,"Only server acknowledgment starts 6c; successful close must not cancel it")
 
         prepare("Old send, manually closed")
         server.offline=true; send.performClick(nil)
         try await Task.sleep(nanoseconds:40_000_000)
         precondition(reloaded.outbox.count==1 && !send.isEnabled)
         composer.window.close()
+        precondition(canceledRoutines==[.photoTake],"Closing a queued composer cancels the camera routine without playing delivery")
         prepare("A new draft stays open")
         server.offline=false; await reloaded.refresh()
         precondition(composer.window.isVisible && composer.draftText.string=="A new draft stays open","A late old acknowledgment must not close another draft")
+        precondition(sentRoutines==1,"An old send must not start 6c for a new draft")
         composer.window.close()
         print("PASS composer: closes immediately on send acknowledgment, stays open offline, prevents duplicate sends, and late acknowledgments cannot close new drafts")
     }

@@ -11,6 +11,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             guard let self else { return }
             let controller = PetCoordinator(); self.coordinator = controller
             controller.start(); self.hasLaunched = true
+            if ProcessInfo.processInfo.arguments.contains("--setup") { controller.showMessageSetup() }
         }
     }
     func applicationWillTerminate(_ notification: Notification) { startupPermissions.cancel(); coordinator?.stop() }

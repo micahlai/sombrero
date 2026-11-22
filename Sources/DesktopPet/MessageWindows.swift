@@ -479,9 +479,25 @@ final class MessageInboxWindow: NSObject, NSWindowDelegate {
     }
 }
 
+/// Center-crop photos to fill the paper aperture without changing their aspect ratio.
+private final class PolaroidImageView: NSImageView {
+    override func draw(_ dirtyRect: NSRect) {
+        guard let image, image.size.width > 0, image.size.height > 0 else { return }
+        let scale = max(bounds.width / image.size.width, bounds.height / image.size.height)
+        let size = NSSize(width: image.size.width * scale, height: image.size.height * scale)
+        let destination = NSRect(x: bounds.midX - size.width / 2, y: bounds.midY - size.height / 2,
+                                 width: size.width, height: size.height)
+        NSGraphicsContext.saveGraphicsState()
+        NSBezierPath(rect: bounds).addClip()
+        image.draw(in: destination, from: .zero, operation: .sourceOver, fraction: 1,
+                   respectFlipped: true, hints: [.interpolation: NSImageInterpolation.high])
+        NSGraphicsContext.restoreGraphicsState()
+    }
+}
+
 private final class MessageMediaView: NSView {
     var onDrop: ((URL) -> Void)?
-    private let image = NSImageView()
+    private let image = PolaroidImageView()
     private let video = AVPlayerView()
     private let label = NSTextField(wrappingLabelWithString: "Choose a photo or video, or drop one here.")
     private var observation: NSKeyValueObservation?
@@ -492,7 +508,6 @@ private final class MessageMediaView: NSView {
         translatesAutoresizingMaskIntoConstraints = false
         wantsLayer = true; layer?.backgroundColor = NSColor.clear.cgColor
         layer?.cornerRadius = 3; layer?.masksToBounds = true
-        image.imageScaling = .scaleProportionallyUpOrDown
         video.controlsStyle = .inline
         label.alignment = .center; label.textColor = PolaroidStyle.mutedInk; label.font = AppTypography.font(size:16)
         for view in [image, video, label] { view.translatesAutoresizingMaskIntoConstraints = false; addSubview(view) }

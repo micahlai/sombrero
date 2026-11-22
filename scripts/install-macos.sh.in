@@ -1,0 +1,44 @@
+#!/bin/sh
+# Rendered into a release with an immutable URL and its archive hash.
+set -eu
+archive_url='@ARCHIVE_URL@'
+archive_sha256='@ARCHIVE_SHA256@'
+bundle_id='com.desktop-pet.watercolor-duck'
+case "$(uname -s)" in Darwin) ;; *) echo 'sombrero requires macOS.' >&2; exit 1;; esac
+major=$(/usr/bin/sw_vers -productVersion | /usr/bin/cut -d . -f 1)
+[ "$major" -ge 13 ] || { echo 'sombrero requires macOS 13 or later.' >&2; exit 1; }
+case "$(uname -m)" in arm64|x86_64) ;; *) echo 'Unsupported Mac architecture.' >&2; exit 1;; esac
+umask 077
+work=$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/sombrero-install.XXXXXX")
+staging=''
+cleanup() { rm -rf "$work"; if [ -n "$staging" ]; then rm -rf "$staging"; fi; }
+trap cleanup EXIT HUP INT TERM
+/usr/bin/curl --fail --location --proto '=https' --proto-redir '=https' --connect-timeout 20 \
+    --retry 2 "$archive_url" -o "$work/sombrero.zip"
+actual=$(/usr/bin/shasum -a 256 "$work/sombrero.zip" | /usr/bin/cut -d ' ' -f 1)
+[ "$actual" = "$archive_sha256" ] || { echo 'Download verification failed.' >&2; exit 1; }
+/usr/bin/ditto -x -k "$work/sombrero.zip" "$work/unpacked"
+source_app="$work/unpacked/sombrero.app"
+[ -d "$source_app" ] || { echo 'The app is missing from this release.' >&2; exit 1; }
+actual_id=$(/usr/libexec/PlistBuddy -c 'Print CFBundleIdentifier' "$source_app/Contents/Info.plist")
+[ "$actual_id" = "$bundle_id" ] || { echo 'Unexpected app identity.' >&2; exit 1; }
+/usr/bin/codesign --verify --deep --strict "$source_app"
+destination="$HOME/Applications"
+mkdir -p "$destination"
+[ ! -L "$destination/sombrero.app" ] || { echo 'Refusing to replace an app symlink.' >&2; exit 1; }
+if [ -e "$destination/sombrero.app" ]; then
+    echo 'sombrero is already installed. Use Check for Updates in its control menu.' >&2
+    exit 1
+fi
+staging=$(/usr/bin/mktemp -d "$destination/.sombrero-install.XXXXXX")
+/usr/bin/ditto "$source_app" "$staging/sombrero.app"
+# curl does not supply browser quarantine metadata. Add it so initial launch
+# follows normal Gatekeeper approval, including the free/ad-hoc distribution path.
+quarantine_time=$(/bin/date +%s)
+quarantine_hex=$(printf '%x' "$quarantine_time")
+/usr/bin/xattr -w com.apple.quarantine "0083;$quarantine_hex;sombrero-installer;" "$staging/sombrero.app"
+mv "$staging/sombrero.app" "$destination/sombrero.app"
+printf '%s\n' 'Installed sombrero in your Applications folder.' \
+    'Approve opening the app if macOS asks. For an unnotarized build, use System Settings → Privacy & Security → Open Anyway.' \
+    'Then allow Camera access and enter this Mac’s private one-use setup code in the connection window.'
+/usr/bin/open "$destination/sombrero.app" --args --setup

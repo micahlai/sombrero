@@ -67,7 +67,7 @@ public enum PetConstants {
     public enum Interaction {
         public static let dragThreshold = 5.0
         public static let recallTimerMinimumDelay = 0.01
-        public static let awayMinuteOptions = [5, 15, 30]
+        public static let awayMinuteOptions = [15, 60, 240]
         public static let secondsPerMinute = 60.0
     }
     public enum Size {
@@ -113,8 +113,6 @@ public enum PetConstants {
         public static let readerMaximumTextHeight = 90.0
     }
     public enum Bible {
-        public static let readyHourStart = 11
-        public static let readyHourEnd = 19
         public static let excludedDays = 3
         public static let timerMinimumDelay = 1.0
     }

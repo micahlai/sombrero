@@ -20,20 +20,20 @@ final class DailyBibleTests: XCTestCase {
         var daily=DailyBible()
         XCTAssertTrue(daily.reconcile(at:date(2026,11,21,8),catalog:catalog,calendar:calendar) { 0 })
         let today=try XCTUnwrap(daily.today(at:date(),calendar:calendar))
-        XCTAssertEqual(today.readyAt,date(2026,11,21,11)); XCTAssertFalse(today.isRead)
-        XCTAssertFalse(today.isReady(at:date(2026,11,21,10))); XCTAssertTrue(today.isReady(at:date(2026,11,21,12)))
+        XCTAssertEqual(today.readyAt,date(2026,11,21,0)); XCTAssertFalse(today.isRead)
+        XCTAssertTrue(today.isReady(at:date(2026,11,21,0))); XCTAssertTrue(today.isReady(at:date(2026,11,21,23)))
         let stored=try JSONDecoder().decode(DailyBible.self,from:JSONEncoder().encode(daily))
         XCTAssertEqual(stored,daily)
         XCTAssertFalse(daily.reconcile(at:date(2026,11,21,22),catalog:catalog,calendar:calendar) { XCTFail("Reconciliation rerolled the day"); return 0 })
         XCTAssertEqual(daily.today(at:date(),calendar:calendar),today)
-        XCTAssertEqual(daily.nextChange(after:date(2026,11,21,10),calendar:calendar),today.readyAt)
+        XCTAssertEqual(daily.nextChange(after:date(2026,11,21,10),calendar:calendar),date(2026,11,22,0))
         XCTAssertEqual(daily.nextChange(after:date(2026,11,21,20),calendar:calendar),date(2026,11,22,0))
     }
-    func testRandomWindowIncludesSevenPMAndWakeDoesNotBackfillMissedDays() throws {
+    func testVerseAvailableAllDayAndWakeDoesNotBackfillMissedDays() throws {
         let catalog=try XCTUnwrap(BibleLibrary().catalog)
         var daily=DailyBible()
         daily.reconcile(at:date(),catalog:catalog,calendar:calendar) { 1 }
-        XCTAssertEqual(daily.today(at:date(),calendar:calendar)?.readyAt,date(2026,11,21,19))
+        XCTAssertEqual(daily.today(at:date(),calendar:calendar)?.readyAt,date(2026,11,21,0))
         XCTAssertEqual(daily.today(at:date(),calendar:calendar)?.verseID,catalog.verses.last?.id)
         daily.reconcile(at:date(2026,11,29,22),catalog:catalog,calendar:calendar) { 0 }
         XCTAssertEqual(daily.assignments.count,2)
@@ -46,7 +46,7 @@ final class DailyBibleTests: XCTestCase {
             let now=date(2026,3,day,12)
             daily.reconcile(at:now,catalog:catalog,calendar:calendar) { 0 }
             ids.append(daily.today(at:now,calendar:calendar)!.verseID)
-            XCTAssertEqual(calendar.component(.hour,from:daily.today(at:now,calendar:calendar)!.readyAt),11)
+            XCTAssertEqual(calendar.component(.hour,from:daily.today(at:now,calendar:calendar)!.readyAt),0)
         }
         XCTAssertEqual(Set(ids.prefix(4)).count,4); XCTAssertEqual(ids[0],ids[4])
     }
@@ -58,6 +58,16 @@ final class DailyBibleTests: XCTestCase {
         let west=DailyBible.calendar(timeZone:TimeZone(identifier:"America/Los_Angeles")!)
         XCTAssertFalse(daily.reconcile(at:now,catalog:catalog,calendar:west) { XCTFail("Travel rerolled an existing date"); return 0 })
         XCTAssertEqual(daily.today(at:now,calendar:west),assignment)
+    }
+    func testPreviouslyScheduledVerseBecomesAvailableWithoutRerolling() throws {
+        let catalog=try XCTUnwrap(BibleLibrary().catalog)
+        let payload:[String:Any] = ["assignments":[["localDate":"2026-11-21", "timeZoneID":calendar.timeZone.identifier,
+            "readyAt":date(2026,11,21,19).timeIntervalSinceReferenceDate,"verseID":catalog.verses[0].id,"isRead":true]]]
+        var daily=try JSONDecoder().decode(DailyBible.self,from:JSONSerialization.data(withJSONObject:payload))
+        XCTAssertTrue(daily.reconcile(at:date(2026,11,21,8),catalog:catalog,calendar:calendar) { XCTFail("Migration must preserve the verse"); return 0 })
+        let assignment=try XCTUnwrap(daily.today(at:date(),calendar:calendar))
+        XCTAssertTrue(assignment.isReady(at:date(2026,11,21,8)))
+        XCTAssertEqual(assignment.verseID,catalog.verses[0].id); XCTAssertTrue(assignment.isRead)
     }
     func testOnlyCompletedDisplayedDailyReaderClearsItsOwnBadge() throws {
         let catalog=try XCTUnwrap(BibleLibrary().catalog)

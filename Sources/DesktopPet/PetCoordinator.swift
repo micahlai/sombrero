@@ -13,7 +13,6 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     private(set) var bibleSession: BibleReadingSession?
     private var bibleReaderPending = false
     private var bibleTimer: Timer?
-    private var debugBibleAvailable = false
     private lazy var conversationBounds: CGRect = sprites.conversationBounds() ?? .null
     private var preferences: PetPreferences
     private var behavior = PetBehavior()
@@ -23,6 +22,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     let bubble: SpeechBubble
     private let windowTracker = WindowTracker()
     private var messaging: MessageCoordinator?
+    private let updates = UpdateController()
     private var attachment = PetAttachment()
     private var sideAttachment: WindowSideAttachment? { attachment.side }
     private var configuredEntryGeneration = -1
@@ -72,6 +72,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
     }
 
     func start() {
+        updates.start()
         configureMessaging()
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         if let button = statusItem.button {
@@ -293,7 +294,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         messaging.onRoutineEnded = { [weak self] request in
             self?.controller.cancel(request); self?.renderFrame()
         }
-        messaging.onCaptureFinished = { [weak self] in self?.controller.takingPhoto=false }
+        messaging.onMessageSent = { [weak self] in self?.controller.takingPhoto=false }
         messaging.onUnreadChanged = { [weak self, weak messaging] count in
             guard let self else { return }
             self.petView.hasUnreadMessages=count>0
@@ -307,6 +308,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         messaging.start()
     }
     @objc private func showMessageSettings() { messaging?.showSettings() }
+    func showMessageSetup() { messaging?.showSettings() }
     @objc private func showMessages() { messaging?.showInbox() }
     @objc private func composeMessage() { messaging?.showComposer() }
     @objc private func showMessageOutbox() { messaging?.showOutbox() }
@@ -320,7 +322,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
 
     private func activeDailyVerse(at date: Date? = nil) -> BibleVerse? {
         let now=date ?? currentDate()
-        guard let assignment=dailyBible.today(at:now), assignment.isReady(at:now) || debugBibleAvailable else { return nil }
+        guard let assignment=dailyBible.today(at:now) else { return nil }
         return bibleLibrary.catalog?.verses.first { $0.id == assignment.verseID }
     }
     private func refreshDailyBible(updateWaitingReader: Bool = false) {
@@ -343,10 +345,6 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         }
         updateBubblePlacement()
     }
-    @objc private func toggleBibleAvailabilityOverride() {
-        debugBibleAvailable.toggle()
-        refreshDailyBible(updateWaitingReader:true)
-    }
     private func endBibleReading() {
         if bibleSession != nil { controller.cancel(.bibleRead) }
         bibleSession=nil; bibleReaderPending=false; refreshDailyBible()
@@ -367,9 +365,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         guard let verse, let today else {
             let status: String
             if bibleLibrary.catalog == nil { status="Bible text could not be loaded. Please reopen sombrero." }
-            else if let today {
-                status="Today's verse will be ready at \(DateFormatter.localizedString(from:today.readyAt,dateStyle:.none,timeStyle:.short))."
-            } else { status="Today's verse is not ready yet." }
+            else { status="Today's verse could not be loaded. Please reopen sombrero." }
             controller.setDialogueOpen(true); bubble.setBible(verse:nil,status:status); bubble.show(mode:.bible); updateBubblePlacement(); return
         }
         beginBibleReading(verse:verse,localDate:today.localDate)
@@ -446,9 +442,6 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         let debug = NSMenuItem(title:"Debug",action:nil,keyEquivalent:"")
         let debugMenu = NSMenu(); debugMenu.autoenablesItems = false
         debugMenu.addItem(item("Receive Test Photo",#selector(receiveTestPhoto)))
-        let bibleOverride = item("Bible Verse Always Available",#selector(toggleBibleAvailabilityOverride),checked:debugBibleAvailable)
-        bibleOverride.isEnabled = bibleLibrary.catalog != nil
-        debugMenu.addItem(bibleOverride)
         let biblePreview=item("Preview Bible Reader",#selector(previewBibleReader))
         biblePreview.isEnabled=bibleLibrary.catalog != nil; debugMenu.addItem(biblePreview)
         debugMenu.addItem(.separator())
@@ -483,6 +476,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         }
         sizes.submenu = submenu; menu.addItem(sizes)
         menu.addItem(.separator())
+        updates.addMenuItems(to:menu)
         menu.addItem(item("Quit sombrero", #selector(quit), key: "q"))
         return menu
     }

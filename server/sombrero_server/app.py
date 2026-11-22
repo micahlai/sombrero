@@ -8,6 +8,7 @@ from fastapi import Depends, FastAPI, Header, Request
 from fastapi.responses import FileResponse, JSONResponse
 
 from .store import ServiceError, Settings, Store
+from .enrollment import redeem_code
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -60,6 +61,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/v1/me")
     def me(device: str = Depends(authorized)):
         return store.identity(device)
+
+    @app.post("/v1/enrollments/redeem")
+    def enroll(authorization: str | None = Header(default=None)):
+        return redeem_code(store, authorization)
 
     @app.post("/v1/attachments")
     async def upload(request: Request, device: str = Depends(authorized)):

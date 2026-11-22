@@ -218,12 +218,16 @@ private final class BubbleView: NSView {
         for row in rows { row.removeFromSuperview() }; rows.removeAll(); reader=mode == .bible
         switch mode {
         case .menu:
-            button("Go away…",.goAway); button("See message",.seePhoto,enabled:messagesAvailable); button("Send message",.sendPhoto)
+            button("Go away…",.goAway)
+            if messagesAvailable { button("See message",.seePhoto) }
+            button("Send message",.sendPhoto)
             if bibleAvailable { button("Read Bible verse",.readBible) }
-            button("Close",.close)
         case .away:
             button("Until I call you",.away(nil))
-            for minutes in PetConstants.Interaction.awayMinuteOptions { button("In \(minutes) minutes",.away(minutes)) }
+            for minutes in PetConstants.Interaction.awayMinuteOptions {
+                let duration = minutes < 60 ? "\(minutes) minutes" : "\(minutes / 60) hour\(minutes == 60 ? "" : "s")"
+                button("In \(duration)",.away(minutes))
+            }
             button("Back",.back)
         case .bible:
             if let verse=bibleVerse {

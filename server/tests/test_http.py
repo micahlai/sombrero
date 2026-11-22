@@ -53,6 +53,16 @@ class HTTPTests(unittest.TestCase):
         self.assertEqual(self.api.post("/v1/attachments", content=b"html", headers={**self.first, "Content-Type": "image/png"}).status_code, 415)
         self.assertEqual(self.api.get("/v1/sync", headers=self.first).json()["changes"], [])
 
+    def test_setup_code_is_one_use_and_response_is_not_cached(self):
+        from sombrero_server.enrollment import create_code
+        code = create_code(self.fixture.store, {**self.fixture.clients[1], "baseURL":"https://example.net"})
+        headers = {"Authorization":"Bearer " + code}
+        response = self.api.post("/v1/enrollments/redeem", headers=headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers["cache-control"], "no-store")
+        self.assertEqual(response.json()["token"], self.fixture.clients[1]["token"])
+        self.assertEqual(self.api.post("/v1/enrollments/redeem", headers=headers).status_code, 401)
+
     def test_missing_volume_is_503_and_does_not_lose_text_messages(self):
         marker = self.fixture.media / ".sombrero-volume"
         marker.unlink()

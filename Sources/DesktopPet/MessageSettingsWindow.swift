@@ -6,7 +6,7 @@ final class MessageSettingsWindow: NSObject, NSWindowDelegate {
     var onSave: ((String, String) -> Void)?
     var onDisconnect: (() -> Void)?
     let window: NSWindow
-    private let address = NSTextField(string: "https://sombrero.micahlai.com")
+    private let address = NSTextField(string: "https://home-lab.tail4869fe.ts.net")
     private let token = NSSecureTextField(string: "")
     private let status = NSTextField(wrappingLabelWithString: "")
     private let save = NSButton(title: "Connect", target: nil, action: nil)
@@ -20,9 +20,9 @@ final class MessageSettingsWindow: NSObject, NSWindowDelegate {
         window.isReleasedWhenClosed = false; window.delegate = self
         let root = window.contentView!
         let description = NSTextField(wrappingLabelWithString:
-            "Connect both computers to your sombrero server. Each computer has its own device token from the server setup.")
+            "Enter this Mac's one-use setup code to connect your messages. You can also use its device token or import a device file.")
         description.frame = NSRect(x: 24, y: 234, width: 432, height: 52); root.addSubview(description)
-        for (title, field, y) in [("Server address", address, 184.0), ("Device token", token, 124.0)] {
+        for (title, field, y) in [("Server address", address, 184.0), ("Setup code or device token", token, 124.0)] {
             let label = NSTextField(labelWithString: title)
             label.frame = NSRect(x: 24, y: y+27, width: 432, height: 18); root.addSubview(label)
             field.frame = NSRect(x: 24, y: y, width: 432, height: 25)
@@ -40,9 +40,9 @@ final class MessageSettingsWindow: NSObject, NSWindowDelegate {
         root.addSubview(disconnect)
     }
     func show(serverURL: URL?, connected: Bool) {
-        address.stringValue = serverURL?.absoluteString ?? "https://sombrero.micahlai.com"
+        address.stringValue = serverURL?.absoluteString ?? "https://home-lab.tail4869fe.ts.net"
         token.stringValue = ""; disconnect.isEnabled = connected
-        setStatus(connected ? "Connected. Use the control panel to open your messages." : "Enter this computer's device token to connect.", busy: false)
+        setStatus(connected ? "Connected. Use the control panel to open your messages." : "Enter this computer's setup code or device token to connect.", busy: false)
         window.center(); window.makeKeyAndOrderFront(nil); NSApp.activate(ignoringOtherApps: true)
     }
     func setStatus(_ text: String, busy: Bool) {
@@ -52,7 +52,7 @@ final class MessageSettingsWindow: NSObject, NSWindowDelegate {
     func close() { token.stringValue = ""; window.orderOut(nil) }
     @objc private func connect() {
         guard !token.stringValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            setStatus("Enter this computer's device token.", busy: false); return
+            setStatus("Enter this computer's setup code or device token.", busy: false); return
         }
         onSave?(address.stringValue.trimmingCharacters(in: .whitespacesAndNewlines), token.stringValue.trimmingCharacters(in: .whitespacesAndNewlines))
     }

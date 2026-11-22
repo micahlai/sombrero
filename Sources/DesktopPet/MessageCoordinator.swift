@@ -8,7 +8,7 @@ final class MessageCoordinator {
     let service: MessageService
     var onRoutineRequested: ((DuckRequest) -> Void)?
     var onRoutineEnded: ((DuckRequest) -> Void)?
-    var onCaptureFinished: (() -> Void)?
+    var onMessageSent: (() -> Void)?
     var onUnreadChanged: ((Int) -> Void)?
     var onWindowsChanged: (() -> Void)?
     private let composer: MessageComposerWindow
@@ -89,7 +89,7 @@ final class MessageCoordinator {
                 self.composerSendID = try self.service.enqueue(body:body,attachment:staged)
                 self.drafts?.clear(); self.applyingDraft = true
                 self.composer.resetAfterSend(); self.applyingDraft = false
-                self.stopCamera(); self.onCaptureFinished?()
+                self.stopCamera()
                 self.composer.setStatus("Sending…",isBusy:true)
             } catch { self.composer.setStatus(error.localizedDescription,isBusy:false) }
         }
@@ -100,10 +100,9 @@ final class MessageCoordinator {
         }
         composer.onClose = { [weak self] in
             guard let self else { return }
-            let queuedOrSent = self.composerSendID != nil || self.closingSentComposer
             self.composerSendID=nil
             self.pendingComposer=false; self.stopCamera()
-            if !queuedOrSent { self.onRoutineEnded?(.photoTake) }
+            if !self.closingSentComposer { self.onRoutineEnded?(.photoTake) }
             self.onWindowsChanged?()
         }
         composer.onCamera = { [weak self] in self?.startCamera() }
@@ -112,7 +111,7 @@ final class MessageCoordinator {
         composer.onStopCamera = { [weak self] in self?.stopCamera() }
         camera.onPhoto = { [weak self] url in
             guard let self else { return }
-            self.composer.setAttachment(url); self.onCaptureFinished?()
+            self.composer.setAttachment(url)
         }
         camera.onError = { [weak self] message in self?.composer.setStatus(message,isBusy:false) }
         camera.onStateChanged = { [weak self] in
@@ -259,6 +258,7 @@ final class MessageCoordinator {
                     // Only this open send owns the close. An acknowledgement for
                     // a manually closed composer cannot dismiss a later draft.
                     closingSentComposer=true; composerSendID=nil
+                    onMessageSent?()
                     composer.window.close(); closingSentComposer=false
                 } else {
                     composer.setStatus(service.lastError ?? "Sending…",isBusy:true)

@@ -139,6 +139,10 @@ private final class CameraPreviewView: NSView {
         super.init(frame: .zero)
         wantsLayer = true
         previewLayer.videoGravity = .resizeAspectFill
+        if let connection = previewLayer.connection, connection.isVideoMirroringSupported {
+            connection.automaticallyAdjustsVideoMirroring = false
+            connection.isVideoMirrored = true
+        }
         layer?.backgroundColor = NSColor.black.cgColor
         layer?.addSublayer(previewLayer)
         setAccessibilityLabel("Live camera preview")
@@ -201,6 +205,11 @@ private final class CameraCaptureWorker {
         queue.async { [self] in
             guard generation == token, let session, session.isRunning, let output else {
                 completion(.failure(CameraCaptureError.notReady)); return
+            }
+            // Mirror the saved JPEG too, so the sent photo matches the preview.
+            if let connection = output.connection(with: .video), connection.isVideoMirroringSupported {
+                connection.automaticallyAdjustsVideoMirroring = false
+                connection.isVideoMirrored = true
             }
             let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
             let id = settings.uniqueID
