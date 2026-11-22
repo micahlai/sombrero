@@ -1,0 +1,1 @@
+curl -fsSL --proto '=https' --proto-redir '=https' https://github.com/micahlai/sombrero/releases/latest/download/install.sh | /bin/sh
