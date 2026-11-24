@@ -14,7 +14,7 @@ Built with Swift and AppKit, with a separate Python service for private messagin
 - Optional still-photo capture from available cameras, including supported Continuity Camera devices.
 - Resizable kept Polaroids that stay above ordinary windows.
 - An offline catalog of 100 World English Bible passages, with a saved daily selection available throughout the local day and refreshed at midnight.
-- A shared animated green exclamation mark for unread messages or a new daily passage.
+- An animated green exclamation mark for unread incoming messages.
 - Optional Sparkle updates in release builds.
 
 ## Requirements
@@ -76,7 +76,7 @@ On macOS 14 or later, the app can optionally request Screen Recording access to 
 
 The main control menu contains the return countdown, **Always on Top**, **Show on All Desktops**, **Click Through Pet**, **Pause Motion**, and **Size**. The **Preferences** submenu contains visibility controls, messaging settings, the outbox, Bible reading, animation debugging, update controls, version information, and Quit. Update availability depends on how the app was built.
 
-Use the speech menu to send or show messages, read the day's passage, or send the duck away. **Show message** remains available when the inbox is empty; an unconfigured connection opens setup. Incoming messages and daily passages retain their unread state while the duck is away without automatically recalling it.
+Use the speech menu to send or show messages, read the day's passage, or send the duck away. **Show message** remains available when the inbox is empty; an unconfigured connection opens setup. Incoming messages and daily passages retain their unread state while the duck is away without automatically recalling it. Only unread incoming messages raise the exclamation mark; the daily passage stays available from the menu.
 
 Window ordering follows macOS behavior. Fullscreen apps, Spaces, Stage Manager, protected system windows, and display changes need testing on the target Mac.
 

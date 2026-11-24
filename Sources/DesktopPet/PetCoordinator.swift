@@ -334,7 +334,7 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         petView.needsDisplay=true
         let unread=messaging?.unreadCount ?? 0
         if unread>0 { statusItem?.button?.toolTip="sombrero — \(unread) unread message\(unread == 1 ? "" : "s")" }
-        else { statusItem?.button?.toolTip=petView.hasUnreadVerse ? "sombrero — a new Bible verse is ready" : "sombrero — show, hide, or recover your companion" }
+        else { statusItem?.button?.toolTip="sombrero — show, hide, or recover your companion" }
     }
 
     private func activeDailyVerse(at date: Date? = nil) -> BibleVerse? {
@@ -346,7 +346,6 @@ final class PetCoordinator: NSObject, NSMenuDelegate {
         let now=currentDate()
         if let catalog=bibleLibrary.catalog, dailyBible.reconcile(at:now,catalog:catalog) { dailyBibleStore.save(dailyBible) }
         let today=dailyBible.today(at:now)
-        petView.hasUnreadVerse=(activeDailyVerse(at:now) != nil && today?.isRead == false)
         petView.needsDisplay=true
         bubble.setBibleAvailable(activeDailyVerse(at:now) != nil)
         updateNotificationStatus()

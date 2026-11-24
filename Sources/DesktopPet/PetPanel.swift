@@ -23,9 +23,9 @@ final class SpriteView: NSView {
     var sprite: SpriteLibrary.Frame?
     var state: DuckState = .look
     var flipsHorizontally = false
-    var hasUnreadVerse = false { didSet { notificationsChanged() } }
     var hasUnreadMessages = false { didSet { notificationsChanged() } }
-    private var hasNotifications: Bool { hasUnreadVerse || hasUnreadMessages }
+    // Daily scripture stays available in the menu without raising a message alert.
+    private var hasNotifications: Bool { hasUnreadMessages }
     var badgeBounds: CGRect?
     private var notificationElapsed = 0.0
     private(set) var notificationFrameIndex = 0
